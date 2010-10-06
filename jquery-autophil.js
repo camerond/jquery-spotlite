@@ -11,7 +11,7 @@
     var $items = $pool.find('li');
     var $chosen = $('<ul />').addClass(opts.class_prefix + 'chosen').prependTo($autophil.find('dd'));
     var $input = $autophil.find('dd input');
-    cleanList();
+    initList();
     positionPool();
 
     $(document).bind("click", function(e) {
@@ -77,10 +77,17 @@
       }
     });
 
-    function cleanList() {
+    function initList() {
       $items.each(function() {
-        var cleaned = $.trim($(this).text());
-        $(this).text(cleaned);
+        var $item = $(this);
+        var cleaned = $.trim($item.text());
+        $item.text(cleaned);
+        var terms = $item.text().split(' ');
+        var spaces = terms.length - 1;
+        for(var i=0; i<terms.length; i++) {
+          terms[i] = terms.slice(i).join(' ');
+        }
+        $item.data('af_terms', terms);
       });
     }
 
@@ -89,32 +96,45 @@
       $items.each(function() {
         var $item = $(this);
         $item.removeClass('active').hide();
-        var comparison = $item.text().substring(0, searchstring.length);
-        if(findMatch(searchstring, comparison, $item)) {
-          var markedup = '<b>' + comparison + '</b>' + $item.text().substring(searchstring.length);
-          $item.html(markedup);
-          if($(this).siblings(':visible').length < opts.result_limit) {
+        var markup = findMatch(searchstring, $item);
+        if(!markup) {
+          $(this).hide();
+        } else {
+          $item.html(markup);
+          if(matchCount < opts.result_limit) {
             $(this).show();
             matchCount++;
           }
-        } else {
-          $(this).hide();
         }
       });
       return matchCount;
     }
 
-    function findMatch(ss, comparison, $item) {
-      if ((ss.length == 0) || (ss.toLowerCase() != comparison.toLowerCase())) {
+    function findMatch(ss, $item) {
+      var markup = '';
+      var duplicate = false;
+      if (ss.length == 0) {
         return false;
       }
-      var matchFound = true;
       $chosen.find('li').each(function() {
         if($(this).text() == $item.text()) {
-          matchFound = false;
+          duplicate = true;
         }
       });
-      return matchFound;
+      if(!duplicate) {
+        var terms = $item.data('af_terms');
+        for(var i=0; i<terms.length; i++ ) {
+          if(ss.toLowerCase() == terms[i].substring(0, ss.length).toLowerCase()) {
+            var toReplace = terms[i].substring(0, ss.length);
+            if(i > 0) {
+              toReplace = ' ' + toReplace;
+            }
+            markup = $item.text().replace(toReplace, '<b>' + toReplace + '</b>');
+            return markup;
+          }
+        }
+      }
+      return markup;
     }
 
     function positionPool() {

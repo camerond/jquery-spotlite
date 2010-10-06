@@ -28,6 +28,11 @@ dl.autophil dd input[type='text'] {
   margin: 0;
   padding: 5px;
   border: 1px solid #666;
+  width: 350px;
+}
+
+dl.autophil dd ul {
+  margin: 20px 0;
 }
 
 dl.autophil dd ul.af_pool {
