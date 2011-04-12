@@ -3,9 +3,10 @@
     %title jquery-spotlite
     %script(type="text/javascript" src="resources/jquery-latest.js")
     %script(type="text/javascript" src="resources/qunit.js")
-    %script(type="text/javascript" src="../jquery-autophil.js")
-    %script(type="text/javascript" src="demo.js")
+    %script(type="text/javascript" src="../jquery-spotlite.js")
+    -#%script(type="text/javascript" src="demo.js")
     %script(type="text/javascript" src="suite.js")
+    %link(rel="stylesheet" href="resources/qunit.css" type="text/css")
     %style(type="text/css")
       :sass
         body
@@ -43,11 +44,20 @@
             &.af_chosen li
               cursor: pointer
   %body
+
+    %h1#qunit-header
+    %h2#qunit-banner
+    %h3#qunit-userAgent
+    %ol#qunit-tests
+    #qunit-fixture
+      #spotlite-test
+        %label Spotlite Test Input
+        %input(type="text")
+        %ul#spotlite-test-results
+
     %h1 jquery-spotlite
 
     #demo
       %label(for="demo_input") Start typin'
       %input(type="text" id="demo_input")
-    %dl#demo
-
-    %ul#demo_results
+      %ul#demo_results

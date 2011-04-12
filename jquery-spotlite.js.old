@@ -1,18 +1,15 @@
 (function($) {
-  $.fn.autophil = function(options) {
+  $.fn.spotlite = function(data, $container, options) {
     return this.each(function() {
       var defaults = {
-        class_prefix: 'af_',
         result_limit: 10
       };
       var opts = $.extend(defaults, options);
       var $autophil = $(this);
-      var $pool = $autophil.find('dd ul.' + opts.class_prefix + 'pool');
-      var $items = $pool.find('li');
-      var $chosen = $('<ul />').addClass(opts.class_prefix + 'chosen').prependTo($autophil.find('dd'));
-      var $input = $autophil.find('dd input');
+      var $chosen = $('<ul />').addClass(opts.class_prefix + 'chosen').appendTo($autophil);
+      var $input = $autophil.find("input[type='text']");
+
       initList();
-      positionPool();
 
       $(document).bind("click", function(e) {
         if($(e.target).parents().filter($autophil).length == 0) {
@@ -134,42 +131,42 @@
          return markup;
        }
 
-       function positionPool() {
-         $pool.css({
-           'top': $input.outerHeight() + $input.position().top - 1,
-           'width': $input.innerWidth() - $pool.css('padding-left').replace('px', '') - $pool.css('padding-right').replace('px', '')
-         });
-       }
-
-       function addResult($result) {
-         if($result.length) {
-           $result.clone().text($result.text()).appendTo($chosen).click(function() {
-             removeResult($(this));
-           });
-           clearAll();
-           positionPool();
-         }
-       }
-
-       function removeResult($result) {
-         $result.animate({
-           opacity:0
-         }, {
-           duration: 100,
-           complete: function() {
-             $result.slideUp(100, function() {
-               $result.remove();
-               positionPool();
-             });
-           }
-         });
-         clearAll();
-       }
-
-       function clearAll() {
-         $input.val('');
-         $pool.hide().find('li').removeClass('active').hide();
-       }
+       // function positionPool() {
+       //   $pool.css({
+       //     'top': $input.outerHeight() + $input.position().top - 1,
+       //     'width': $input.innerWidth() - $pool.css('padding-left').replace('px', '') - $pool.css('padding-right').replace('px', '')
+       //   });
+       // }
+       // 
+       // function addResult($result) {
+       //   if($result.length) {
+       //     $result.clone().text($result.text()).appendTo($chosen).click(function() {
+       //       removeResult($(this));
+       //     });
+       //     clearAll();
+       //     positionPool();
+       //   }
+       // }
+       // 
+       // function removeResult($result) {
+       //   $result.animate({
+       //     opacity:0
+       //   }, {
+       //     duration: 100,
+       //     complete: function() {
+       //       $result.slideUp(100, function() {
+       //         $result.remove();
+       //         positionPool();
+       //       });
+       //     }
+       //   });
+       //   clearAll();
+       // }
+       // 
+       // function clearAll() {
+       //   $input.val('');
+       //   $pool.hide().find('li').removeClass('active').hide();
+       // }
 
     });
   };
