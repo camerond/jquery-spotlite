@@ -1,7 +1,6 @@
 (function($) {
   $.fn.autophil = function(options) {
     return this.each(function() {
-      
       var defaults = {
         class_prefix: 'af_',
         result_limit: 10
@@ -26,28 +25,27 @@
       });
 
       $items.mouseover(function() {
-        $(this).siblings().removeClass('active');
-        $(this).addClass('active');
+        $(this).siblings().removeClass('active').end().addClass('active');
       });
 
       $input.bind('focusin click', function() {
         $pool.show();
-        if($pool.find('li:visible').length == 0) {
+        if(!$pool.find('li:visible').length) {
           $pool.hide();
         }
       });
 
       $input.bind('focusout', function(e) {
-        if($(e.target).parents().filter($autophil).length == 0) {
+        if(!$(e.target).parents().filter($autophil).length) {
           $pool.hide();
         }
       });
 
       $input.live("keydown", function(e) {
-        if (e.keyCode == 13) {
+        if (e.keyCode === 13) {
           e.preventDefault();
           addResult($pool.find('li.active:visible'));
-        } else if (e.keyCode == 27) {
+        } else if (e.keyCode === 27) {
           clearAll();
         }
       });
@@ -59,31 +57,29 @@
         var $nextActive = $active.nextAll(':visible');
 
 
-        if (e.keyCode == 38) {
+        if (e.keyCode === 38) {
           e.preventDefault();
-          if($prevActive.length != 0) {
+          if($prevActive.length) {
             $active.removeClass('active');
             $prevActive.eq(0).addClass('active');
           }
-        } else if (e.keyCode == 40) {
+        } else if (e.keyCode === 40) {
           e.preventDefault();
-          if($nextActive.length != 0) {
+          if($nextActive.length) {
             $active.removeClass('active');
             $nextActive.eq(0).addClass('active');
           }
-        } else if (e.keyCode != 13) {
+        } else if (e.keyCode !== 13) {
           var searchstring = $(this).val();
-          findMatches(searchstring) > 0 ? $pool.show() : $pool.hide();
+          $pool[(findMatches(searchstring) > 0 ? "show" : "hide")]();
           $active = $items.filter(':visible').eq(0).addClass('active');
         }
       });
-      
+
       function initList() {
          $items.each(function() {
            var $item = $(this);
-           var cleaned = $.trim($item.text());
-           $item.text(cleaned);
-           var terms = $item.text().split(' ');
+           var terms = $.trim($item.text()).split(' ');
            var spaces = terms.length - 1;
            for(var i=0; i<terms.length; i++) {
              terms[i] = terms.slice(i).join(' ');
@@ -99,11 +95,11 @@
            $item.removeClass('active').hide();
            var markup = findMatch(searchstring, $item);
            if(!markup) {
-             $(this).hide();
+             $item.hide();
            } else {
              $item.html(markup);
              if(matchCount < opts.result_limit) {
-               $(this).show();
+               $item.show();
                matchCount++;
              }
            }
@@ -114,7 +110,7 @@
        function findMatch(ss, $item) {
          var markup = '';
          var duplicate = false;
-         if (ss.length == 0) {
+         if (!ss.length) {
            return false;
          }
          $chosen.find('li').each(function() {
@@ -127,7 +123,7 @@
            for(var i=0; i<terms.length; i++ ) {
              if(ss.toLowerCase() == terms[i].substring(0, ss.length).toLowerCase()) {
                var toReplace = terms[i].substring(0, ss.length);
-               if(i > 0) {
+               if (i) {
                  toReplace = ' ' + toReplace;
                }
                markup = $item.text().replace(toReplace, '<b>' + toReplace + '</b>');
@@ -161,8 +157,8 @@
          }, {
            duration: 100,
            complete: function() {
-             $(this).slideUp(100, function() {
-               $(this).remove();
+             $result.slideUp(100, function() {
+               $result.remove();
                positionPool();
              });
            }
@@ -172,8 +168,7 @@
 
        function clearAll() {
          $input.val('');
-         $pool.find('li').removeClass('active').hide();
-         $pool.hide();
+         $pool.hide().find('li').removeClass('active').hide();
        }
 
     });
