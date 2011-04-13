@@ -12,11 +12,54 @@ $(function() {
     shouldNotSee("Angie Hopkins");
   });
 
-  // it displays no matches when no matches are found
+  test("it displays no matches when no matches are found", function() {
+    fireSpotlite();
+    type("Wil");
+    shouldSeeMatchCount(2);
+    type("w");
+    shouldSeeMatchCount(0);
+  });
 
-  // it re-searches after each time the field value changes (incl. backspace)
+  test("it matches any word in a phrase", function() {
+    fireSpotlite();
+    type("Ba");
+    shouldSeeMatchCount(4);
+    shouldSee("Alonzo Bartlett");
+    shouldSee("Barrett Larson");
+    shouldSee("Josefa Jenna Barton");
+    shouldNotSee("Sebastian Hilario Langley");
+  });
 
-  // it limits displayed matches to 10 by default
+  test("it re-searches on backspace", function() {
+    fireSpotlite();
+    type("V");
+    shouldSeeMatchCount(7);
+    shouldSee("Romeo Velez");
+    shouldSee("Virgil Gomez");
+    type("e");
+    shouldSeeMatchCount(3);
+    shouldSee("Romeo Velez");
+    shouldNotSee("Virgil Gomez");
+    backspace();
+    shouldSeeMatchCount(7);
+    shouldSee("Romeo Velez");
+    shouldSee("Virgil Gomez");
+  });
+
+  test("it limits displayed matches to 10 by default", function() {
+    var v = fireSpotlite();
+    type("E");
+    shouldSeeMatchCount(10);
+    shouldSee("Elaine Huff");
+    shouldNotSee("Eliseo Mathew Oneal");
+  });
+
+  // test("it highlights the first result", function() {
+  //   fireSpotlite();
+  //   type("Ba");
+  //   shouldSee("Barrett Larson");
+  //   shouldSee("Bart Velazquez");
+  // });
 
   // it attaches the matched word to the results on enter
 
@@ -25,8 +68,6 @@ $(function() {
   // it hides the suggestions on esc
 
   // it is not case sensitive
-
-  // it matches any word in a phrase
 
   // it bolds the matched elements of a word/phrase
 
@@ -42,9 +83,8 @@ $(function() {
 
   function fireSpotlite(data, options) {
     if (!data) {
-      data = ["Amalia Oliver","Angie Hopkins","Bernadine Goodman","Blanche Emily Burch","Brianna Juliet Chavez","Bridgette Villarreal","Charlotte Coleen Edwards","Cora Pennington","Cornelia King","Deirdre Goldie Estes","Deirdre Sherrie Becker","Donna Maryellen Glenn","Elaine Huff","Estella Dixon","Ester Abigail Lancaster","Ethel Cathryn Burgess","Eunice Tonya Flowers","Fanny Meadows","Felecia Norton","Freida Finley","Gwen Tonya Olsen","Hilda Shaffer","Ina Tonya Cervantes","Isabel Mindy Huff","Janice Ayers","Josefa Jenna Barton","Josefa Richards","Lakisha Kristine Doyle","Laurel Levine","Leona Maxine Hampton","Lottie Catalina Hogan","Luella Sims","Mable Thompson","Marlene Jayne Green","Mattie Aimee Goff","Maureen Madeleine Stevens","Rachel Bray","Randi Etta Fulton","Reva Karina Ferguson","Robyn Joseph","Rosetta Marilyn Kennedy","Roxanne Belinda Ewing","Sarah Edna Fitzpatrick","Shana Browning","Sharlene Earlene Guzman","Sheryl Elsa Suarez","Susan Leann Page","Susana Wynn","Tonia Melisa Carney","Vera Karin Reeves","Alfredo Elton Lindsey","Alonzo Bartlett","Antonio Valentin Vaughan","Arron Conrad Sweeney","Art Harmon","Barrett Larson","Bart Velazquez","Bobbie Tate","Cameron Van Sutton","Clayton Phillips","Curt Peters","Devin Larson","Diego Kim","Earl Garrett","Earle Wiggins","Eddy Ray","Edmund Ulysses Haynes","Efrain Sharp","Eliseo Mathew Oneal","Elmer Aron Preston","Enoch Garcia","Errol Dixon","Franklyn Juarez","Harlan Richardson","Hugo Marcelo Estes","Jamal Cruz Merrill","Joseph Walters","Jospeh Louis Spencer","Lawrence Tate","Leonel Roman","Leroy Atkins","Marcel Horn","Max York","Millard Brooks","Odell Kerry Rosa","Ramiro Rivas","Rico Minh Mcdonald","Romeo Velez","Rudolf Harold Leach","Sebastian Hilario Langley","Seth Hyde","Sid Damion Gonzalez","Stephen Reyes Stanley","Thanh Haney","Theodore Soto","Tyree Green","Virgil Gomez","Williams Burgess","Williams Mitch Floyd","Zack Leslie Hicks"];
+      data = getDefaultData();
     }
-    data.sort();
     return $("#spotlite-test").spotlite(data, $("#spotlite-test-matches"), $("#spotlite-test-results"), options);
   }
 
@@ -53,9 +93,7 @@ $(function() {
     var $input = getInput();
     for(var i = 0; i < str.length; i++) {
       $input.val($input.val() + str[i]);
-      var e = $.Event("keyup");
-      e.which = str.charCodeAt(i);
-      $input.trigger(e);
+      $input.trigger('keyup');
     }
   }
 
@@ -63,6 +101,7 @@ $(function() {
     ok(true, "I type a backspace");
     var $input = getInput();
     $input.val($input.val().slice(0, -1));
+    $input.trigger('keyup');
   }
 
   function shouldSee(str) {
@@ -71,6 +110,113 @@ $(function() {
 
   function shouldNotSee(str) {
     return equal($("#spotlite-test-matches").find('li:visible:contains("' + str + '")').length, 0, "I should not see " + str);
+  }
+
+  function shouldSeeMatchCount(num) {
+    return equal($("#spotlite-test-matches").find("li:visible").length, num, "I should see " + num + " matches");
+  }
+
+  function getDefaultData() {
+    return ["Alfredo Elton Lindsey",
+    "Alonzo Bartlett",
+    "Amalia Oliver",
+    "Angie Hopkins",
+    "Antonio Vaughan",
+    "Arron Conrad Sweeney",
+    "Art Harmon",
+    "Barrett Larson",
+    "Bart Velazquez",
+    "Bernadine Goodman",
+    "Blanche Emily Burch",
+    "Bobbie Tate",
+    "Brianna Juliet Chavez",
+    "Bridgette Villarreal",
+    "Cameron Van Sutton",
+    "Charlotte Coleen Edwards",
+    "Clayton Phillips",
+    "Cora Pennington",
+    "Cornelia King",
+    "Curt Peters",
+    "Deirdre Goldie Estes",
+    "Deirdre Sherrie Becker",
+    "Devin Larson",
+    "Diego Kim",
+    "Donna Maryellen Glenn",
+    "Earl Garrett",
+    "Earle Wiggins",
+    "Eddy Ray",
+    "Edmund Ulysses Haynes",
+    "Efrain Sharp",
+    "Elaine Huff",
+    "Eliseo Mathew Oneal",
+    "Elmer Aron Preston",
+    "Enoch Garcia",
+    "Errol Dixon",
+    "Estella Dixon",
+    "Ester Abigail Lancaster",
+    "Ethel Cathryn Burgess",
+    "Eunice Tonya Flowers",
+    "Fanny Meadows",
+    "Felecia Norton",
+    "Franklyn Juarez",
+    "Freida Finley",
+    "Gwen Tonya Olsen",
+    "Harlan Richardson",
+    "Hilda Shaffer",
+    "Hugo Marcelo Estes",
+    "Ina Tonya Cervantes",
+    "Isabel Mindy Huff",
+    "Jamal Cruz Merrill",
+    "Janice Ayers",
+    "Josefa Jenna Barton",
+    "Josefa Richards",
+    "Joseph Walters",
+    "Jospeh Louis Spencer",
+    "Lakisha Kristine Doyle",
+    "Laurel Levine",
+    "Lawrence Tate",
+    "Leona Maxine Hampton",
+    "Leonel Roman",
+    "Leroy Atkins",
+    "Lottie Catalina Hogan",
+    "Luella Sims",
+    "Mable Thompson",
+    "Marcel Horn",
+    "Marlene Jayne Green",
+    "Mattie Aimee Goff",
+    "Maureen Madeleine Stevens",
+    "Max York",
+    "Millard Brooks",
+    "Odell Kerry Rosa",
+    "Rachel Bray",
+    "Ramiro Rivas",
+    "Randi Etta Fulton",
+    "Reva Karina Ferguson",
+    "Rico Minh Mcdonald",
+    "Robyn Joseph",
+    "Romeo Velez",
+    "Rosetta Marilyn Kennedy",
+    "Roxanne Belinda Ewing",
+    "Rudolf Harold Leach",
+    "Sarah Edna Fitzpatrick",
+    "Sebastian Hilario Langley",
+    "Seth Hyde",
+    "Shana Browning",
+    "Sharlene Earlene Guzman",
+    "Sheryl Elsa Suarez",
+    "Sid Damion Gonzalez",
+    "Stephen Reyes Stanley",
+    "Susan Leann Page",
+    "Susana Wynn",
+    "Thanh Haney",
+    "Theodore Soto",
+    "Tonia Melisa Carney",
+    "Tyree Green",
+    "Vera Karin Reeves",
+    "Virgil Gomez",
+    "Williams Burgess",
+    "Williams Mitch Floyd",
+    "Zack Leslie Hicks"];
   }
 
 });
