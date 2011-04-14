@@ -61,8 +61,16 @@ $(function() {
   test("it highlights the first result", function() {
     fireSpotlite();
     type("Ba");
-    shouldSee("Alonzo Bartlett");
-    shouldSee("Bart Velazquez");
+    shouldHighlight("Alonzo Bartlett");
+  });
+
+  test("highlight changes on hover", function() {
+    fireSpotlite();
+    type("Ba");
+    var $matches = $("ul#spotlite-test-matches");
+    $matches.find('li:eq(2)').trigger("mouseover");
+    shouldHighlight("Bart Velazquez");
+    $matches.find('li:eq(0)').trigger("mouseover");
     shouldHighlight("Alonzo Bartlett");
   });
 
@@ -123,7 +131,6 @@ $(function() {
 
   function shouldHighlight(str) {
     var $matches = $("#spotlite-test-matches");
-    console.log($matches);
     var selected = $matches.find("li.spotlite-selected:contains('" + str + "')");
     return ok(selected.length == 1, "'" + str + "' is the highlighted result");
   }

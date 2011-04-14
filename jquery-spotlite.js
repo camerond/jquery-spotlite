@@ -38,8 +38,9 @@ $(function() {
 
   function populateMatches(ss) {
     var results = [],
-        $ul = this.match_list,
-        pool = this.pool;
+        opts = this,
+        $ul = opts.match_list,
+        pool = opts.pool;
     if(!ss.length) return false;
     $ul.find("li").detach();
     for(var i = 0; i < pool.length && results.length < this.result_limit; i++) {
@@ -48,12 +49,15 @@ $(function() {
       }
     }
     if (results.length) {
-      $ul.append($(results));
+      $ul.append($(results)).find("li").live("mouseover", function() {
+        highlightMatch.call(opts, $(this).index());
+      });
     }
     return this;
   }
 
   function highlightMatch(num) {
+    this.match_list.find("li").removeClass("spotlite-selected");
     this.match_list.find("li:eq(" + num + ")").addClass("spotlite-selected");
   }
 
