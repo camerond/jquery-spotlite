@@ -15,6 +15,7 @@ $(function() {
 
       $input.bind('keyup', function() {
         populateMatches.apply(opts, [$input.val()]);
+        highlightMatch.apply(opts, [0]);
       });
 
     });
@@ -50,6 +51,10 @@ $(function() {
       $ul.append($(results));
     }
     return this;
+  }
+
+  function highlightMatch(num) {
+    this.match_list.find('li:eq(' + num + ')').addClass('spotlite-selected');
   }
 
 });

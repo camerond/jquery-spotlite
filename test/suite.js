@@ -54,12 +54,13 @@ $(function() {
     shouldNotSee("Eliseo Mathew Oneal");
   });
 
-  // test("it highlights the first result", function() {
-  //   fireSpotlite();
-  //   type("Ba");
-  //   shouldSee("Barrett Larson");
-  //   shouldSee("Bart Velazquez");
-  // });
+  test("it highlights the first result", function() {
+    fireSpotlite();
+    type("Ba");
+    shouldSee("Alonzo Bartlett");
+    shouldSee("Bart Velazquez");
+    shouldHighlight("Alonzo Bartlett");
+  });
 
   // it attaches the matched word to the results on enter
 
@@ -114,6 +115,13 @@ $(function() {
 
   function shouldSeeMatchCount(num) {
     return equal($("#spotlite-test-matches").find("li:visible").length, num, "I should see " + num + " matches");
+  }
+
+  function shouldHighlight(str) {
+    var $matches = $("#spotlite-test-matches");
+    console.log($matches);
+    var selected = $matches.find("li.spotlite-selected:contains('" + str + "')");
+    return ok(selected.length == 1, "'" + str + "' is the highlighted result");
   }
 
   function getDefaultData() {
