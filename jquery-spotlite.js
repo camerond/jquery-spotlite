@@ -1,7 +1,6 @@
 $(function() {
 
   $.fn.spotlite = function(terms, $match_list, $result_list, options) {
-
     return this.each(function() {
       var defaults = {
         result_limit: 10,
@@ -14,8 +13,8 @@ $(function() {
       var $input = $spot.find("input[type='text']");
 
       $input.bind("keyup", function() {
-        populateMatches.apply(opts, [$input.val()]);
-        highlightMatch.apply(opts, [0]);
+        populateMatches.call(opts, $input.val());
+        highlightMatch.call(opts, 0);
       });
 
     });
