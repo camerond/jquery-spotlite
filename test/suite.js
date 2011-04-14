@@ -3,7 +3,9 @@ $(function() {
   test("it is chainable", function() {
     same(fireSpotlite().hide().show(), $("#spotlite-test"));
   });
-  
+
+  module("Displaying Matches");
+
   test("it displays matches when a letter is typed", function() {
     fireSpotlite();
     type("Ba");
@@ -53,6 +55,8 @@ $(function() {
     shouldSee("Elaine Huff");
     shouldNotSee("Eliseo Mathew Oneal");
   });
+
+  module("Highlighting Results");
 
   test("it highlights the first result", function() {
     fireSpotlite();
@@ -106,11 +110,11 @@ $(function() {
   }
 
   function shouldSee(str) {
-    return ok($("#spotlite-test-matches").find('li:visible:contains("' + str + '")').length, "I should see " + str);
+    return ok($("#spotlite-test-matches").find("li:visible:contains('" + str + "')").length, "I should see " + str);
   }
 
   function shouldNotSee(str) {
-    return equal($("#spotlite-test-matches").find('li:visible:contains("' + str + '")').length, 0, "I should not see " + str);
+    return equal($("#spotlite-test-matches").find("li:visible:contains('" + str + "')").length, 0, "I should not see " + str);
   }
 
   function shouldSeeMatchCount(num) {

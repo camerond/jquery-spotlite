@@ -13,7 +13,7 @@ $(function() {
       var $spot = $(this);
       var $input = $spot.find("input[type='text']");
 
-      $input.bind('keyup', function() {
+      $input.bind("keyup", function() {
         populateMatches.apply(opts, [$input.val()]);
         highlightMatch.apply(opts, [0]);
       });
@@ -26,10 +26,10 @@ $(function() {
     var pool = [],
         match_item = {};
     for(var i = 0; i < terms.length; i++) {
-      var words = $.trim(terms[i]).split(' ');
+      var words = $.trim(terms[i]).split(" ");
       for(var j = 0; j < words.length; j++) {
         match_item.term = terms[i];
-        match_item.search_term = words.slice(j).join(' ');
+        match_item.search_term = words.slice(j).join(" ");
         pool.push($.extend({}, match_item));
       }
     }
@@ -41,10 +41,10 @@ $(function() {
         $ul = this.match_list,
         pool = this.pool;
     if(!ss.length) return false;
-    $ul.find('li').detach();
+    $ul.find("li").detach();
     for(var i = 0; i < pool.length && results.length < this.result_limit; i++) {
       if(ss.toLowerCase() == pool[i].search_term.substring(0, ss.length).toLowerCase()) {
-        results.push($('<li />').text(pool[i].term)[0]);
+        results.push($("<li />").text(pool[i].term)[0]);
       }
     }
     if (results.length) {
@@ -54,7 +54,7 @@ $(function() {
   }
 
   function highlightMatch(num) {
-    this.match_list.find('li:eq(' + num + ')').addClass('spotlite-selected');
+    this.match_list.find("li:eq(" + num + ")").addClass("spotlite-selected");
   }
 
 });
