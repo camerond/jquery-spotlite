@@ -32,8 +32,6 @@ $(function() {
     shouldNotSee("Sebastian Hilario Langley");
   });
 
-  // it is not case sensitive
-
   test("it re-searches on backspace", function() {
     fireSpotlite();
     type("Ve");
@@ -44,6 +42,17 @@ $(function() {
     shouldSeeMatchCount(7);
     shouldSee("Romeo Velez");
     shouldSee("Virgil Gomez");
+  });
+
+  test("it is not case sensitive", function() {
+    fireSpotlite();
+    type("Ba");
+    shouldSeeMatchCount(4);
+    shouldSee("Alonzo Bartlett");
+    backspace();
+    type("A");
+    shouldSeeMatchCount(4);
+    shouldSee("Alonzo Bartlett");
   });
 
   test("it limits displayed matches to 10 by default", function() {
@@ -84,7 +93,17 @@ $(function() {
     shouldHighlight("Josefa Jenna Barton");
   });
 
-  // highlight previous match with up arrow
+  test("highlight previous match with up arrow", function() {
+    fireSpotlite();
+    type("Ba");
+    shouldHighlight("Alonzo Bartlett");
+    typeKeycode(38, "up");
+    shouldHighlight("Alonzo Bartlett");
+    var $matches = $("ul#spotlite-test-matches");
+    $matches.find("li:eq(2)").trigger("mouseover");
+    typeKeycode(38, "up");
+    shouldHighlight("Barrett Larson");
+  });
 
   // remove matches on escape
 

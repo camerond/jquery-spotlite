@@ -71,7 +71,9 @@ $(function() {
     var cl = "spotlite-selected";
     var $li = this.match_list.find("li." + cl);
     if (keycode === 40 && ($li.index() != $li.siblings().length)) {
-      this.match_list.find("li." + cl).removeClass(cl).next().addClass(cl);
+      highlightMatch.call(this, $li.index() + 1);
+    } else if (keycode === 38 && ($li.index() != 0)) {
+      highlightMatch.call(this, $li.index() - 1);
     }
 
   }
