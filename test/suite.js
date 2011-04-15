@@ -32,13 +32,11 @@ $(function() {
     shouldNotSee("Sebastian Hilario Langley");
   });
 
+  // it is not case sensitive
+
   test("it re-searches on backspace", function() {
     fireSpotlite();
-    type("V");
-    shouldSeeMatchCount(7);
-    shouldSee("Romeo Velez");
-    shouldSee("Virgil Gomez");
-    type("e");
+    type("Ve");
     shouldSeeMatchCount(3);
     shouldSee("Romeo Velez");
     shouldNotSee("Virgil Gomez");
@@ -88,24 +86,27 @@ $(function() {
 
   // highlight previous match with up arrow
 
-
-//  type(String.fromCharCode(40)) // up arrow
-
   // remove matches on escape
 
-  // module: result interaction
+  // module: interacting with matches
 
   // it attaches the matched word to the results on enter or tab
 
   // it attaches the matched word to the results on click
 
-  // it hides the suggestions on esc
-
-  // it is not case sensitive
+  // it removes the result on click
 
   // it bolds the matched elements of a word/phrase
 
+  // module: options
+
   // option: adjust number of displayed matches
+
+  // option: custom class names
+
+  // option: delay before searching
+
+  // option: min. number of characters before search
 
   function getMain() {
     return $("#spotlite-test");
