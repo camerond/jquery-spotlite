@@ -13,7 +13,7 @@ $(function() {
       var $input = $spot.find("input[type='text']");
       var current_val = $input.val();
 
-      $input.bind("keydown", function(e) {
+      $input.bind("keydown.spotlite", function(e) {
         if(current_val != $input.val()) {
           populateMatches.call(opts, $input.val());
           highlightMatch.call(opts, 0);
@@ -23,13 +23,13 @@ $(function() {
         }
       });
 
-      $input.bind("focus", function(e) {
+      $input.bind("focus.spotlite", function(e) {
         if(opts.match_list.find("li").length > 0) {
           opts.match_list.show();
         }
       });
 
-      $("body").live("click", function(e) {
+      $("body").live("click.spotlite", function(e) {
         if(!$.contains($spot[0], e.target)) {
           opts.match_list.hide();
         }
@@ -66,7 +66,7 @@ $(function() {
       }
     }
     if (results.length) {
-      $ul.show().append($(results)).find("li").live("mouseover", function() {
+      $ul.show().append($(results)).find("li").live("mouseover.spotlite", function() {
         highlightMatch.call(opts, $(this).index());
       });
     }
