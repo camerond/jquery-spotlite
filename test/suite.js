@@ -56,7 +56,7 @@ $(function() {
   });
 
   test("it limits displayed matches to 10 by default", function() {
-    var v = fireSpotlite();
+    fireSpotlite();
     type("E");
     shouldSeeMatchCount(10);
     shouldSee("Elaine Huff");
@@ -72,9 +72,9 @@ $(function() {
   });
 
   test("highlight changes on hover", function() {
+    var $matches = $("ul#spotlite-test-matches");
     fireSpotlite();
     type("Ba");
-    var $matches = $("ul#spotlite-test-matches");
     $matches.find('li:eq(2)').trigger("mouseover");
     shouldHighlight("Bart Velazquez");
     $matches.find('li:eq(0)').trigger("mouseover");
@@ -94,18 +94,47 @@ $(function() {
   });
 
   test("highlight previous match with up arrow", function() {
+    var $matches = $("ul#spotlite-test-matches");
     fireSpotlite();
     type("Ba");
     shouldHighlight("Alonzo Bartlett");
     typeKeycode(38, "up");
     shouldHighlight("Alonzo Bartlett");
-    var $matches = $("ul#spotlite-test-matches");
     $matches.find("li:eq(2)").trigger("mouseover");
     typeKeycode(38, "up");
     shouldHighlight("Barrett Larson");
   });
 
-  // remove matches on escape
+  test("hide matches on escape", function() {
+    fireSpotlite();
+    type("Ba");
+    shouldSeeMatchCount(4);
+    expectAttribute($("ul#spotlite-test-matches"), ":visible");
+    typeKeycode(27, "esc");
+    shouldSeeMatchCount(4);
+    expectAttribute($("ul#spotlite-test-matches"), ":hidden");
+  });
+
+  test("show matches on focus", function() {
+    fireSpotlite();
+    getInput().trigger("focus");
+    expectAttribute($("ul#spotlite-test-matches"), ":hidden");
+    type("Ba");
+    typeKeycode(27, "esc");
+    expectAttribute($("ul#spotlite-test-matches"), ":hidden");
+    getInput().trigger("focus");
+    expectAttribute($("ul#spotlite-test-matches"), ":visible");
+  });
+
+  test("hide matches on outside click", function() {
+    var $spot = fireSpotlite();
+    type("Ba");
+    expectAttribute($("ul#spotlite-test-matches"), ":visible");
+    $spot.find("input[type='text']").trigger("click");
+    expectAttribute($("ul#spotlite-test-matches"), ":visible");
+    $("<div />").appendTo("body").trigger("click");
+    expectAttribute($("ul#spotlite-test-matches"), ":hidden");
+  });
 
   // module: interacting with matches
 
@@ -171,16 +200,27 @@ $(function() {
     $input.trigger('keydown');
   }
 
+  function expectAttribute($el, attr) {
+    var identifier = $el.attr("nodeName").toLowerCase();
+    if($el.attr("id").length > 0 ) {
+      identifier += "#" + $el.attr("id");
+    }
+    if($el.hasClass()) {
+      identifier += "." + $el.attr("class");
+    }
+    return ok($el.is(attr), identifier + " should be " + attr);
+  }
+
   function shouldSee(str) {
-    return ok($("#spotlite-test-matches").find("li:visible:contains('" + str + "')").length, "I should see " + str);
+    return ok($("#spotlite-test-matches").find("li:contains('" + str + "')").length, "I should see " + str);
   }
 
   function shouldNotSee(str) {
-    return equal($("#spotlite-test-matches").find("li:visible:contains('" + str + "')").length, 0, "I should not see " + str);
+    return equal($("#spotlite-test-matches").find("li:contains('" + str + "')").length, 0, "I should not see " + str);
   }
 
   function shouldSeeMatchCount(num) {
-    return equal($("#spotlite-test-matches").find("li:visible").length, num, "I should see " + num + " matches");
+    return equal($("#spotlite-test-matches").find("li").length, num, "I should see " + num + " matches");
   }
 
   function shouldHighlight(str) {

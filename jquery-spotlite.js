@@ -5,7 +5,7 @@ $(function() {
       var defaults = {
         result_limit: 10,
         pool: generatePool(terms),
-        match_list: $match_list,
+        match_list: $match_list.hide(),
         result_list: $result_list
       };
       var opts = $.extend(defaults, options);
@@ -20,6 +20,18 @@ $(function() {
           current_val = $input.val();
         } else {
           handleKeypress.call(opts, e.keyCode);
+        }
+      });
+
+      $input.bind("focus", function(e) {
+        if(opts.match_list.find("li").length > 0) {
+          opts.match_list.show();
+        }
+      });
+
+      $("body").live("click", function(e) {
+        if(!$.contains($spot[0], e.target)) {
+          opts.match_list.hide();
         }
       });
 
@@ -54,7 +66,7 @@ $(function() {
       }
     }
     if (results.length) {
-      $ul.append($(results)).find("li").live("mouseover", function() {
+      $ul.show().append($(results)).find("li").live("mouseover", function() {
         highlightMatch.call(opts, $(this).index());
       });
     }
@@ -67,13 +79,15 @@ $(function() {
   }
 
   function handleKeypress(keycode) {
-    var keys = [];
-    var cl = "spotlite-selected";
-    var $li = this.match_list.find("li." + cl);
+    var keys = [],
+        $ul = this.match_list,
+        $li = $ul.find("li.spotlite-selected");
     if (keycode === 40 && ($li.index() != $li.siblings().length)) {
       highlightMatch.call(this, $li.index() + 1);
     } else if (keycode === 38 && ($li.index() != 0)) {
       highlightMatch.call(this, $li.index() - 1);
+    } else if (keycode === 27 && ($ul.find("li").length > 0)) {
+      $ul.hide();
     }
 
   }
