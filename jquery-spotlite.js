@@ -11,10 +11,16 @@ $(function() {
       var opts = $.extend(defaults, options);
       var $spot = $(this);
       var $input = $spot.find("input[type='text']");
+      var current_val = $input.val();
 
-      $input.bind("keyup", function() {
-        populateMatches.call(opts, $input.val());
-        highlightMatch.call(opts, 0);
+      $input.bind("keydown", function(e) {
+        if(current_val != $input.val()) {
+          populateMatches.call(opts, $input.val());
+          highlightMatch.call(opts, 0);
+          current_val = $input.val();
+        } else {
+          handleKeypress.call(opts, e.keyCode);
+        }
       });
 
     });
@@ -58,6 +64,16 @@ $(function() {
   function highlightMatch(num) {
     this.match_list.find("li").removeClass("spotlite-selected");
     this.match_list.find("li:eq(" + num + ")").addClass("spotlite-selected");
+  }
+
+  function handleKeypress(keycode) {
+    var keys = [];
+    var cl = "spotlite-selected";
+    var $li = this.match_list.find("li." + cl);
+    if (keycode === 40 && ($li.index() != $li.siblings().length)) {
+      this.match_list.find("li." + cl).removeClass(cl).next().addClass(cl);
+    }
+
   }
 
 });

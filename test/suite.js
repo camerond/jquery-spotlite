@@ -74,7 +74,28 @@ $(function() {
     shouldHighlight("Alonzo Bartlett");
   });
 
-  // it attaches the matched word to the results on enter
+  test("highlight next match with down arrow", function() {
+    fireSpotlite();
+    type("Ba");
+    typeKeycode(40, "down");
+    shouldHighlight("Barrett Larson");
+    typeKeycode(40, "down");
+    typeKeycode(40, "down");
+    shouldHighlight("Josefa Jenna Barton");
+    typeKeycode(40, "down");
+    shouldHighlight("Josefa Jenna Barton");
+  });
+
+  // highlight previous match with up arrow
+
+
+//  type(String.fromCharCode(40)) // up arrow
+
+  // remove matches on escape
+
+  // module: result interaction
+
+  // it attaches the matched word to the results on enter or tab
 
   // it attaches the matched word to the results on click
 
@@ -105,16 +126,29 @@ $(function() {
     ok(true, "I type '" + str + "'");
     var $input = getInput();
     for(var i = 0; i < str.length; i++) {
+      var $e = $.Event('keydown');
+      $e.keyCode = str.charCodeAt(str[i]);
       $input.val($input.val() + str[i]);
-      $input.trigger('keyup');
+      $input.trigger($e);
     }
+  }
+
+  function typeKeycode(k, msg) {
+    if(msg) {
+      ok(true, "I press '" + msg + "'");
+    }
+    var $input = getInput();
+    var $e = $.Event('keydown');
+    $e.keyCode = k;
+    $input.trigger($e);
   }
 
   function backspace() {
     ok(true, "I type a backspace");
     var $input = getInput();
     $input.val($input.val().slice(0, -1));
-    $input.trigger('keyup');
+    $input.keyCode = 8;
+    $input.trigger('keydown');
   }
 
   function shouldSee(str) {
