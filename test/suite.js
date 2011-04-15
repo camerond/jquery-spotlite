@@ -201,14 +201,7 @@ $(function() {
   }
 
   function expectAttribute($el, attr) {
-    var identifier = $el.attr("nodeName").toLowerCase();
-    if($el.attr("id").length > 0 ) {
-      identifier += "#" + $el.attr("id");
-    }
-    if($el.hasClass()) {
-      identifier += "." + $el.attr("class");
-    }
-    return ok($el.is(attr), identifier + " should be " + attr);
+    return ok($el.is(attr), $el.selector + " should be " + attr);
   }
 
   function shouldSee(str) {
