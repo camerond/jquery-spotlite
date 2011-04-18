@@ -5,19 +5,22 @@ $(function() {
       var defaults = {
         result_limit: 10,
         pool: generatePool(terms),
+        cache: [],
         match_list: $match_list.hide(),
-        result_list: $result_list
+        result_list: $result_list,
+        current_val: ''
       };
       var opts = $.extend(defaults, options);
       var $spot = $(this);
       var $input = $spot.find("input[type='text']");
-      var current_val = $input.val();
+      current_val = $input.val();
 
       $input.bind("keydown.spotlite", function(e) {
-        if(current_val != $input.val()) {
-          populateMatches.call(opts, $input.val());
+        var ss = $input.val();
+        if (opts.current_val != ss) {
+          opts.cache = populateMatches.call(opts, ss);
           highlightMatch.call(opts, 0);
-          current_val = $input.val();
+          opts.current_val = ss;
         } else {
           handleKeypress.call(opts, e.keyCode);
         }
@@ -46,7 +49,7 @@ $(function() {
       var words = $.trim(terms[i]).split(" ");
       for(var j = 0; j < words.length; j++) {
         match_item.term = terms[i];
-        match_item.search_term = words.slice(j).join(" ");
+        match_item.search_term = words.slice(j).join(" ").toLowerCase();
         pool.push($.extend({}, match_item));
       }
     }
@@ -54,15 +57,22 @@ $(function() {
   }
 
   function populateMatches(ss) {
+    if (!ss.length) return false;
     var results = [],
         opts = this,
         $ul = opts.match_list,
-        pool = opts.pool;
-    if(!ss.length) return false;
+        pool = opts.pool,
+        new_cache = [];
     $ul.find("li").detach();
-    for(var i = 0; i < pool.length && results.length < this.result_limit; i++) {
-      if(ss.toLowerCase() == pool[i].search_term.substring(0, ss.length).toLowerCase()) {
-        results.push($("<li />").text(pool[i].term)[0]);
+    if (ss.length > 1 && opts.current_val === ss.substring(0, ss.length-1)) {
+      pool = opts.cache;
+    }
+    for (var i = 0; i < pool.length; i++) {
+      if(ss.toLowerCase() === pool[i].search_term.substring(0, ss.length)) {
+        if(results.length < this.result_limit) {
+          results.push($("<li />").text(pool[i].term)[0]);
+        }
+        new_cache.push(pool[i]);
       }
     }
     if (results.length) {
@@ -70,7 +80,7 @@ $(function() {
         highlightMatch.call(opts, $(this).index());
       });
     }
-    return this;
+    return new_cache;
   }
 
   function highlightMatch(num) {
