@@ -110,8 +110,6 @@ $(function() {
   test("hide matches on escape", function() {
     fireSpotlite();
     type("Ba");
-    shouldSeeMatchCount(4);
-    expectAttribute($("ul#spotlite-test-matches"), ":visible");
     typeKeycode(27, "esc");
     shouldSeeMatchCount(4);
     expectAttribute($("ul#spotlite-test-matches"), ":hidden");
@@ -122,6 +120,7 @@ $(function() {
     getInput().trigger("focus");
     expectAttribute($("ul#spotlite-test-matches"), ":hidden");
     type("Ba");
+    expectAttribute($("ul#spotlite-test-matches"), ":visible");
     typeKeycode(27, "esc");
     expectAttribute($("ul#spotlite-test-matches"), ":hidden");
     getInput().trigger("focus");
@@ -131,7 +130,6 @@ $(function() {
   test("hide matches on outside click", function() {
     var $spot = fireSpotlite();
     type("Ba");
-    expectAttribute($("ul#spotlite-test-matches"), ":visible");
     $spot.find("input[type='text']").trigger("click");
     expectAttribute($("ul#spotlite-test-matches"), ":visible");
     $("<div />").appendTo("body").trigger("click");
