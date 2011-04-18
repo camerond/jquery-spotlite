@@ -18,8 +18,10 @@ $(function() {
     fireSpotlite();
     type("Wil");
     shouldSeeMatchCount(2);
+    expectAttribute($("ul#spotlite-test-matches"), ":visible");
     type("w");
     shouldSeeMatchCount(0);
+    expectAttribute($("ul#spotlite-test-matches"), ":hidden");
   });
 
   test("it matches any word in a phrase", function() {
@@ -174,7 +176,7 @@ $(function() {
   function type(str) {
     ok(true, "I type '" + str + "'");
     var $input = getInput();
-    for(var i = 0; i < str.length; i++) {
+    for (var i = 0; i < str.length; i++) {
       var $e = $.Event('keydown');
       $e.keyCode = str.charCodeAt(str[i]);
       $input.val($input.val() + str[i]);
@@ -183,7 +185,7 @@ $(function() {
   }
 
   function typeKeycode(k, msg) {
-    if(msg) {
+    if (msg) {
       ok(true, "I press '" + msg + "'");
     }
     var $input = getInput();
@@ -219,7 +221,7 @@ $(function() {
   function shouldHighlight(str) {
     var $matches = $("#spotlite-test-matches");
     var selected = $matches.find("li.spotlite-selected:contains('" + str + "')");
-    return ok(selected.length == 1, "'" + str + "' is the highlighted result");
+    return ok(selected.length === 1, "'" + str + "' is the highlighted result");
   }
 
   function getDefaultData() {
