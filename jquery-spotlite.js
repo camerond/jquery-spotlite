@@ -98,7 +98,9 @@ $(function() {
 
   function addMatch($el) {
     var opts = this;
-    opts.result_list.append(opts.match_list.find("li.spotlite-selected").detach());
+    opts.result_list.append(opts.match_list.find("li.spotlite-selected").unbind().detach().click(function() {
+      $(this).remove();
+    }));
   }
 
   function handleKeypress(keycode) {

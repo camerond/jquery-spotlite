@@ -168,7 +168,13 @@ $(function() {
     equal(getInput().val(), "", "Input is clear");
   });
 
-  // it removes the result on click
+  test("it removes the result on click", function() {
+    fireSpotlite();
+    type("Ba");
+    typeKeycode(13);
+    $("ul#spotlite-test-results li").click();
+    shouldSeeResultCount(0);
+  });
 
   // it bolds the matched elements of a word/phrase
 
@@ -244,6 +250,10 @@ $(function() {
 
   function shouldSeeMatchCount(num) {
     return equal($("#spotlite-test-matches").find("li").length, num, "I should see " + num + " matches");
+  }
+
+  function shouldSeeResultCount(num) {
+    return equal($("#spotlite-test-results").find("li").length, num, "I should see " + num + " results");
   }
 
   function shouldHighlight(str) {
