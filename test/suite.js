@@ -176,7 +176,24 @@ $(function() {
     shouldSeeResultCount(0);
   });
 
-  // it bolds the matched elements of a word/phrase
+  test("it bolds the matched elements of a word/phrase", function() {
+    fireSpotlite();
+    type("Ba");
+    $("ul#spotlite-test-matches li").each(function() {
+      var $li = $(this);
+      equal($li.find('b').text(), "Ba", "'Ba' is bolded for " + $li.text());
+    });
+  });
+
+  test("it bolds the matched elements of a word/phrase across words", function() {
+    fireSpotlite();
+    type("Alonzo Bar");
+    $("ul#spotlite-test-matches li").each(function() {
+      var $li = $(this);
+      equal($li.find('b').text(), "Alonzo Bar", "'Alonzo Bar' is bolded for " + $li.text());
+    });
+  });
+
 
   // module: options
 

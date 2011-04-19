@@ -59,19 +59,22 @@ $(function() {
     var results = [],
         opts = this,
         new_cache = [],
-        pool = ss.length > 1 && opts.current_val === ss.substring(0, ss.length-1) ? opts.cache : opts.pool;
+        content,
+        ln = ss.length,
+        pool = ln > 1 && opts.current_val === ss.substring(0, ln-1) ? opts.cache : opts.pool;
     opts.match_list.find("li").detach();
     for (var i = 0, pl = pool.length; i < pl; i++) {
-      if (ss.toLowerCase() === pool[i].search_term.substring(0, ss.length)) {
+      if (ss.toLowerCase() === pool[i].search_term.substring(0, ln)) {
         if (results.length < opts.result_limit) {
-          results.push($("<li />").text(pool[i].term)[0]);
+          results.push($("<li />").html(pool[i].term.replace(ss, '<b>' + ss + '</b>'))[0]);
         }
         new_cache.push(pool[i]);
       }
     }
     if (results.length) {
-      opts.match_list.show().append($(results)).find("li").bind("mouseover.spotlite", function() {
-        highlightMatch.call(opts, $(this).index());
+      opts.match_list.show().append($(results)).find("li")
+        .bind("mouseover.spotlite", function() {
+          highlightMatch.call(opts, $(this).index());
       }).bind("click", function() {
         addMatch.call(opts, $(this));
         clearMatches.call(opts);
