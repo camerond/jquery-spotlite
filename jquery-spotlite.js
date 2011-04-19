@@ -9,14 +9,14 @@ $(function() {
         match_list: $match_list.hide(),
         result_list: $result_list,
         current_val: '',
-        match_count: 0
+        match_count: 0,
+        input_field: $(this).find("input[type='text']")
       };
       var opts = $.extend(defaults, options);
       var $spot = $(this);
-      var $input = $spot.find("input[type='text']");
 
-      $input.bind("keydown.spotlite", function(e) {
-        var ss = $input.val();
+      opts.input_field.bind("keydown.spotlite", function(e) {
+        var ss = $(this).val();
         if (ss && opts.current_val != ss) {
           opts.cache = populateMatches.call(opts, ss);
           highlightMatch.call(opts, 0);
@@ -26,7 +26,7 @@ $(function() {
         }
       });
 
-      $input.bind("click.spotlite focus.spotlite", function(e) {
+      opts.input_field.bind("click.spotlite focus.spotlite", function(e) {
         if (opts.match_count > 0) {
           opts.match_list.show();
         }
@@ -70,14 +70,23 @@ $(function() {
       }
     }
     if (results.length) {
-      opts.match_list.show().append($(results)).find("li").live("mouseover.spotlite", function() {
+      opts.match_list.show().append($(results)).find("li").bind("mouseover.spotlite", function() {
         highlightMatch.call(opts, $(this).index());
+      }).bind("click", function() {
+        addMatch.call(opts, $(this));
+        clearMatches.call(opts);
       });
     } else {
       opts.match_list.hide();
     }
     opts.match_count = results.length;
     return new_cache;
+  }
+
+  function clearMatches() {
+    var opts = this;
+    opts.match_list.hide().find("li").detach();
+    opts.input_field.val('');
   }
 
   function highlightMatch(num) {
@@ -87,8 +96,14 @@ $(function() {
     }
   }
 
+  function addMatch($el) {
+    var opts = this;
+    opts.result_list.append(opts.match_list.find("li.spotlite-selected").detach());
+  }
+
   function handleKeypress(keycode) {
-    var $ul = this.match_list,
+    var opts = this,
+        $ul = opts.match_list,
         $sel = $ul.find("li.spotlite-selected"),
         idx = $sel.index();
     if (keycode === 40 && (idx != $sel.siblings().length)) {
@@ -97,6 +112,9 @@ $(function() {
       highlightMatch.call(this, idx - 1);
     } else if (keycode === 27) {
       $ul.hide();
+    } else if (keycode === 13 || keycode === 9) {
+      addMatch.call(this, $sel);
+      clearMatches.call(this);
     }
 
   }

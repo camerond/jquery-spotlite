@@ -136,11 +136,37 @@ $(function() {
     expectAttribute($("ul#spotlite-test-matches"), ":hidden");
   });
 
-  // module: interacting with matches
+  module("interacting with matches");
 
-  // it attaches the matched word to the results on enter or tab
+  test("it attaches the matched item to the results on enter", function() {
+    fireSpotlite();
+    type("Ba");
+    typeKeycode(13);
+    shouldSeeResult("Alonzo Bartlett");
+    shouldSeeMatchCount(0);
+    expectAttribute($("ul#spotlite-test-matches"), ":hidden");
+    equal(getInput().val(), "", "Input is clear");
+  });
 
-  // it attaches the matched word to the results on click
+  test("it attaches the matched item to the results on tab", function() {
+    fireSpotlite();
+    type("Ba");
+    typeKeycode(9);
+    shouldSeeResult("Alonzo Bartlett");
+    shouldSeeMatchCount(0);
+    expectAttribute($("ul#spotlite-test-matches"), ":hidden");
+    equal(getInput().val(), "", "Input is clear");
+  });
+
+  test("it attaches the matched item to the results on click", function() {
+    fireSpotlite();
+    type("Ba");
+    $("ul#spotlite-test-matches li.spotlite-selected").click();
+    shouldSeeResult("Alonzo Bartlett");
+    shouldSeeMatchCount(0);
+    expectAttribute($("ul#spotlite-test-matches"), ":hidden");
+    equal(getInput().val(), "", "Input is clear");
+  });
 
   // it removes the result on click
 
@@ -210,6 +236,10 @@ $(function() {
 
   function shouldNotSee(str) {
     return equal($("#spotlite-test-matches").find("li:contains('" + str + "')").length, 0, "I should not see " + str);
+  }
+
+  function shouldSeeResult(str) {
+    return ok($("#spotlite-test-results").find("li:contains('" + str + "')").length, "I should see " + str);
   }
 
   function shouldSeeMatchCount(num) {
