@@ -192,16 +192,23 @@ $(function() {
     });
   });
 
+  module("Options");
 
-  // module: options
+  test("adjust number of displayed matches", function() {
+    fireSpotlite({ result_limit: 2 });
+    type("a");
+    shouldSeeMatchCount(2);
+  });
 
-  // option: adjust number of displayed matches
-
-  // option: custom class names
-
-  // option: delay before searching
-
-  // option: min. number of characters before search
+  test("min. number of characters before search", function() {
+    fireSpotlite({ threshold: 3 });
+    type("b");
+    shouldSeeMatchCount(0);
+    type("a");
+    shouldSeeMatchCount(0);
+    type("r");
+    shouldSeeMatchCount(4);
+  });
 
   function getMain() {
     return $("#spotlite-test");
@@ -219,7 +226,7 @@ $(function() {
     return getMain().find("ul#spotlite-test-results");
   }
 
-  function fireSpotlite(data, options) {
+  function fireSpotlite(options, data) {
     if (!data) {
       data = getDefaultData();
     }

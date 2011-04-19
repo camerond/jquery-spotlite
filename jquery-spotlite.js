@@ -4,6 +4,7 @@ $(function() {
     return this.each(function() {
       var defaults = {
         result_limit: 10,
+        threshold: 0,
         pool: generatePool(terms),
         cache: [],
         match_list: $match_list.hide(),
@@ -17,7 +18,7 @@ $(function() {
 
       spot.input_field.bind("keydown.spotlite", function(e) {
         var ss = $(this).val();
-        if (ss && spot.current_val != ss) {
+        if (ss.length >= spot.threshold && spot.current_val != ss) {
           spot.cache = populateMatches.call(spot, ss);
           highlightMatch.call(spot, 0);
           spot.current_val = ss;
