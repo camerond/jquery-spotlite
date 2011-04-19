@@ -8,33 +8,33 @@ $(function() {
         cache: [],
         match_list: $match_list.hide(),
         result_list: $result_list,
+        input_field: $(this).find("input[type='text']"),
         current_val: '',
-        match_count: 0,
-        input_field: $(this).find("input[type='text']")
+        match_count: 0
       };
-      var opts = $.extend(defaults, options);
+      var spot = $.extend(defaults, options);
       var $spot = $(this);
 
-      opts.input_field.bind("keydown.spotlite", function(e) {
+      spot.input_field.bind("keydown.spotlite", function(e) {
         var ss = $(this).val();
-        if (ss && opts.current_val != ss) {
-          opts.cache = populateMatches.call(opts, ss);
-          highlightMatch.call(opts, 0);
-          opts.current_val = ss;
+        if (ss && spot.current_val != ss) {
+          spot.cache = populateMatches.call(spot, ss);
+          highlightMatch.call(spot, 0);
+          spot.current_val = ss;
         } else {
-          handleKeypress.call(opts, e.keyCode);
+          handleKeypress.call(spot, e.keyCode);
         }
       });
 
-      opts.input_field.bind("click.spotlite focus.spotlite", function(e) {
-        if (opts.match_count > 0) {
-          opts.match_list.show();
+      spot.input_field.bind("click.spotlite focus.spotlite", function(e) {
+        if (spot.match_count) {
+          spot.match_list.show();
         }
       });
 
       $("body").live("click.spotlite", function(e) {
         if (!$.contains($spot[0], e.target)) {
-          opts.match_list.hide();
+          spot.match_list.hide();
         }
       });
     });
@@ -57,39 +57,31 @@ $(function() {
 
   function populateMatches(ss) {
     var results = [],
-        opts = this,
+        spot = this,
         new_cache = [],
-        content,
         ln = ss.length,
-        pool = ln > 1 && opts.current_val === ss.substring(0, ln-1) ? opts.cache : opts.pool;
-    opts.match_list.find("li").detach();
+        pool = ln > 1 && spot.current_val === ss.substring(0, ln-1) ? spot.cache : spot.pool;
+    spot.match_list.find("li").remove();
     for (var i = 0, pl = pool.length; i < pl; i++) {
       if (ss.toLowerCase() === pool[i].search_term.substring(0, ln)) {
-        if (results.length < opts.result_limit) {
+        if (results.length < spot.result_limit) {
           results.push($("<li />").html(pool[i].term.replace(ss, '<b>' + ss + '</b>'))[0]);
         }
         new_cache.push(pool[i]);
       }
     }
     if (results.length) {
-      opts.match_list.show().append($(results)).find("li")
+      spot.match_list.show().append($(results)).find("li")
         .bind("mouseover.spotlite", function() {
-          highlightMatch.call(opts, $(this).index());
+          highlightMatch.call(spot, $(this).index());
       }).bind("click", function() {
-        addMatch.call(opts, $(this));
-        clearMatches.call(opts);
+        addMatch.call(spot, $(this));
       });
     } else {
-      opts.match_list.hide();
+      spot.match_list.hide();
     }
-    opts.match_count = results.length;
+    spot.match_count = results.length;
     return new_cache;
-  }
-
-  function clearMatches() {
-    var opts = this;
-    opts.match_list.hide().find("li").detach();
-    opts.input_field.val('');
   }
 
   function highlightMatch(num) {
@@ -100,15 +92,17 @@ $(function() {
   }
 
   function addMatch($el) {
-    var opts = this;
-    opts.result_list.append(opts.match_list.find("li.spotlite-selected").unbind().detach().click(function() {
+    var spot = this;
+    spot.result_list.append(spot.match_list.find("li.spotlite-selected").unbind().detach().bind("click.spotlite", function() {
       $(this).remove();
     }));
+    spot.match_list.hide().find("li").detach();
+    spot.input_field.val('');
   }
 
   function handleKeypress(keycode) {
-    var opts = this,
-        $ul = opts.match_list,
+    var spot = this,
+        $ul = spot.match_list,
         $sel = $ul.find("li.spotlite-selected"),
         idx = $sel.index();
     if (keycode === 40 && (idx != $sel.siblings().length)) {
@@ -119,7 +113,6 @@ $(function() {
       $ul.hide();
     } else if (keycode === 13 || keycode === 9) {
       addMatch.call(this, $sel);
-      clearMatches.call(this);
     }
 
   }

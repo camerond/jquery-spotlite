@@ -18,10 +18,10 @@ $(function() {
     fireSpotlite();
     type("Wil");
     shouldSeeMatchCount(2);
-    expectAttribute($("ul#spotlite-test-matches"), ":visible");
+    expectAttribute(getMatches(), ":visible");
     type("w");
     shouldSeeMatchCount(0);
-    expectAttribute($("ul#spotlite-test-matches"), ":hidden");
+    expectAttribute(getMatches(), ":hidden");
   });
 
   test("it matches any word in a phrase", function() {
@@ -74,12 +74,11 @@ $(function() {
   });
 
   test("highlight changes on hover", function() {
-    var $matches = $("ul#spotlite-test-matches");
     fireSpotlite();
     type("Ba");
-    $matches.find('li:eq(2)').trigger("mouseover");
+    getMatches().find('li:eq(2)').trigger("mouseover");
     shouldHighlight("Bart Velazquez");
-    $matches.find('li:eq(0)').trigger("mouseover");
+    getMatches().find('li:eq(0)').trigger("mouseover");
     shouldHighlight("Alonzo Bartlett");
   });
 
@@ -96,13 +95,12 @@ $(function() {
   });
 
   test("highlight previous match with up arrow", function() {
-    var $matches = $("ul#spotlite-test-matches");
     fireSpotlite();
     type("Ba");
     shouldHighlight("Alonzo Bartlett");
     typeKeycode(38, "up");
     shouldHighlight("Alonzo Bartlett");
-    $matches.find("li:eq(2)").trigger("mouseover");
+    getMatches().find("li:eq(2)").trigger("mouseover");
     typeKeycode(38, "up");
     shouldHighlight("Barrett Larson");
   });
@@ -112,28 +110,28 @@ $(function() {
     type("Ba");
     typeKeycode(27, "esc");
     shouldSeeMatchCount(4);
-    expectAttribute($("ul#spotlite-test-matches"), ":hidden");
+    expectAttribute(getMatches(), ":hidden");
   });
 
   test("show matches on focus", function() {
     fireSpotlite();
     getInput().trigger("focus");
-    expectAttribute($("ul#spotlite-test-matches"), ":hidden");
+    expectAttribute(getMatches(), ":hidden");
     type("Ba");
-    expectAttribute($("ul#spotlite-test-matches"), ":visible");
+    expectAttribute(getMatches(), ":visible");
     typeKeycode(27, "esc");
-    expectAttribute($("ul#spotlite-test-matches"), ":hidden");
+    expectAttribute(getMatches(), ":hidden");
     getInput().trigger("focus");
-    expectAttribute($("ul#spotlite-test-matches"), ":visible");
+    expectAttribute(getMatches(), ":visible");
   });
 
   test("hide matches on outside click", function() {
     var $spot = fireSpotlite();
     type("Ba");
     $spot.find("input[type='text']").trigger("click");
-    expectAttribute($("ul#spotlite-test-matches"), ":visible");
+    expectAttribute(getMatches(), ":visible");
     $("<div />").appendTo("body").trigger("click");
-    expectAttribute($("ul#spotlite-test-matches"), ":hidden");
+    expectAttribute(getMatches(), ":hidden");
   });
 
   module("interacting with matches");
@@ -144,7 +142,7 @@ $(function() {
     typeKeycode(13);
     shouldSeeResult("Alonzo Bartlett");
     shouldSeeMatchCount(0);
-    expectAttribute($("ul#spotlite-test-matches"), ":hidden");
+    expectAttribute(getMatches(), ":hidden");
     equal(getInput().val(), "", "Input is clear");
   });
 
@@ -154,17 +152,17 @@ $(function() {
     typeKeycode(9);
     shouldSeeResult("Alonzo Bartlett");
     shouldSeeMatchCount(0);
-    expectAttribute($("ul#spotlite-test-matches"), ":hidden");
+    expectAttribute(getMatches(), ":hidden");
     equal(getInput().val(), "", "Input is clear");
   });
 
   test("it attaches the matched item to the results on click", function() {
     fireSpotlite();
     type("Ba");
-    $("ul#spotlite-test-matches li.spotlite-selected").click();
+    getMatches().find("li.spotlite-selected").click();
     shouldSeeResult("Alonzo Bartlett");
     shouldSeeMatchCount(0);
-    expectAttribute($("ul#spotlite-test-matches"), ":hidden");
+    expectAttribute(getMatches(), ":hidden");
     equal(getInput().val(), "", "Input is clear");
   });
 
@@ -172,14 +170,14 @@ $(function() {
     fireSpotlite();
     type("Ba");
     typeKeycode(13);
-    $("ul#spotlite-test-results li").click();
+    getResults().find("li").click();
     shouldSeeResultCount(0);
   });
 
   test("it bolds the matched elements of a word/phrase", function() {
     fireSpotlite();
     type("Ba");
-    $("ul#spotlite-test-matches li").each(function() {
+    getMatches().find("li").each(function() {
       var $li = $(this);
       equal($li.find('b').text(), "Ba", "'Ba' is bolded for " + $li.text());
     });
@@ -188,7 +186,7 @@ $(function() {
   test("it bolds the matched elements of a word/phrase across words", function() {
     fireSpotlite();
     type("Alonzo Bar");
-    $("ul#spotlite-test-matches li").each(function() {
+    getMatches().find("li").each(function() {
       var $li = $(this);
       equal($li.find('b').text(), "Alonzo Bar", "'Alonzo Bar' is bolded for " + $li.text());
     });
@@ -213,11 +211,19 @@ $(function() {
     return getMain().find("input[type='text']");
   }
 
+  function getMatches() {
+    return getMain().find("ul#spotlite-test-matches");
+  }
+
+  function getResults() {
+    return getMain().find("ul#spotlite-test-results");
+  }
+
   function fireSpotlite(data, options) {
     if (!data) {
       data = getDefaultData();
     }
-    return $("#spotlite-test").spotlite(data, $("#spotlite-test-matches"), $("#spotlite-test-results"), options);
+    return $("#spotlite-test").spotlite(data, getMatches(), getResults(), options);
   }
 
   function type(str) {
@@ -254,28 +260,27 @@ $(function() {
   }
 
   function shouldSee(str) {
-    return ok($("#spotlite-test-matches").find("li:contains('" + str + "')").length, "I should see " + str);
+    return ok(getMatches().find("li:contains('" + str + "')").length, "I should see " + str);
   }
 
   function shouldNotSee(str) {
-    return equal($("#spotlite-test-matches").find("li:contains('" + str + "')").length, 0, "I should not see " + str);
+    return equal(getMatches().find("li:contains('" + str + "')").length, 0, "I should not see " + str);
   }
 
   function shouldSeeResult(str) {
-    return ok($("#spotlite-test-results").find("li:contains('" + str + "')").length, "I should see " + str);
+    return ok(getResults().find("li:contains('" + str + "')").length, "I should see " + str);
   }
 
   function shouldSeeMatchCount(num) {
-    return equal($("#spotlite-test-matches").find("li").length, num, "I should see " + num + " matches");
+    return equal(getMatches().find("li").length, num, "I should see " + num + " matches");
   }
 
   function shouldSeeResultCount(num) {
-    return equal($("#spotlite-test-results").find("li").length, num, "I should see " + num + " results");
+    return equal(getResults().find("li").length, num, "I should see " + num + " results");
   }
 
   function shouldHighlight(str) {
-    var $matches = $("#spotlite-test-matches");
-    var selected = $matches.find("li.spotlite-selected:contains('" + str + "')");
+    var selected = getMatches().find("li.spotlite-selected:contains('" + str + "')");
     return ok(selected.length === 1, "'" + str + "' is the highlighted result");
   }
 
