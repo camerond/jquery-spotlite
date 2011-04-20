@@ -6,6 +6,7 @@ $(function() {
         result_limit: 10,
         threshold: 0,
         exclude_characters: '\\W',
+        output: false,
         pool: [],
         cache: [],
         match_list: $match_list.hide(),
@@ -73,7 +74,7 @@ $(function() {
     } else {
       spot.cache = [];
     }
-    spot.match_list.find("li").remove();
+    spot.match_list.children().remove();
     for (var i = 0, pl = pool.length; i < pl; i++) {
       item = pool[i];
       if (ss.toLowerCase() === $.trim(item.search_term).substring(0, ln)) {
@@ -81,14 +82,18 @@ $(function() {
           term = ' ' + item.term;
           sanitized_term = term.replace(new RegExp(spot.exclude_characters, 'gi'), ' ');
           to_markup = sanitized_term.substr(term.toLowerCase().indexOf(' ' + ss.toLowerCase()), ss.length + 1);
-          markup = (' ' + item.term).replace(to_markup, ' <b>' + $.trim(to_markup) + '</b>');
-          results.push($("<li />").html(markup)[0]);
+          markup = $.trim((' ' + item.term).replace(to_markup, ' <b>' + $.trim(to_markup) + '</b>'));
+          if(typeof spot.output === "function") {
+            results.push(spot.output(markup)[0]);
+          } else {
+            results.push($("<li />").html(markup)[0]);
+          }
         }
         new_cache.push(pool[i]);
       }
     }
     if (results.length && ss.length) {
-      spot.match_list.show().append($(results)).find("li")
+      spot.match_list.show().append($(results)).children()
         .bind("mouseover.spotlite", function() {
           highlightMatch.call(spot, $(this).index());
       }).bind("click", function() {
@@ -102,7 +107,7 @@ $(function() {
   }
 
   function highlightMatch(num) {
-    var $li = this.match_list.find("li");
+    var $li = this.match_list.children();
     if ($li.length) {
       $li.removeClass("spotlite-selected")[num].className += "spotlite-selected";
     }
@@ -110,17 +115,17 @@ $(function() {
 
   function addMatch($el) {
     var spot = this;
-    spot.result_list.append(spot.match_list.find("li.spotlite-selected").unbind().detach().bind("click.spotlite", function() {
+    spot.result_list.append(spot.match_list.find(".spotlite-selected").unbind().detach().bind("click.spotlite", function() {
       $(this).remove();
     }));
-    spot.match_list.hide().find("li").detach();
+    spot.match_list.hide().children().detach();
     spot.input_field.val('');
   }
 
   function handleKeypress(keycode) {
     var spot = this,
         $ul = spot.match_list,
-        $sel = $ul.find("li.spotlite-selected"),
+        $sel = $ul.find(".spotlite-selected"),
         idx = $sel.index();
     if (keycode === 40 && (idx != $sel.siblings().length)) {
       highlightMatch.call(this, idx + 1);

@@ -229,7 +229,32 @@ $(function() {
     shouldSeeMatchCount(1);
   });
 
-  // allow array of object
+  test("Allow custom output function", function() {
+    fireSpotlite({
+      output: function(e) {
+        return $("<p />").html(e);
+      }
+    });
+    type("Ba");
+    equal(getMatches().find('p:eq(0)').text(), "Alonzo Bartlett", "Custom output function wraps match in paragraph");
+  });
+
+  // test("Allow array of objects as data", function() {
+  //   fireSpotlite({}, getObjectData());
+  //   type("great");
+  //   shouldSeeMatchCount(1);
+  // });
+  // 
+  // test("Ignore specified object keys", function() {
+  //   fireSpotlite({
+  //     ignore: 'email'
+  //   }, getObjectData());
+  //   type("B");
+  //   shouldSeeMatchCount(2);
+  //   backspace();
+  //   type("great");
+  //   shouldSeeMatchCount(0);
+  // });
 
   // output function
 
@@ -281,12 +306,15 @@ $(function() {
     $input.trigger($e);
   }
 
-  function backspace() {
-    ok(true, "I type a backspace");
+  function backspace(num) {
+    if (!num) { num = 1; }
     var $input = getInput();
-    $input.val($input.val().slice(0, -1));
-    $input.keyCode = 8;
-    $input.trigger('keyup');
+    for(var i = 0; i < num; i++) {
+      $input.val($input.val().slice(0, -1));
+      $input.keyCode = 8;
+      $input.trigger('keyup');
+    }
+    ok(true, "I type a backspace x " + num);
   }
 
   function expectAttribute($el, attr) {
@@ -419,6 +447,15 @@ $(function() {
     "Williams Burgess",
     "Williams Mitch Floyd",
     "Zack Leslie Hicks"];
+  }
+
+  function getObjectData() {
+    return [
+      { name: "Marty", email: "marty@mcfly.com" },
+      { name: "Doc Brown", email: "great@scott.com" },
+      { name: "Biff", email: "makelikea@tree.com" },
+      { name: "Crispin Glover", email: "whatisit@willard.com" }
+    ];
   }
 
 });
