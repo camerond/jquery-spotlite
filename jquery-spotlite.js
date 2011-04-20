@@ -5,7 +5,8 @@ $(function() {
       var defaults = {
         result_limit: 10,
         threshold: 0,
-        pool: generatePool(terms),
+        exclude_characters: '\\W',
+        pool: [],
         cache: [],
         match_list: $match_list.hide(),
         result_list: $result_list,
@@ -15,7 +16,7 @@ $(function() {
       };
       var spot = $.extend(defaults, options);
       var $spot = $(this);
-
+      spot.pool = generatePool.call(spot, terms);
       spot.input_field.bind("keyup.spotlite", function(e) {
         var ss = $(this).val();
         if (ss.length >= spot.threshold && spot.current_val != ss) {
@@ -49,7 +50,7 @@ $(function() {
       words = $.trim(terms[i]).split(" ");
       for (j = 0, wl = words.length; j < wl; j++) {
         match_item.term = terms[i];
-        match_item.search_term = words.slice(j).join(" ").toLowerCase();
+        match_item.search_term = words.slice(j).join(" ").replace(new RegExp(this.exclude_characters, 'gi'), ' ').toLowerCase();
         pool.push($.extend({}, match_item));
       }
     }
@@ -65,6 +66,7 @@ $(function() {
         markup,
         item,
         term,
+        sanitized_term,
         pool = spot.pool;
     if(ln > 1 && spot.current_val === ss.substring(0, ln-1)) {
       pool = spot.cache;
@@ -74,11 +76,12 @@ $(function() {
     spot.match_list.find("li").remove();
     for (var i = 0, pl = pool.length; i < pl; i++) {
       item = pool[i];
-      if (ss.toLowerCase() === item.search_term.substring(0, ln)) {
+      if (ss.toLowerCase() === $.trim(item.search_term).substring(0, ln)) {
         if (results.length < spot.result_limit) {
           term = ' ' + item.term;
-          to_markup = term.substr(term.toLowerCase().indexOf(' ' + ss.toLowerCase()), ss.length + 1);
-          markup = term.replace(to_markup, ' <b>' + $.trim(to_markup) + '</b>');
+          sanitized_term = term.replace(new RegExp(spot.exclude_characters, 'gi'), ' ');
+          to_markup = sanitized_term.substr(term.toLowerCase().indexOf(' ' + ss.toLowerCase()), ss.length + 1);
+          markup = (' ' + item.term).replace(to_markup, ' <b>' + $.trim(to_markup) + '</b>');
           results.push($("<li />").html(markup)[0]);
         }
         new_cache.push(pool[i]);

@@ -210,6 +210,31 @@ $(function() {
     shouldSeeMatchCount(4);
   });
 
+  test("ignore certain characters", function() {
+    var special_data = ['(marty@mcfly.com)', '(doc@brown.com)', '(twin@pines.com)', '(teen@wolf.com)', '(delorean@flying.com)'];
+    fireSpotlite({}, special_data);
+    type("marty");
+    shouldSeeMatchCount(1);
+    shouldSee("(marty@mcfly.com)");
+    type("@");
+    shouldSeeMatchCount(0);
+    QUnit.reset();
+    fireSpotlite({
+      exclude_characters: '[()]'
+    }, special_data);
+    type("(");
+    shouldSeeMatchCount(0);
+    backspace();
+    type("marty@");
+    shouldSeeMatchCount(1);
+  });
+
+  // allow array of object
+
+  // output function
+
+  // module("Methods");
+
   // refresh call
 
   function getMain() {
