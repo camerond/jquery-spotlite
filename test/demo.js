@@ -5,6 +5,9 @@ $(function() {
 
   demo_data.sort();
 
-  $("dl#demo").spotlite(demo_data, results);
+  $("form.spotlite").each(function() {
+    var $f = $(this);
+    $f.spotlite(demo_data, $f.find('.matches'), $f.find('results'));
+  });
 
 });

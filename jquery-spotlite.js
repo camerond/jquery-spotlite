@@ -16,7 +16,7 @@ $(function() {
       var spot = $.extend(defaults, options);
       var $spot = $(this);
 
-      spot.input_field.bind("keydown.spotlite", function(e) {
+      spot.input_field.bind("keyup.spotlite", function(e) {
         var ss = $(this).val();
         if (ss.length >= spot.threshold && spot.current_val != ss) {
           spot.cache = populateMatches.call(spot, ss);
@@ -61,17 +61,30 @@ $(function() {
         spot = this,
         new_cache = [],
         ln = ss.length,
-        pool = ln > 1 && spot.current_val === ss.substring(0, ln-1) ? spot.cache : spot.pool;
+        to_markup,
+        markup,
+        item,
+        term,
+        pool = spot.pool;
+    if(ln > 1 && spot.current_val === ss.substring(0, ln-1)) {
+      pool = spot.cache;
+    } else {
+      spot.cache = [];
+    }
     spot.match_list.find("li").remove();
     for (var i = 0, pl = pool.length; i < pl; i++) {
-      if (ss.toLowerCase() === pool[i].search_term.substring(0, ln)) {
+      item = pool[i];
+      if (ss.toLowerCase() === item.search_term.substring(0, ln)) {
         if (results.length < spot.result_limit) {
-          results.push($("<li />").html(pool[i].term.replace(ss, '<b>' + ss + '</b>'))[0]);
+          term = ' ' + item.term;
+          to_markup = term.substr(term.toLowerCase().indexOf(' ' + ss.toLowerCase()), ss.length + 1);
+          markup = term.replace(to_markup, ' <b>' + $.trim(to_markup) + '</b>');
+          results.push($("<li />").html(markup)[0]);
         }
         new_cache.push(pool[i]);
       }
     }
-    if (results.length) {
+    if (results.length && ss.length) {
       spot.match_list.show().append($(results)).find("li")
         .bind("mouseover.spotlite", function() {
           highlightMatch.call(spot, $(this).index());

@@ -1,0 +1,17 @@
+%html
+  %head
+    %title jquery-spotlite
+    %script(type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js")
+    %script(type="text/javascript" src="jquery-spotlite.js")
+    %script(type="text/javascript" src="test/demo.js")
+    %style(type="text/css")
+      :sass
+        body
+          font-family: 'Helvetica Neue', helvetica, sans-serif
+          padding: 50px
+  %body
+    %form.spotlite#demo-1
+      %label Type!
+      %input(type="text")
+      %ul.matches
+      %ul.results

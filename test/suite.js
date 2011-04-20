@@ -176,7 +176,7 @@ $(function() {
 
   test("it bolds the matched elements of a word/phrase", function() {
     fireSpotlite();
-    type("Ba");
+    type("ba");
     getMatches().find("li").each(function() {
       var $li = $(this);
       equal($li.find('b').text(), "Ba", "'Ba' is bolded for " + $li.text());
@@ -210,6 +210,8 @@ $(function() {
     shouldSeeMatchCount(4);
   });
 
+  // refresh call
+
   function getMain() {
     return $("#spotlite-test");
   }
@@ -237,7 +239,7 @@ $(function() {
     ok(true, "I type '" + str + "'");
     var $input = getInput();
     for (var i = 0; i < str.length; i++) {
-      var $e = $.Event('keydown');
+      var $e = $.Event('keyup');
       $e.keyCode = str.charCodeAt(str[i]);
       $input.val($input.val() + str[i]);
       $input.trigger($e);
@@ -249,7 +251,7 @@ $(function() {
       ok(true, "I press '" + msg + "'");
     }
     var $input = getInput();
-    var $e = $.Event('keydown');
+    var $e = $.Event('keyup');
     $e.keyCode = k;
     $input.trigger($e);
   }
@@ -259,7 +261,7 @@ $(function() {
     var $input = getInput();
     $input.val($input.val().slice(0, -1));
     $input.keyCode = 8;
-    $input.trigger('keydown');
+    $input.trigger('keyup');
   }
 
   function expectAttribute($el, attr) {

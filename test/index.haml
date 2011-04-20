@@ -4,47 +4,9 @@
     %script(type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js")
     %script(type="text/javascript" src="resources/qunit.js")
     %script(type="text/javascript" src="../jquery-spotlite.js")
-    -#%script(type="text/javascript" src="demo.js")
     %script(type="text/javascript" src="suite.js")
     %link(rel="stylesheet" href="resources/qunit.css" type="text/css")
-    %style(type="text/css")
-      :sass
-        body
-          font-family: 'Helvetica Neue', helvetica, sans-serif
-          padding: 50px
-        #demo
-          label
-            display: block
-          
-        dl.autophil
-          position: relative
-          dd
-            margin: 0
-            padding: 0
-            input[type='text']
-              margin: 0
-              padding: 5px
-              border: 1px solid #666
-              width: 350px
-            ul
-              margin: 20px 0
-              &.af_pool
-            list-style-type: none
-            display: none
-            position: absolute
-            margin: 0
-            padding: 10px
-            border: 1px solid #666
-            li
-              display: none
-              padding: 5px
-              cursor: pointer
-            li.active
-              background: #ddeeff
-            &.af_chosen li
-              cursor: pointer
   %body
-
     %h1#qunit-header
     %h2#qunit-banner
     %h3#qunit-userAgent
