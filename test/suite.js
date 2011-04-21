@@ -240,7 +240,6 @@ $(function() {
   });
 
   test("Allow array of objects as data", function() {
-    var i;
     fireSpotlite({
       output: function(e) {
         var i = $("<span />");
@@ -258,10 +257,6 @@ $(function() {
     shouldSeeMatchCount(1);
     equal(getMatches().find("li span").html().toLowerCase(), "<b>great</b>@scott.com".toLowerCase(), "Should find email and return formatted result");
   });
-
-  // test("Ignore specified object keys", function() {
-
-  // output function
 
   // module("Methods");
 
@@ -317,7 +312,6 @@ $(function() {
     var $input = getInput();
     for(var i = 0; i < num; i++) {
       $input.val($input.val().slice(0, -1));
-      $input.keyCode = 8;
       $input.trigger('keyup');
     }
     ok(true, "I type a backspace x " + num);

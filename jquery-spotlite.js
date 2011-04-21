@@ -71,14 +71,11 @@ $(function() {
     var results = [],
         spot = this,
         new_cache = [],
-        ln = ss.length,
-        to_markup,
-        markup,
         temp_term,
         val,
         item,
         pool = spot.pool;
-    if(ln > 1 && spot.current_val === ss.substring(0, ln-1)) {
+    if(ss.length > 1 && spot.current_val === ss.substring(0, ss.length-1)) {
       pool = spot.cache;
     } else {
       spot.cache = [];
@@ -86,7 +83,7 @@ $(function() {
     spot.match_list.children().remove();
     for (var i = 0, pl = pool.length; i < pl; i++) {
       item = pool[i];
-      if (ss.toLowerCase() === $.trim(item.search_term).substring(0, ln)) {
+      if (ss.toLowerCase() === $.trim(item.search_term).substring(0, ss.length)) {
         if (results.length < spot.result_limit) {
           if (typeof item.term === "object") {
             temp_term = $.extend({}, item.term);
@@ -95,8 +92,7 @@ $(function() {
             }
             results.push(spot.output(temp_term)[0]);
           } else {
-            markup = emphasizeInString(ss, item.term, spot.exclude_characters);
-            results.push(spot.output(markup)[0]);
+            results.push(spot.output(emphasizeInString(ss, item.term, spot.exclude_characters))[0]);
           }
         }
         new_cache.push(pool[i]);
