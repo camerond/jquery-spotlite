@@ -264,11 +264,11 @@ $(function() {
     });
     type("w");
     shouldSeeMatchCount(1);
-    equal(getMatches().find("li").html().toLowerCase(), "Crispin Glover<span><b>w</b>hatisit@willard.com</span>".toLowerCase(), "Should return formatted result");
+    equal(getMatches().find("li span b.spotlite-highlighted").text(), "w", "Should return formatted result");
     backspace();
     type("great");
     shouldSeeMatchCount(1);
-    equal(getMatches().find("li span").html().toLowerCase(), "<b>great</b>@scott.com".toLowerCase(), "Should find email and return formatted result");
+    equal(getMatches().find("li span b.spotlite-highlighted").text(), "great", "Should find email and return formatted result");
   });
 
   module("Methods");

@@ -137,7 +137,12 @@ $(function() {
       }
     }
     if (results.length && ss.length) {
-      spot.match_list.show().append($(results)).children()
+      for (var j = 0, rl = results.length; j < rl; j++) {
+        if (!spot.match_list.find(":contains(" + $(results[j]).text() + ")").length) {
+          spot.match_list.append(results[j]);
+        }
+      }
+      spot.match_list.show().children()
         .bind("mouseover.spotlite", function() {
           highlightMatch.call(spot, $(this).index());
       }).bind("click", function() {
