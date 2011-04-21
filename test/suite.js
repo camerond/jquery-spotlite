@@ -260,16 +260,16 @@ $(function() {
     equal(getMatches().find("li span").html().toLowerCase(), "<b>great</b>@scott.com".toLowerCase(), "Should find email and return formatted result");
   });
 
-  // module("Methods");
-  //
-  // test("Refresh", function() {
-  //   var data = getDefaultData();
-  //   fireSpotlite();
-  //   data.push("Billy Dee Williams");
-  //   $("#spotlite-test").spotlite('refresh', {pool: data});
-  //   type("dee");
-  //   shouldSee("Billy Dee Williams");
-  // });
+  module("Methods");
+
+  test("Refresh", function() {
+    var data = getDefaultData();
+    fireSpotlite();
+    data.push("Billy Dee Williams");
+    $("#spotlite-test").spotlite('refresh', {pool: data});
+    type("dee");
+    shouldSee("Billy Dee Williams");
+  });
 
   function getMain() {
     return $("#spotlite-test");

@@ -1,55 +1,83 @@
 $(function() {
 
-  $.fn.spotlite = function(options) {
+  $.fn.spotlite = function(options, secondary) {
     return this.each(function() {
 
-      var $spot = $(this);
+      var $spot = $(this),
+          spot = {};
 
-      var defaults = {
-        pool: [],
-        match_list: $(this).find("ul:eq(0)").hide(),
-        result_list: $(this).find("ul").last(),
-        input_field: $(this).find("input[type='text']"),
-        result_limit: 10,
-        threshold: 1,
-        exclude_characters: '\\W',
-        output: function(e) { return $("<li />").html(e); }
-      };
-
-      var private_settings = {
-        cache: [],
-        current_val: '',
-        match_count: 0
-      };
-
-      var spot = $.extend($.extend(defaults, options), private_settings);
-      generatePool.call(spot);
-
-      spot.input_field.bind("keyup.spotlite", function(e) {
-        var ss = $(this).val();
-        if (ss.length >= spot.threshold && spot.current_val != ss) {
-          spot.cache = populateMatches.call(spot, ss);
-          highlightMatch.call(spot, 0);
-          spot.current_val = ss;
-        } else {
-          handleKeypress.call(spot, e.keyCode);
+      if (typeof options === 'string') {
+        switch (options) {
+          case 'refresh':
+            init($spot, secondary);
+            break;
         }
-      });
-
-      spot.input_field.bind("click.spotlite focus.spotlite", function(e) {
-        if (spot.match_count) {
-          spot.match_list.show();
-        }
-      });
-
-      $("body").live("click.spotlite", function(e) {
-        if (!$.contains($spot[0], e.target)) {
-          spot.match_list.hide();
-        }
-      });
+      } else {
+        spot = init($spot, options);
+        attachEvents($spot, spot);
+      }
 
     });
   };
+
+  function init($spot, options) {
+
+    var defaults = {
+      pool: [],
+      match_list: $spot.find("ul:eq(0)").hide(),
+      result_list: $spot.find("ul").last(),
+      input_field: $spot.find("input[type='text']"),
+      result_limit: 10,
+      threshold: 1,
+      exclude_characters: '\\W',
+      output: function(e) { return $("<li />").html(e); }
+    };
+
+    var temp_settings = {
+      cache: [],
+      current_val: '',
+      match_count: 0
+    };
+
+    var spot = {};
+
+    if ($spot.data('opts.spotlite')) {
+      spot = $.extend($spot.data('opts.spotlite'), options, temp_settings);
+    } else {
+      spot = $.extend(defaults, options, temp_settings);
+    }
+
+    generatePool.call(spot);
+    $spot.data('opts.spotlite', spot);
+
+    return spot;
+
+  }
+
+  function attachEvents($spot, spot) {
+    spot.input_field.bind("keyup.spotlite", function(e) {
+      var ss = $(this).val();
+      if (ss.length >= spot.threshold && spot.current_val != ss) {
+        spot.cache = populateMatches.call(spot, ss);
+        highlightMatch.call(spot, 0);
+        spot.current_val = ss;
+      } else {
+        handleKeypress.call(spot, e.keyCode);
+      }
+    });
+
+    spot.input_field.bind("click.spotlite focus.spotlite", function(e) {
+      if (spot.match_count) {
+        spot.match_list.show();
+      }
+    });
+
+    $("body").live("click.spotlite", function(e) {
+      if (!$.contains($spot[0], e.target)) {
+        spot.match_list.hide();
+      }
+    });
+  }
 
   function generatePool() {
     var spot = this,
