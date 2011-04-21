@@ -7,7 +7,11 @@ $(function() {
 
   $("form.spotlite").each(function() {
     var $f = $(this);
-    $f.spotlite(demo_data, $f.find('.matches'), $f.find('results'));
+    $f.spotlite({
+      pool: demo_data,
+      match_list: $f.find('.matches'),
+      result_list: $f.find('.results')
+    });
   });
 
 });
