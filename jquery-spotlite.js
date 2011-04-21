@@ -60,6 +60,7 @@ $(function() {
     });
     spot.input_field.bind("keyup.spotlite", function(e) {
       var ss = $(this).val();
+      ss.length ? spot.match_list.show() : spot.match_list.hide();
       if (ss.length >= spot.threshold && spot.current_val != ss) {
         spot.cache = populateMatches.call(spot, ss);
         highlightMatch.call(spot, 0);
@@ -68,9 +69,7 @@ $(function() {
     });
 
     spot.input_field.bind("click.spotlite focus.spotlite", function(e) {
-      if (spot.match_count) {
-        spot.match_list.show();
-      }
+      ($(this).val().length && spot.match_count) ? spot.match_list.show() : spot.match_list.hide();
     });
 
     $("body").live("click.spotlite", function(e) {
