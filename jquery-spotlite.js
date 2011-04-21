@@ -210,7 +210,6 @@
       e.preventDefault();
       addMatch.call(this, $sel);
     } else if (keycode === 9) {
-      e.preventDefault();
       addMatch.call(this, $sel);
     }
 
