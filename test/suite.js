@@ -1,5 +1,7 @@
 $(function() {
 
+  $.fx.off = true;
+
   test("it is chainable", function() {
     same(fireSpotlite().hide().show(), $("#spotlite-test"));
   });

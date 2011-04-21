@@ -179,7 +179,14 @@ $(function() {
       var hl = $el.find('.spotlite-highlighted');
       hl.replaceWith(hl.html());
       spot.result_list.append($el.removeClass("spotlite-selected").unbind().detach().bind("click.spotlite", function() {
-        $(this).remove();
+        $(this).animate({ opacity: 0 }, {
+          duration: 200,
+          complete: function() {
+            $(this).slideUp(200, function() {
+              $(this).remove();
+            });
+          }
+        });
       }));
       spot.match_list.hide().children().detach();
       spot.input_field.val('');
