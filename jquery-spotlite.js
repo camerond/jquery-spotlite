@@ -183,6 +183,7 @@ $(function() {
       }));
       spot.match_list.hide().children().detach();
       spot.input_field.val('');
+      spot.current_val = '';
     }
   }
 
