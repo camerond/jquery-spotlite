@@ -4,9 +4,9 @@ $(function() {
     return this.each(function() {
       var defaults = {
         result_limit: 10,
-        threshold: 0,
+        threshold: 1,
         exclude_characters: '\\W',
-        output: false,
+        output: function(e) { return $("<li />").html(e); },
         pool: [],
         cache: [],
         match_list: $match_list.hide(),
@@ -46,9 +46,18 @@ $(function() {
   function generatePool(terms) {
     var pool = [],
         match_item = {},
-        words, i, j, tl, wl;
+        words = [],
+        i, j, tl, wl, term;
     for (i = 0, tl = terms.length; i < tl; i++) {
-      words = $.trim(terms[i]).split(" ");
+      words = [];
+      if (typeof terms[i] === "object") {
+        term = terms[i];
+        for (t in term) {
+          words = $.merge(words, $.trim(term[t]).split(" "));
+        }
+      } else {
+        words = $.trim(terms[i]).split(" ");
+      }
       for (j = 0, wl = words.length; j < wl; j++) {
         match_item.term = terms[i];
         match_item.search_term = words.slice(j).join(" ").replace(new RegExp(this.exclude_characters, 'gi'), ' ').toLowerCase();
@@ -65,9 +74,8 @@ $(function() {
         ln = ss.length,
         to_markup,
         markup,
-        item,
-        term,
-        sanitized_term,
+        temp_term,
+        val,
         pool = spot.pool;
     if(ln > 1 && spot.current_val === ss.substring(0, ln-1)) {
       pool = spot.cache;
@@ -79,14 +87,15 @@ $(function() {
       item = pool[i];
       if (ss.toLowerCase() === $.trim(item.search_term).substring(0, ln)) {
         if (results.length < spot.result_limit) {
-          term = ' ' + item.term;
-          sanitized_term = term.replace(new RegExp(spot.exclude_characters, 'gi'), ' ');
-          to_markup = sanitized_term.substr(term.toLowerCase().indexOf(' ' + ss.toLowerCase()), ss.length + 1);
-          markup = $.trim((' ' + item.term).replace(to_markup, ' <b>' + $.trim(to_markup) + '</b>'));
-          if(typeof spot.output === "function") {
-            results.push(spot.output(markup)[0]);
+          if (typeof item.term === "object") {
+            temp_term = $.extend({}, item.term);
+            for (val in temp_term) {
+              temp_term[val] = emphasizeInString(ss, temp_term[val], spot.exclude_characters);
+            }
+            results.push(spot.output(temp_term)[0]);
           } else {
-            results.push($("<li />").html(markup)[0]);
+            markup = emphasizeInString(ss, item.term, spot.exclude_characters);
+            results.push(spot.output(markup)[0]);
           }
         }
         new_cache.push(pool[i]);
@@ -111,6 +120,17 @@ $(function() {
     if ($li.length) {
       $li.removeClass("spotlite-selected")[num].className += "spotlite-selected";
     }
+  }
+
+  function emphasizeInString(ss, term, excl) {
+    term = ' ' + term;
+    var sanitized_term = term.replace(new RegExp(excl, 'gi'), ' ');
+    var found = term.toLowerCase().indexOf(' ' + ss.toLowerCase());
+    if (found < 0) {
+      return $.trim(term);
+    }
+    var to_markup = sanitized_term.substr(found, ss.length + 1);
+    return $.trim(term.replace(to_markup, ' <b>' + $.trim(to_markup) + '</b>'));
   }
 
   function addMatch($el) {

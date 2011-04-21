@@ -239,22 +239,27 @@ $(function() {
     equal(getMatches().find('p:eq(0)').text(), "Alonzo Bartlett", "Custom output function wraps match in paragraph");
   });
 
-  // test("Allow array of objects as data", function() {
-  //   fireSpotlite({}, getObjectData());
-  //   type("great");
-  //   shouldSeeMatchCount(1);
-  // });
-  // 
+  test("Allow array of objects as data", function() {
+    var i;
+    fireSpotlite({
+      output: function(e) {
+        var i = $("<span />");
+        var el = $("<li />");
+        i.html(e.email);
+        el.html(e.name);
+        return el.append(i);
+      }
+    }, getObjectData());
+    type("w");
+    shouldSeeMatchCount(1);
+    equal(getMatches().find("li").html(), "Crispin Glover<span><b>w</b>hatisit@willard.com</span>");
+    backspace();
+    type("great");
+    shouldSeeMatchCount(1);
+    equal(getMatches().find("li span").html(), "<b>great</b>@scott.com");
+  });
+
   // test("Ignore specified object keys", function() {
-  //   fireSpotlite({
-  //     ignore: 'email'
-  //   }, getObjectData());
-  //   type("B");
-  //   shouldSeeMatchCount(2);
-  //   backspace();
-  //   type("great");
-  //   shouldSeeMatchCount(0);
-  // });
 
   // output function
 
@@ -451,7 +456,7 @@ $(function() {
 
   function getObjectData() {
     return [
-      { name: "Marty", email: "marty@mcfly.com" },
+      { name: "Marty McFly", email: "marty@mcfly.com" },
       { name: "Doc Brown", email: "great@scott.com" },
       { name: "Biff", email: "makelikea@tree.com" },
       { name: "Crispin Glover", email: "whatisit@willard.com" }
