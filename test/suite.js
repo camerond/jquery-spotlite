@@ -252,11 +252,11 @@ $(function() {
     }, getObjectData());
     type("w");
     shouldSeeMatchCount(1);
-    equal(getMatches().find("li").html(), "Crispin Glover<span><b>w</b>hatisit@willard.com</span>");
+    equal(getMatches().find("li").html().toLowerCase(), "Crispin Glover<span><b>w</b>hatisit@willard.com</span>".toLowerCase(), "Should return formatted result");
     backspace();
     type("great");
     shouldSeeMatchCount(1);
-    equal(getMatches().find("li span").html(), "<b>great</b>@scott.com");
+    equal(getMatches().find("li span").html().toLowerCase(), "<b>great</b>@scott.com".toLowerCase(), "Should find email and return formatted result");
   });
 
   // test("Ignore specified object keys", function() {
@@ -293,10 +293,11 @@ $(function() {
   function type(str) {
     ok(true, "I type '" + str + "'");
     var $input = getInput();
-    for (var i = 0; i < str.length; i++) {
+    var s = str.split('');
+    for (var i = 0, ln = s.length; i < ln; i++) {
       var $e = $.Event('keyup');
-      $e.keyCode = str.charCodeAt(str[i]);
-      $input.val($input.val() + str[i]);
+      $e.keyCode = str.charCodeAt(s[i]);
+      $input.val($input.val() + s[i]);
       $input.trigger($e);
     }
   }

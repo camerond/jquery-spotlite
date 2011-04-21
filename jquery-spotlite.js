@@ -76,6 +76,7 @@ $(function() {
         markup,
         temp_term,
         val,
+        item,
         pool = spot.pool;
     if(ln > 1 && spot.current_val === ss.substring(0, ln-1)) {
       pool = spot.cache;
