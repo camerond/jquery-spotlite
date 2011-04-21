@@ -166,12 +166,14 @@ $(function() {
       return $.trim(term);
     }
     var to_markup = sanitized_term.substr(found, ss.length + 1);
-    return $.trim(term.replace(to_markup, ' <b>' + $.trim(to_markup) + '</b>'));
+    return $.trim(term.replace(to_markup, ' <b class="spotlite-highlighted">' + $.trim(to_markup) + '</b>'));
   }
 
   function addMatch($el) {
     var spot = this;
     if (!spot.result_list.find(":contains(" + $el.text() + ")").length) {
+      var hl = $el.find('.spotlite-highlighted');
+      hl.replaceWith(hl.html());
       spot.result_list.append($el.removeClass("spotlite-selected").unbind().detach().bind("click.spotlite", function() {
         $(this).remove();
       }));
