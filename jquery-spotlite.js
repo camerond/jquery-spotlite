@@ -169,8 +169,8 @@
     if (found < 0) {
       return $.trim(term);
     }
-    var to_markup = sanitized_term.substr(found, ss.length + 1);
-    return $.trim(term.replace(to_markup, ' <b class="spotlite-highlighted">' + $.trim(to_markup) + '</b>'));
+    var to_markup = sanitized_term.substr(found + 1, ss.length);
+    return $.trim(term.replace(to_markup, '<b class="spotlite-highlighted">' + to_markup + '</b>'));
   }
 
   function addMatch($el) {
