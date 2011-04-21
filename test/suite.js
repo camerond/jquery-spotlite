@@ -166,6 +166,17 @@ $(function() {
     equal(getInput().val(), "", "Input is clear");
   });
 
+  test("it does now allow duplicate additions", function() {
+    fireSpotlite();
+    type("Ba");
+    getMatches().find("li.spotlite-selected").click();
+    shouldSeeResultCount(1);
+    backspace(2);
+    type("Ba");
+    getMatches().find("li.spotlite-selected").click();
+    shouldSeeResultCount(1);
+  });
+
   test("it removes the result on click", function() {
     fireSpotlite();
     type("Ba");
@@ -313,7 +324,7 @@ $(function() {
       ok(true, "I press '" + msg + "'");
     }
     var $input = getInput();
-    var $e = $.Event('keyup');
+    var $e = $.Event('keydown');
     $e.keyCode = k;
     $input.trigger($e);
   }

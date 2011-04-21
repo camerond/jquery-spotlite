@@ -55,14 +55,15 @@ $(function() {
   }
 
   function attachEvents($spot, spot) {
+    spot.input_field.bind("keydown.spotlite", function(e) {
+      handleKeypress.call(spot, e);
+    });
     spot.input_field.bind("keyup.spotlite", function(e) {
       var ss = $(this).val();
       if (ss.length >= spot.threshold && spot.current_val != ss) {
         spot.cache = populateMatches.call(spot, ss);
         highlightMatch.call(spot, 0);
         spot.current_val = ss;
-      } else {
-        handleKeypress.call(spot, e.keyCode);
       }
     });
 
@@ -170,15 +171,18 @@ $(function() {
 
   function addMatch($el) {
     var spot = this;
-    spot.result_list.append(spot.match_list.find(".spotlite-selected").unbind().detach().bind("click.spotlite", function() {
-      $(this).remove();
-    }));
-    spot.match_list.hide().children().detach();
-    spot.input_field.val('');
+    if (!spot.result_list.find(":contains(" + $el.text() + ")").length) {
+      spot.result_list.append($el.removeClass("spotlite-selected").unbind().detach().bind("click.spotlite", function() {
+        $(this).remove();
+      }));
+      spot.match_list.hide().children().detach();
+      spot.input_field.val('');
+    }
   }
 
-  function handleKeypress(keycode) {
+  function handleKeypress(e) {
     var spot = this,
+        keycode = e.keyCode,
         $ul = spot.match_list,
         $sel = $ul.find(".spotlite-selected"),
         idx = $sel.index();
@@ -188,7 +192,11 @@ $(function() {
       highlightMatch.call(this, idx - 1);
     } else if (keycode === 27) {
       $ul.hide();
-    } else if (keycode === 13 || keycode === 9) {
+    } else if (keycode === 13) {
+      e.preventDefault();
+      addMatch.call(this, $sel);
+    } else if (keycode === 9) {
+      e.preventDefault();
       addMatch.call(this, $sel);
     }
 
