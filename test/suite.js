@@ -212,7 +212,7 @@ $(function() {
 
   test("ignore certain characters", function() {
     var special_data = ['(marty@mcfly.com)', '(doc@brown.com)', '(twin@pines.com)', '(teen@wolf.com)', '(delorean@flying.com)'];
-    fireSpotlite({}, special_data);
+    fireSpotlite({ pool: special_data });
     type("marty");
     shouldSeeMatchCount(1);
     shouldSee("(marty@mcfly.com)");
@@ -220,8 +220,9 @@ $(function() {
     shouldSeeMatchCount(0);
     QUnit.reset();
     fireSpotlite({
+      pool: special_data,
       exclude_characters: '[()]'
-    }, special_data);
+    });
     type("(");
     shouldSeeMatchCount(0);
     backspace();
@@ -241,6 +242,7 @@ $(function() {
 
   test("Allow array of objects as data", function() {
     fireSpotlite({
+      pool: getObjectData(),
       output: function(e) {
         var i = $("<span />");
         var el = $("<li />");
@@ -248,7 +250,7 @@ $(function() {
         el.html(e.name);
         return el.append(i);
       }
-    }, getObjectData());
+    });
     type("w");
     shouldSeeMatchCount(1);
     equal(getMatches().find("li").html().toLowerCase(), "Crispin Glover<span><b>w</b>hatisit@willard.com</span>".toLowerCase(), "Should return formatted result");
@@ -259,8 +261,15 @@ $(function() {
   });
 
   // module("Methods");
-
-  // refresh call
+  //
+  // test("Refresh", function() {
+  //   var data = getDefaultData();
+  //   fireSpotlite();
+  //   data.push("Billy Dee Williams");
+  //   $("#spotlite-test").spotlite('refresh', {pool: data});
+  //   type("dee");
+  //   shouldSee("Billy Dee Williams");
+  // });
 
   function getMain() {
     return $("#spotlite-test");
@@ -278,11 +287,13 @@ $(function() {
     return getMain().find("ul#spotlite-test-results");
   }
 
-  function fireSpotlite(options, data) {
-    if (!data) {
-      data = getDefaultData();
-    }
-    return $("#spotlite-test").spotlite(data, getMatches(), getResults(), options);
+  function fireSpotlite(options) {
+    var opts = $.extend({
+      pool: getDefaultData(),
+      match_list: getMatches(),
+      result_list: getResults()
+    }, options);
+    return $("#spotlite-test").spotlite(opts);
   }
 
   function type(str) {

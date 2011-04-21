@@ -1,23 +1,30 @@
 $(function() {
 
-  $.fn.spotlite = function(terms, $match_list, $result_list, options) {
+  $.fn.spotlite = function(options) {
     return this.each(function() {
+
+      var $spot = $(this);
+
       var defaults = {
+        pool: [],
+        match_list: $(this).find("ul:eq(0)").hide(),
+        result_list: $(this).find("ul").last(),
+        input_field: $(this).find("input[type='text']"),
         result_limit: 10,
         threshold: 1,
         exclude_characters: '\\W',
-        output: function(e) { return $("<li />").html(e); },
-        pool: [],
+        output: function(e) { return $("<li />").html(e); }
+      };
+
+      var private_settings = {
         cache: [],
-        match_list: $match_list.hide(),
-        result_list: $result_list,
-        input_field: $(this).find("input[type='text']"),
         current_val: '',
         match_count: 0
       };
-      var spot = $.extend(defaults, options);
-      var $spot = $(this);
-      spot.pool = generatePool.call(spot, terms);
+
+      var spot = $.extend($.extend(defaults, options), private_settings);
+      generatePool.call(spot);
+
       spot.input_field.bind("keyup.spotlite", function(e) {
         var ss = $(this).val();
         if (ss.length >= spot.threshold && spot.current_val != ss) {
@@ -40,11 +47,14 @@ $(function() {
           spot.match_list.hide();
         }
       });
+
     });
   };
 
-  function generatePool(terms) {
-    var pool = [],
+  function generatePool() {
+    var spot = this,
+        terms = spot.pool,
+        pool = [],
         match_item = {},
         words = [],
         i, j, tl, wl, term;
@@ -64,7 +74,7 @@ $(function() {
         pool.push($.extend({}, match_item));
       }
     }
-    return pool;
+    spot.pool = pool;
   }
 
   function populateMatches(ss) {
