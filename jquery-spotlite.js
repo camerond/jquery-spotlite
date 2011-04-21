@@ -1,4 +1,4 @@
-$(function() {
+;(function($) {
 
   $.fn.spotlite = function(options, secondary) {
     return this.each(function() {
@@ -216,4 +216,4 @@ $(function() {
 
   }
 
-});
+})(jQuery);

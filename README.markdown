@@ -1,8 +1,6 @@
 # Spotlite
 
-## Lightweight ()
-
-### Viewing the demo / test suite
+## A lightweight autocomplete plugin for jQuery
 
 `gem install haml-server`
 

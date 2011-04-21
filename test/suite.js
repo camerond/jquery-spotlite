@@ -1,4 +1,4 @@
-$(function() {
+;(function($) {
 
   $.fx.off = true;
 
@@ -482,4 +482,4 @@ $(function() {
     ];
   }
 
-});
+})(jQuery);
