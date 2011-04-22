@@ -23,7 +23,7 @@
   function init($spot, options) {
 
     var defaults = {
-      pool: [],
+      pool: '',
       match_list: $spot.find("ul:eq(0)").hide(),
       result_list: $spot.find("ul").last(),
       input_field: $spot.find("input[type='text']"),
@@ -46,8 +46,13 @@
     } else {
       spot = $.extend(defaults, options, temp_settings);
     }
-
-    generatePool.call(spot);
+    if (typeof spot.pool === 'string') {
+      $.getJSON(spot.pool, function(data) {
+        generatePool.call(spot, data);
+      });
+    } else {
+      generatePool.call(spot);
+    }
     $spot.data('opts.spotlite', spot);
 
     return spot;
@@ -79,9 +84,9 @@
     });
   }
 
-  function generatePool() {
+  function generatePool(data) {
     var spot = this,
-        terms = spot.pool,
+        terms = data ? data : spot.pool,
         pool = [],
         match_item = {},
         words = [],

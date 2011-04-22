@@ -273,6 +273,25 @@
     equal(getMatches().find("li span b.spotlite-highlighted").text(), "great", "Should find email and return formatted result");
   });
 
+  test("Load JSON from URL", function() {
+    fireSpotlite({
+      pool: "/test/test_data.json",
+      output: function(e) {
+        var i = $("<span />");
+        var el = $("<li />");
+        i.html(e.email);
+        el.html(e.name);
+        return el.append(i);
+      }
+    });
+    stop();
+    setTimeout(function() {
+      type("marty");
+      shouldSeeMatchCount(1);
+      start();
+    }, 100);
+  });
+
   module("Methods");
 
   test("Refresh", function() {
