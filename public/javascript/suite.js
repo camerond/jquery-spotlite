@@ -275,7 +275,7 @@
 
   test("Load JSON from URL", function() {
     fireSpotlite({
-      pool: "/test/test_data.json",
+      pool: "/javascript/test_data.json",
       output: function(e) {
         var i = $("<span />");
         var el = $("<li />");
