@@ -79,10 +79,12 @@
   }
 
   function attachEvents($spot, spot) {
+    var keyHandled = false;
     spot.input_field.bind("keydown.spotlite", function(e) {
-      handleKeypress.call(spot, e);
+      keyHandled = handleKeypress.call(spot, e);
     });
     spot.input_field.bind("keyup.spotlite", function(e) {
+      if (keyHandled) { return; }
       var ss = $(this).val();
       ss.length ? spot.match_list.show() : spot.match_list.hide();
       if (ss.length >= spot.threshold && spot.current_val != ss) {
@@ -241,8 +243,10 @@
       addMatch.call(this, $sel);
     } else if (keycode === 9) {
       addMatch.call(this, $sel);
+    } else {
+      return false;
     }
-
+    return true;
   }
 
 })(jQuery);
