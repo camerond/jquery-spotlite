@@ -136,7 +136,7 @@
     expectAttribute(getMatches(), ":hidden");
   });
 
-  module("interacting with matches");
+  module("Interacting With Matches");
 
   test("it attaches the matched item to the results on enter", function() {
     fireSpotlite();
@@ -243,7 +243,7 @@
     shouldSeeMatchCount(1);
   });
 
-  test("Allow custom output function", function() {
+  test("allow custom output function", function() {
     fireSpotlite({
       output: function(e) {
         return $("<p />").html(e);
@@ -253,14 +253,14 @@
     equal(getMatches().find('p:eq(0)').text(), "Alonzo Bartlett", "Custom output function wraps match in paragraph");
   });
 
-  test("Allow array of objects as data", function() {
+  test("allow array of objects as data", function() {
     fireSpotlite({
       pool: getObjectData(),
       output: function(e) {
         var i = $("<span />");
         var el = $("<li />");
         i.html(e.email);
-        el.html(e.name);
+        el.html(e.full_name);
         return el.append(i);
       }
     });
@@ -273,13 +273,13 @@
     equal(getMatches().find("li span b.spotlite-highlighted").text(), "great", "Should find email and return formatted result");
   });
 
-  test("Exclude certain object attributes from being used in matching algorithm", function() {
+  test("exclude certain object attributes from being used in matching algorithm", function() {
     fireSpotlite({
       pool: getImageData(),
       bypass: "img, thumb",
       output: function(e) {
         return $("<li />")
-          .html(e.name)
+          .html(e.full_name)
           .append($("<img />", {src: e.img}));
       }
     });
@@ -291,14 +291,14 @@
     equal(getMatches().find("li:eq(0) img").attr("src"), "http://dummyimage.com/20x20", "Should display image tags for results");
   });
 
-  test("Load JSON from URL", function() {
+  test("load JSON from URL", function() {
     fireSpotlite({
       pool: "/javascript/test_data.json",
       output: function(e) {
         var i = $("<span />");
         var el = $("<li />");
         i.html(e.email);
-        el.html(e.name);
+        el.html(e.full_name);
         return el.append(i);
       }
     });
@@ -312,7 +312,7 @@
 
   module("Methods");
 
-  test("Refresh", function() {
+  test("refresh", function() {
     var data = getDefaultData();
     fireSpotlite();
     data.push("Billy Dee Williams");
@@ -371,7 +371,7 @@
   function backspace(num) {
     if (!num) { num = 1; }
     var $input = getInput();
-    for(var i = 0; i < num; i++) {
+    for (var i = 0; i < num; i++) {
       $input.val($input.val().slice(0, -1));
       $input.trigger('keyup');
     }
@@ -512,19 +512,19 @@
 
   function getObjectData() {
     return [
-      { name: "Marty McFly", email: "marty@mcfly.com" },
-      { name: "Doc Brown", email: "great@scott.com" },
-      { name: "Biff", email: "makelikea@tree.com" },
-      { name: "Crispin Glover", email: "whatisit@willard.com" }
+      { full_name: "Marty McFly", email: "marty@mcfly.com" },
+      { full_name: "Doc Brown", email: "great@scott.com" },
+      { full_name: "Biff", email: "makelikea@tree.com" },
+      { full_name: "Crispin Glover", email: "whatisit@willard.com" }
     ];
   }
 
   function getImageData() {
     return [
-      { name: "Marty McFly", img: "http://dummyimage.com/10x10", thumb: "http://dummyimage.com/1x1" },
-      { name: "Doc Brown", img: "http://dummyimage.com/20x20", thumb: "http://dummyimage.com/2x2" },
-      { name: "Biff", img: "http://dummyimage.com/30x30", thumb: "http://dummyimage.com/3x3" },
-      { name: "Crispin Glover", img: "http://dummyimage.com/40x40", thumb: "http://dummyimage.com/4x4" }
+      { full_name: "Marty McFly", img: "http://dummyimage.com/10x10", thumb: "http://dummyimage.com/1x1" },
+      { full_name: "Doc Brown", img: "http://dummyimage.com/20x20", thumb: "http://dummyimage.com/2x2" },
+      { full_name: "Biff", img: "http://dummyimage.com/30x30", thumb: "http://dummyimage.com/3x3" },
+      { full_name: "Crispin Glover", img: "http://dummyimage.com/40x40", thumb: "http://dummyimage.com/4x4" }
     ];
   }
 
