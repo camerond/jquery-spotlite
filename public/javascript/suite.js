@@ -223,7 +223,7 @@
     shouldSeeMatchCount(4);
   });
 
-  test("ignore certain characters", function() {
+  test("exclude certain characters", function() {
     var special_data = ['(marty@mcfly.com)', '(doc@brown.com)', '(twin@pines.com)', '(teen@wolf.com)', '(delorean@flying.com)'];
     fireSpotlite({ pool: special_data });
     type("marty");
@@ -271,6 +271,24 @@
     type("great");
     shouldSeeMatchCount(1);
     equal(getMatches().find("li span b.spotlite-highlighted").text(), "great", "Should find email and return formatted result");
+  });
+
+  test("Exclude certain object attributes from being used in matching algorithm", function() {
+    fireSpotlite({
+      pool: getImageData(),
+      bypass: "img, thumb",
+      output: function(e) {
+        return $("<li />")
+          .html(e.name)
+          .append($("<img />", {src: e.img}));
+      }
+    });
+    type("http");
+    shouldSeeMatchCount(0);
+    backspace(4);
+    type("b");
+    shouldSeeMatchCount(2);
+    equal(getMatches().find("li:eq(0) img").attr("src"), "http://dummyimage.com/20x20", "Should display image tags for results");
   });
 
   test("Load JSON from URL", function() {
@@ -498,6 +516,15 @@
       { name: "Doc Brown", email: "great@scott.com" },
       { name: "Biff", email: "makelikea@tree.com" },
       { name: "Crispin Glover", email: "whatisit@willard.com" }
+    ];
+  }
+
+  function getImageData() {
+    return [
+      { name: "Marty McFly", img: "http://dummyimage.com/10x10", thumb: "http://dummyimage.com/1x1" },
+      { name: "Doc Brown", img: "http://dummyimage.com/20x20", thumb: "http://dummyimage.com/2x2" },
+      { name: "Biff", img: "http://dummyimage.com/30x30", thumb: "http://dummyimage.com/3x3" },
+      { name: "Crispin Glover", img: "http://dummyimage.com/40x40", thumb: "http://dummyimage.com/4x4" }
     ];
   }
 

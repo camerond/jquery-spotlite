@@ -30,6 +30,7 @@
       result_limit: 10,
       threshold: 1,
       exclude_characters: '\\W',
+      bypass: '',
       output: function(e) { return $("<li />").html(e); }
     };
 
@@ -45,6 +46,10 @@
       spot = $.extend($spot.data('opts.spotlite'), options, temp_settings);
     } else {
       spot = $.extend(defaults, options, temp_settings);
+    }
+
+    if (spot.bypass.length) {
+      spot.bypass = spot.bypass.replace(" ", "").split(",");
     }
 
     if (typeof spot.pool === 'string') {
@@ -110,7 +115,13 @@
       if (typeof terms[i] === "object") {
         term = terms[i];
         for (t in term) {
-          words = $.merge(words, $.trim(term[t]).split(" "));
+          if (spot.bypass.length) {
+            if ($.inArray(t, spot.bypass) == -1) {
+              words = $.merge(words, $.trim(term[t]).split(" "));
+            }
+          } else {
+            words = $.merge(words, $.trim(term[t]).split(" "));
+          }
         }
       } else {
         words = $.trim(terms[i]).split(" ");
