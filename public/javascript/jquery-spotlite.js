@@ -46,6 +46,7 @@
     } else {
       spot = $.extend(defaults, options, temp_settings);
     }
+
     if (typeof spot.pool === 'string') {
       $.getJSON(spot.pool, function(data) {
         generatePool.call(spot, data);
@@ -55,8 +56,21 @@
     }
     $spot.data('opts.spotlite', spot);
 
+    positionMatches.call(spot);
+
     return spot;
 
+  }
+
+  function positionMatches() {
+    var $input = this.input_field;
+    this.match_list.css({
+      position: 'absolute',
+      'z-index': 1000,
+      left: $input.position().left + 'px',
+      top: $input.position().top + $input.outerHeight() + 'px',
+      width: $input.outerWidth()
+    });
   }
 
   function attachEvents($spot, spot) {

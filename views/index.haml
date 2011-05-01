@@ -1,16 +1,19 @@
 %html
   %head
     %title jquery-spotlite
+    %link(rel="stylesheet" href="/stylesheets/application.css")
     %script(type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js")
     %script(type="text/javascript" src="/javascript/jquery-spotlite.js")
     %script(type="text/javascript" src="/javascript/demo.js")
-    %link(rel="stylesheet" href="/stylesheets/application.css")
   %body
-    %h1 Barely a demo
+    %hgroup
+      %h1 Jquery-spotlite
+      %h2
+        %a(href="/test") Check out the the test suite
     %form.spotlite#demo-1
-      %label Type!
-      %input(type="text")
-      %h2 Matches
+      %fieldset
+        %label Type!
+        %input(type="text")
       %ul.matches
-      %h2 Results
+      %h2 Results!
       %ul.results

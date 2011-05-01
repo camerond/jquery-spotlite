@@ -1,5 +1,50 @@
+@import 'reset.scss'
+
 body
   font-family: 'Helvetica Neue', helvetica, sans-serif
   padding: 50px
-.spotlite-selected
-  background: #dddddd
+
+hgroup
+  margin: 0 0 40px 0
+  h1
+    font-size: 24px
+    font-weight: bold
+  h2
+    font-size: 20px
+    font-weight: bold
+
+form#demo-1
+  width: 290px
+  position: relative
+  fieldset
+    margin: 0 0 40px 0
+    label
+      display: block
+      font-weight: bold
+      font-size: 18px
+    input[type="text"]
+      border: 1px solid #333
+      border-radius: ppx
+      padding: 8px
+      width: 290px
+      font-size: 14px
+  ul.matches
+    position: absolute
+    border: 1px solid #aaa
+    border-top: none
+    background: #fff
+    li
+      padding: 4px 6px
+      &.spotlite-selected
+        background: #ddd
+      b
+        font-weight: bold
+  h2
+    font-size: 18px
+    font-weight: bold
+  ul.results
+    li
+      padding: 4px 6px
+      border: 1px solid #aaa
+      margin: 0 0 2px 0
+      cursor: pointer
