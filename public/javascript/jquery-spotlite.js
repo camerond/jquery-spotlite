@@ -101,13 +101,16 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   }
 
   function positionMatches() {
-    var $input = this.input_field;
-    this.match_list.css({
+    var spot = this;
+    var $input = spot.input_field;
+    var border_width = parseInt(spot.match_list.css('border-left-width').replace('px', ''), 10);
+    border_width += parseInt(spot.match_list.css('border-right-width').replace('px', ''), 10);
+    spot.match_list.css({
       position: 'absolute',
       'z-index': 1000,
       left: $input.position().left + 'px',
       top: $input.position().top + $input.outerHeight() + 'px',
-      width: $input.outerWidth()
+      width: $input.outerWidth() - border_width
     });
   }
 
