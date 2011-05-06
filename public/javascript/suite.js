@@ -213,6 +213,15 @@
     shouldSeeMatchCount(2);
   });
 
+  test("fill input intead of adding match to result list", function() {
+    fireSpotlite({ multiselect: false });
+    type("jos");
+    var $li = getMatches().find("li:eq(2)").trigger("click");
+    equal(getInput().val(), $li.text(), "'Joseph Walters' is now the value of the input field");
+    backspace(11);
+    shouldSeeMatchCount(5);
+  });
+
   test("min. number of characters before search", function() {
     fireSpotlite({ threshold: 3 });
     type("b");

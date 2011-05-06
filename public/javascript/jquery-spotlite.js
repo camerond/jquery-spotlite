@@ -1,7 +1,7 @@
 /*
 
 jQuery Spotlite Plugin
-version 0.1
+version 0.1.1
 
 Copyright (c) 2011 Cameron Daigle, http://camerondaigle.com
 
@@ -59,6 +59,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       threshold: 1,
       exclude_characters: '\\W',
       bypass: '',
+      multiselect: true,
       output: function(e) { return $("<li />").html(e); }
     };
 
@@ -235,23 +236,28 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
   function addMatch($el) {
     var spot = this;
-    if (!spot.result_list.find(":contains(" + $el.text() + ")").length) {
-      var hl = $el.find('.spotlite-highlighted');
-      hl.replaceWith(hl.html());
-      spot.result_list.append($el.removeClass("spotlite-selected").unbind().detach().bind("click.spotlite", function() {
-        $(this).animate({ opacity: 0 }, {
-          duration: 200,
-          complete: function() {
-            $(this).slideUp(200, function() {
-              $(this).remove();
-            });
-          }
-        });
-      }));
-      spot.match_list.hide().children().detach();
-      spot.input_field.val('');
-      spot.current_val = '';
+    if (spot.multiselect) {
+      if (!spot.result_list.find(":contains(" + $el.text() + ")").length) {
+        var hl = $el.find('.spotlite-highlighted');
+        hl.replaceWith(hl.html());
+        spot.result_list.append($el.removeClass("spotlite-selected").unbind().detach().bind("click.spotlite", function() {
+          $(this).animate({ opacity: 0 }, {
+            duration: 200,
+            complete: function() {
+              $(this).slideUp(200, function() {
+                $(this).remove();
+              });
+            }
+          });
+        }));
+        spot.input_field.val('');
+        spot.current_val = '';
+      }
+    } else {
+      spot.input_field.val($el.text());
+      spot.current_val = $el.text();
     }
+    spot.match_list.hide().children().detach();
   }
 
   function handleKeypress(e) {
