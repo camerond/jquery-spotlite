@@ -5,13 +5,13 @@ $(function() {
 
   demo_data.sort();
 
-  $("form.spotlite").each(function() {
-    var $f = $(this);
-    $f.spotlite({
-      pool: demo_data,
-      match_list: $f.find('.matches'),
-      result_list: $f.find('.results')
-    });
+  $("#demo-1").spotlite({
+    pool: demo_data
+  });
+
+  $("#demo-2").spotlite({
+    pool: demo_data,
+    multiselect: false
   });
 
 });

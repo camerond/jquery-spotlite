@@ -216,10 +216,14 @@
   test("fill input intead of adding match to result list", function() {
     fireSpotlite({ multiselect: false });
     type("jos");
+    shouldSeeMatchCount(5);
     var $li = getMatches().find("li:eq(2)").trigger("click");
-    equal(getInput().val(), $li.text(), "'Joseph Walters' is now the value of the input field");
+    equal(getInput().val(), "Joseph Walters", "'Joseph Walters' is now the value of the input field");
     backspace(11);
     shouldSeeMatchCount(5);
+    $li = getMatches().find("li:eq(2)");
+    typeKeycode(13, "Enter");
+    equal(getInput().val(), "Josefa Jenna Barton", "'Josefa Jenna Barton' is now the value of the input field");
   });
 
   test("min. number of characters before search", function() {

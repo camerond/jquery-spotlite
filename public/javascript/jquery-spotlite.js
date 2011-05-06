@@ -268,6 +268,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     } else {
       spot.input_field.val($el.text());
       spot.current_val = $el.text();
+      $el.removeClass("spotlite-selected");
     }
     spot.match_list.hide().children().detach();
   }
