@@ -1,7 +1,7 @@
 /*
 
 jQuery Spotlite Plugin
-version 0.1.1
+version 0.1.2
 
 Copyright (c) 2011 Cameron Daigle, http://camerondaigle.com
 
@@ -81,6 +81,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       spot.bypass = spot.bypass.replace(" ", "").split(",");
     }
 
+    spot.sanitize = function(str) {
+      return str.replace(new RegExp(spot.exclude_characters, 'gi'), ' ');
+    };
+
     if (typeof spot.pool === 'string') {
       $.getJSON(spot.pool, function(data) {
         generatePool.call(spot, data);
@@ -118,7 +122,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       ss.length ? spot.match_list.show() : spot.match_list.hide();
       if (ss.length >= spot.threshold && spot.current_val != ss) {
         spot.cache = populateMatches.call(spot, ss);
-        highlightMatch.call(spot, 0);
+        selectMatch.call(spot, 0);
         spot.current_val = ss;
       }
     });
@@ -148,22 +152,26 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         for (t in term) {
           if (spot.bypass.length) {
             if ($.inArray(t, spot.bypass) == -1) {
-              words = $.merge(words, $.trim(term[t]).split(" "));
+              words = $.merge(words, cleanSplit(term[t]));
             }
           } else {
-            words = $.merge(words, $.trim(term[t]).split(" "));
+            words = $.merge(words, cleanSplit(term[t]));
           }
         }
       } else {
-        words = $.trim(terms[i]).split(" ");
+        words = cleanSplit(terms[i]);
       }
       for (j = 0, wl = words.length; j < wl; j++) {
         match_item.term = terms[i];
-        match_item.search_term = words.slice(j).join(" ").replace(new RegExp(this.exclude_characters, 'gi'), ' ').toLowerCase();
+        match_item.search_term = words.slice(j).join(" ").toLowerCase();
         pool.push($.extend({}, match_item));
       }
     }
     spot.pool = pool;
+
+    function cleanSplit(str) {
+      return spot.sanitize($.trim(str)).split(" ");
+    }
   }
 
   function populateMatches(ss) {
@@ -173,6 +181,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         temp_term,
         val,
         item,
+        clean_ss = spot.sanitize(ss).toLowerCase(),
         pool = spot.pool;
     if(ss.length > 1 && spot.current_val === ss.substring(0, ss.length-1)) {
       pool = spot.cache;
@@ -182,16 +191,16 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     spot.match_list.children().remove();
     for (var i = 0, pl = pool.length; i < pl; i++) {
       item = pool[i];
-      if (ss.toLowerCase() === $.trim(item.search_term).substring(0, ss.length)) {
+      if ($.trim(clean_ss).length && clean_ss === $.trim(item.search_term).substring(0, ss.length)) {
         if (results.length < spot.result_limit) {
           if (typeof item.term === "object") {
             temp_term = $.extend({}, item.term);
             for (val in temp_term) {
-              temp_term[val] = emphasizeInString(ss, temp_term[val], spot.exclude_characters);
+              temp_term[val] = highlightInString.call(spot, ss, temp_term[val]);
             }
             results.push(spot.output(temp_term)[0]);
           } else {
-            results.push(spot.output(emphasizeInString(ss, item.term, spot.exclude_characters))[0]);
+            results.push(spot.output(highlightInString.call(spot, ss, item.term))[0]);
           }
         }
         new_cache.push(pool[i]);
@@ -205,7 +214,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
       spot.match_list.show().children()
         .bind("mouseover.spotlite", function() {
-          highlightMatch.call(spot, $(this).index());
+          selectMatch.call(spot, $(this).index());
       }).bind("click", function() {
         addMatch.call(spot, $(this));
       });
@@ -216,21 +225,21 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     return new_cache;
   }
 
-  function highlightMatch(num) {
+  function selectMatch(num) {
     var $li = this.match_list.children();
     if ($li.length) {
       $li.removeClass("spotlite-selected")[num].className += "spotlite-selected";
     }
   }
 
-  function emphasizeInString(ss, term, excl) {
+  function highlightInString(ss, term) {
+    var spot = this;
     term = ' ' + term;
-    var sanitized_term = term.replace(new RegExp(excl, 'gi'), ' ');
-    var found = term.toLowerCase().indexOf(' ' + ss.toLowerCase());
+    var found = spot.sanitize(term).toLowerCase().indexOf(' ' + spot.sanitize(ss).toLowerCase());
     if (found < 0) {
       return $.trim(term);
     }
-    var to_markup = sanitized_term.substr(found + 1, ss.length);
+    var to_markup = term.substr(found + 1, ss.length);
     return $.trim(term.replace(to_markup, '<b class="spotlite-highlighted">' + to_markup + '</b>'));
   }
 
@@ -267,9 +276,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         $sel = $ul.find(".spotlite-selected"),
         idx = $sel.index();
     if (keycode === 40 && (idx != $sel.siblings().length)) {
-      highlightMatch.call(this, idx + 1);
+      selectMatch.call(this, idx + 1);
     } else if (keycode === 38 && (idx != 0)) {
-      highlightMatch.call(this, idx - 1);
+      selectMatch.call(this, idx - 1);
     } else if (keycode === 27) {
       $ul.hide();
     } else if (keycode === 13) {

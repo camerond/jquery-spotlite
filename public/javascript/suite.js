@@ -239,7 +239,10 @@
     shouldSeeMatchCount(1);
     shouldSee("(marty@mcfly.com)");
     type("@");
-    shouldSeeMatchCount(0);
+    shouldSeeMatchCount(1);
+    backspace(6);
+    type("mcfly");
+    shouldSeeMatchCount(1);
     QUnit.reset();
     fireSpotlite({
       pool: special_data,
