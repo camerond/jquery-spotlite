@@ -265,7 +265,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         spot.input_field.val('');
         spot.current_val = '';
       }
-    } else {
+    } else if ($el.length) {
       spot.input_field.val($el.text());
       spot.current_val = $el.text();
       $el.removeClass("spotlite-selected");

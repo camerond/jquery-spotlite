@@ -224,6 +224,8 @@
     $li = getMatches().find("li:eq(2)");
     typeKeycode(13, "Enter");
     equal(getInput().val(), "Josefa Jenna Barton", "'Josefa Jenna Barton' is now the value of the input field");
+    typeKeycode(13, "Enter");
+    equal(getInput().val(), "Josefa Jenna Barton", "Input field stays chosen after enter keypress");
   });
 
   test("min. number of characters before search", function() {
