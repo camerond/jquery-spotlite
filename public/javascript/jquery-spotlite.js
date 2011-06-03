@@ -243,7 +243,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       return $.trim(term);
     }
     var to_markup = term.substr(found + 1, ss.length);
-    return $.trim(term.replace(to_markup, '<b class="spotlite-highlighted">' + to_markup + '</b>'));
+    var start = term.substr(0, found + 1);
+    var end = term.substr(found + 1 + ss.length);
+    return $.trim(start + '<b class="spotlite-highlighted">' + to_markup + '</b>' + end);
   }
 
   function addMatch($el) {
