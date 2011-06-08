@@ -275,6 +275,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       $el.removeClass("spotlite-selected");
     }
     spot.match_list.hide().children().detach();
+    positionMatches.call(spot);
   }
 
   function handleKeypress(e) {
