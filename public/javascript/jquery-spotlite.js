@@ -85,6 +85,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       return str.replace(new RegExp(spot.exclude_characters, 'gi'), ' ');
     };
 
+    spot.showMatches = function() {
+      if(spot.match_list.is(":hidden")) {
+        var $input = spot.input_field;
+        var border_width = parseInt(spot.match_list.css('border-left-width').replace('px', ''), 10);
+        border_width += parseInt(spot.match_list.css('border-right-width').replace('px', ''), 10);
+        spot.match_list.css({
+          position: 'absolute',
+          'z-index': 1000,
+          left: $input.position().left + 'px',
+          top: $input.position().top + $input.outerHeight() + 'px',
+          width: $input.outerWidth() - border_width
+        }).show();
+      }
+      return spot.match_list;
+    };
+
     if (typeof spot.pool === 'string') {
       $.getJSON(spot.pool, function(data) {
         generatePool.call(spot, data);
@@ -94,24 +110,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     }
     $spot.data('opts.spotlite', spot);
 
-    positionMatches.call(spot);
-
     return spot;
 
-  }
-
-  function positionMatches() {
-    var spot = this;
-    var $input = spot.input_field;
-    var border_width = parseInt(spot.match_list.css('border-left-width').replace('px', ''), 10);
-    border_width += parseInt(spot.match_list.css('border-right-width').replace('px', ''), 10);
-    spot.match_list.css({
-      position: 'absolute',
-      'z-index': 1000,
-      left: $input.position().left + 'px',
-      top: $input.position().top + $input.outerHeight() + 'px',
-      width: $input.outerWidth() - border_width
-    });
   }
 
   function attachEvents($spot, spot) {
@@ -122,7 +122,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     spot.input_field.bind("keyup.spotlite", function(e) {
       if (keyHandled) { return; }
       var ss = $(this).val();
-      ss.length ? spot.match_list.show() : spot.match_list.hide();
+      ss.length ? spot.showMatches() : spot.match_list.hide();
       if (ss.length >= spot.threshold && spot.current_val != ss) {
         spot.cache = populateMatches.call(spot, ss);
         selectMatch.call(spot, 0);
@@ -131,7 +131,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     });
 
     spot.input_field.bind("click.spotlite focus.spotlite", function(e) {
-      ($(this).val().length && spot.match_count) ? spot.match_list.show() : spot.match_list.hide();
+      ($(this).val().length && spot.match_count) ? spot.showMatches() : spot.match_list.hide();
     });
 
     $("body").live("click.spotlite", function(e) {
@@ -219,7 +219,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           spot.match_list.append(results[j]);
         }
       }
-      spot.match_list.show().children()
+      spot.showMatches().children()
         .bind("mouseover.spotlite", function() {
           selectMatch.call(spot, $(this).index());
       }).bind("click", function() {
@@ -275,7 +275,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       $el.removeClass("spotlite-selected");
     }
     spot.match_list.hide().children().detach();
-    positionMatches.call(spot);
   }
 
   function handleKeypress(e) {
