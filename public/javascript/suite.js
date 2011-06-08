@@ -187,6 +187,15 @@
     shouldSeeResultCount(0);
   });
 
+  test("it properly handles items already in result list", function() {
+    getResults().append($("<li />").text("foo"));
+    getResults().append($("<li />").text("bar"));
+    fireSpotlite();
+    shouldSeeResultCount(2);
+    getResults().find("li:first").click();
+    shouldSeeResultCount(1);
+  });
+
   test("it bolds the matched elements of a word/phrase", function() {
     fireSpotlite();
     type("ba");

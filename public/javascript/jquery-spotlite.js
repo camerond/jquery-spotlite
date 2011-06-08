@@ -134,6 +134,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       ($(this).val().length && spot.match_count) ? spot.showMatches() : spot.match_list.hide();
     });
 
+    spot.result_list.children().each(function() {
+      removeOnClick($(this));
+    });
+
     $("body").live("click.spotlite", function(e) {
       if (!$.contains($spot[0], e.target)) {
         spot.match_list.hide();
@@ -257,16 +261,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     if (spot.multiselect) {
       var hl = $el.find('.spotlite-highlighted');
       hl.replaceWith(hl.html());
-      spot.result_list.append($el.removeClass("spotlite-selected").unbind().detach().bind("click.spotlite", function() {
-        $(this).animate({ opacity: 0 }, {
-          duration: 200,
-          complete: function() {
-            $(this).slideUp(200, function() {
-              $(this).remove();
-            });
-          }
-        });
-      }));
+      spot.result_list.append(removeOnClick($el.removeClass("spotlite-selected").unbind().detach()));
       spot.input_field.val('');
       spot.current_val = '';
     } else if ($el.length) {
@@ -298,6 +293,19 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       return false;
     }
     return true;
+  }
+
+  function removeOnClick($el) {
+    return $el.bind("click.spotlite", function() {
+      $(this).animate({ opacity: 0 }, {
+        duration: 200,
+        complete: function() {
+          $(this).slideUp(200, function() {
+            $(this).remove();
+          });
+        }
+      });
+    });
   }
 
 })(jQuery);
