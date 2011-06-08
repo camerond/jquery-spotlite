@@ -141,7 +141,7 @@
   test("it attaches the matched item to the results on enter", function() {
     fireSpotlite();
     type("Ba");
-    typeKeycode(13);
+    typeKeycode(13, "enter");
     shouldSeeResult("Alonzo Bartlett");
     shouldSeeMatchCount(0);
     expectAttribute(getMatches(), ":hidden");
@@ -168,15 +168,15 @@
     equal(getInput().val(), "", "Input is clear");
   });
 
-  test("it does now allow duplicate additions", function() {
+  test("it does not show matches that have already been added", function() {
     fireSpotlite();
     type("Ba");
+    shouldSee("Alonzo Bartlett");
     getMatches().find("li.spotlite-selected").click();
-    shouldSeeResultCount(1);
-    backspace(2);
+    shouldSeeResult("Alonzo Bartlett");
     type("Ba");
-    getMatches().find("li.spotlite-selected").click();
-    shouldSeeResultCount(1);
+    shouldNotSee("Alonzo Bartlett");
+    shouldSee("Barrett Larson");
   });
 
   test("it removes the result on click", function() {

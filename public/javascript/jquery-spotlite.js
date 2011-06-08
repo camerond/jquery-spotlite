@@ -185,7 +185,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         val,
         item,
         clean_ss = spot.sanitize(ss).toLowerCase(),
-        pool = spot.pool;
+        pool = spot.pool,
+        current_results = [];
+    spot.result_list.find("li").each(function() {
+      current_results.push($(this).text());
+    });
     if(ss.length > 1 && spot.current_val === ss.substring(0, ss.length-1)) {
       pool = spot.cache;
     } else {
@@ -194,7 +198,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     spot.match_list.children().remove();
     for (var i = 0, pl = pool.length; i < pl; i++) {
       item = pool[i];
-      if ($.trim(clean_ss).length && clean_ss === $.trim(item.search_term).substring(0, ss.length)) {
+      if ($.trim(clean_ss).length && $.inArray(item.term, current_results) < 0 && clean_ss === $.trim(item.search_term).substring(0, ss.length)) {
         if (results.length < spot.result_limit) {
           if (typeof item.term === "object") {
             temp_term = $.extend({}, item.term);
@@ -251,22 +255,20 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   function addMatch($el) {
     var spot = this;
     if (spot.multiselect) {
-      if (!spot.result_list.find(":contains(" + $el.text() + ")").length) {
-        var hl = $el.find('.spotlite-highlighted');
-        hl.replaceWith(hl.html());
-        spot.result_list.append($el.removeClass("spotlite-selected").unbind().detach().bind("click.spotlite", function() {
-          $(this).animate({ opacity: 0 }, {
-            duration: 200,
-            complete: function() {
-              $(this).slideUp(200, function() {
-                $(this).remove();
-              });
-            }
-          });
-        }));
-        spot.input_field.val('');
-        spot.current_val = '';
-      }
+      var hl = $el.find('.spotlite-highlighted');
+      hl.replaceWith(hl.html());
+      spot.result_list.append($el.removeClass("spotlite-selected").unbind().detach().bind("click.spotlite", function() {
+        $(this).animate({ opacity: 0 }, {
+          duration: 200,
+          complete: function() {
+            $(this).slideUp(200, function() {
+              $(this).remove();
+            });
+          }
+        });
+      }));
+      spot.input_field.val('');
+      spot.current_val = '';
     } else if ($el.length) {
       spot.input_field.val($el.text());
       spot.current_val = $el.text();
