@@ -202,8 +202,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     spot.match_list.children().remove();
     for (var i = 0, pl = pool.length; i < pl; i++) {
       item = pool[i];
-      if ($.trim(clean_ss).length && $.inArray(item.term, current_results) < 0 && clean_ss === $.trim(item.search_term).substring(0, ss.length)) {
-        if (results.length < spot.result_limit) {
+      if ($.trim(clean_ss).length && clean_ss === $.trim(item.search_term).substring(0, ss.length)) {
+        new_cache.push(pool[i]);
+        if ((results.length < spot.result_limit) &&
+            ((spot.multiselect && $.inArray(item.term, current_results) < 0) || !spot.multiselect)) {
           if (typeof item.term === "object") {
             temp_term = $.extend({}, item.term);
             for (val in temp_term) {
@@ -214,7 +216,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             results.push(spot.output(highlightInString.call(spot, ss, item.term))[0]);
           }
         }
-        new_cache.push(pool[i]);
       }
     }
     if (results.length && ss.length) {
