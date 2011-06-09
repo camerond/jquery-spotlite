@@ -122,7 +122,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     spot.input_field.bind("keyup.spotlite", function(e) {
       if (keyHandled) { return; }
       var ss = $(this).val();
-      ss.length ? spot.showMatches() : spot.match_list.hide();
+      ss.length && spot.match_list.length ? spot.showMatches() : spot.match_list.hide();
       if (ss.length >= spot.threshold && spot.current_val != ss) {
         spot.cache = populateMatches.call(spot, ss);
         selectMatch.call(spot, 0);
