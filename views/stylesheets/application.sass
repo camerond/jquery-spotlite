@@ -2,50 +2,89 @@
 
 body
   font-family: 'Helvetica Neue', helvetica, sans-serif
-  padding: 50px
+  background: #1d1f21
+  color: #ffd800
+
+#wrapper
+  padding: 100px
 
 hgroup
   margin: 0 0 40px 0
+  font-family: "chunk-1","chunk-2", 'Helvetica Neue', helvetica, sans-serif
   h1
-    font-size: 24px
-    font-weight: bold
+    font-size: 80px
   h2
-    font-size: 20px
-    font-weight: bold
+    font-size: 40px
+    color: #3ad4e6
+  form
+    label
+      font-size: 14px
+    + form
 
-form.spotlite
-  width: 290px
+form
+  width: 320px
+  float: left
   position: relative
-  margin: 0 0 40px 0
+  margin: 0 80px 0 0
+  + form
+    margin-right: 0
+    color: #3ad4e6
+    fieldset
+      input[type="text"]
+        background: #3ad4e6
+    ul.matches
+      li
+        color: #3ad4e6
+        &.spotlite-selected
+          background: #3ad4e6
   fieldset
-    margin: 0 0 20px 0
     label
       display: block
-      font-weight: bold
       font-size: 18px
     input[type="text"]
-      border: 1px solid #333
-      border-radius: ppx
+      border: none
       padding: 8px
       width: 290px
       font-size: 14px
+      background: #ffd800
+      font-weight: bold
+      color: #1d1f21
   ul.matches
     position: absolute
-    border: 1px solid #aaa
-    border-top: none
-    background: #fff
+    background: #3d3f42
     li
       padding: 4px 6px
       &.spotlite-selected
-        background: #ddd
+        background: #ffd800
+        color: #1d1f21
       b
         font-weight: bold
   h2
     font-size: 18px
     font-weight: bold
   ul.results
+    padding: 20px 0 0 0
     li
-      padding: 4px 6px
-      border: 1px solid #aaa
-      margin: 0 0 3px 0
+      font-size: 11px
+      font-weight: bold
+      background: url("/images/remove.png") no-repeat 5px center #ffd800
+      color: #1d1f21
+      border-radius: 5px
+      float: left
+      margin: 0 5px 5px 0
+      padding: 4px 8px 4px 22px
       cursor: pointer
+      &:hover
+        background-color: #ffe44d
+
+p
+  clear: both
+  font-weight: bold
+  margin: 0 0 40px 0
+  a
+    text-decoration: none
+    color: #ffd800
+    border-bottom: 1px dotted #ffd800
+    &:hover
+      color: #3ad4e6
+      border-bottom: 1px dotted #3ad4e6
