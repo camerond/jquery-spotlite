@@ -1,5 +1,5 @@
 # Spotlite
 
-## A lightweight autocomplete plugin for jQuery
+## A lightweight autofill/search plugin for jQuery
 
-[Check it out](http://sharp-galaxy-790.heroku.com/)
+[See it in action here.](http://jquery-spotlite.heroku.com/)
