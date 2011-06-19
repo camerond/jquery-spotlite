@@ -3,7 +3,7 @@
   $.fx.off = true;
 
   test("it is chainable", function() {
-    same(fireSpotlite().hide().show(), $("#spotlite-test"));
+    ok(fireSpotlite().hide().show().attr("id", "spotlite-test"), "spotlite is invoked and visibility is toggled");
   });
 
   module("Displaying Matches");
@@ -247,6 +247,14 @@
     shouldSeeMatchCount(4);
   });
 
+  test("custom class prefix", function() {
+    fireSpotlite({ class_prefix: "foo" });
+    type("Ba");
+    shouldHighlight("Alonzo Bartlett");
+    typeKeycode(13, "enter");
+    shouldSeeResult("Alonzo Bartlett");
+  });
+
   test("exclude certain characters", function() {
     var special_data = ['(marty@mcfly.com)', '(doc@brown.com)', '(twin@pines.com)', '(teen@wolf.com)', '(delorean@flying.com)'];
     fireSpotlite({ pool: special_data });
@@ -343,13 +351,13 @@
     var data = getDefaultData();
     fireSpotlite();
     data.push("Billy Dee Williams");
-    $("#spotlite-test").spotlite('refresh', {pool: data});
+    $("[id$='-test']").spotlite('refresh', {pool: data});
     type("dee");
     shouldSee("Billy Dee Williams");
   });
 
   function getMain() {
-    return $("#spotlite-test");
+    return $("[id$='-test']");
   }
 
   function getInput() {
@@ -357,11 +365,11 @@
   }
 
   function getMatches() {
-    return getMain().find("ul#spotlite-test-matches");
+    return getMain().find("ul[id$='-test-matches']");
   }
 
   function getResults() {
-    return getMain().find("ul#spotlite-test-results");
+    return getMain().find("ul[id$='-test-results']");
   }
 
   function fireSpotlite(options) {
@@ -370,7 +378,7 @@
       match_list: getMatches(),
       result_list: getResults()
     }, options);
-    return $("#spotlite-test").spotlite(opts);
+    return $("[id$='-test']").spotlite(opts);
   }
 
   function type(str) {
@@ -430,7 +438,7 @@
   }
 
   function shouldHighlight(str) {
-    var selected = getMatches().find("li.spotlite-selected:contains('" + str + "')");
+    var selected = getMatches().find("li[class$='-selected']:contains('" + str + "')");
     return ok(selected.length === 1, "'" + str + "' is the highlighted result");
   }
 

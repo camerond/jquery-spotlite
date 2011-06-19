@@ -1,7 +1,7 @@
 /*
 
 jQuery Spotlite Plugin
-version 0.1.2
+version 0.1.3
 
 Copyright (c) 2011 Cameron Daigle, http://camerondaigle.com
 
@@ -60,6 +60,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       exclude_characters: '\\W',
       bypass: '',
       multiselect: true,
+      class_prefix: 'spotlite',
       output: function(e) { return $("<li />").html(e); }
     };
 
@@ -238,9 +239,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   }
 
   function selectMatch(num) {
-    var $li = this.match_list.children();
+    var spot = this;
+    var $li = spot.match_list.children();
     if ($li.length) {
-      $li.removeClass("spotlite-selected")[num].className += "spotlite-selected";
+      $li.removeClass(spot.class_prefix + "-selected")[num].className += spot.class_prefix + "-selected";
     }
   }
 
@@ -254,21 +256,21 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var to_markup = term.substr(found + 1, ss.length);
     var start = term.substr(0, found + 1);
     var end = term.substr(found + 1 + ss.length);
-    return $.trim(start + '<b class="spotlite-highlighted">' + to_markup + '</b>' + end);
+    return $.trim(start + '<b class="' + spot.class_prefix + '-highlighted">' + to_markup + '</b>' + end);
   }
 
   function addMatch($el) {
     var spot = this;
     if (spot.multiselect) {
-      var hl = $el.find('.spotlite-highlighted');
+      var hl = $el.find('.' + spot.class_prefix + '-highlighted');
       hl.replaceWith(hl.html());
-      spot.result_list.append(removeOnClick($el.removeClass("spotlite-selected").unbind().detach()));
+      spot.result_list.append(removeOnClick($el.removeClass(spot.class_prefix + "-selected").unbind().detach()));
       spot.input_field.val('');
       spot.current_val = '';
     } else if ($el.length) {
       spot.input_field.val($el.text());
       spot.current_val = $el.text();
-      $el.removeClass("spotlite-selected");
+      $el.removeClass(spot.class_prefix + "-selected");
     }
     spot.match_list.hide().children().detach();
   }
@@ -277,7 +279,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var spot = this,
         keycode = e.keyCode,
         $ul = spot.match_list,
-        $sel = $ul.find(".spotlite-selected"),
+        $sel = $ul.find("." + spot.class_prefix + "-selected"),
         idx = $sel.index();
     if (keycode === 40 && (idx != $sel.siblings().length)) {
       selectMatch.call(this, idx + 1);
