@@ -2,8 +2,9 @@
 
 body
   font-family: 'Helvetica Neue', helvetica, sans-serif
-  background: #1d1f21
-  color: #ffd800
+  background: #1d1f21 url("/images/jq_bg.png")
+  color: #d2d8e3
+  text-shadow: 0 2px 1px #000
 
 #wrapper
   padding: 100px
@@ -13,9 +14,10 @@ hgroup
   font-family: "chunk-1","chunk-2", 'Helvetica Neue', helvetica, sans-serif
   h1
     font-size: 80px
+    span
+      color: #3bd8e2
   h2
     font-size: 40px
-    color: #3ad4e6
   form
     label
       font-size: 14px
@@ -28,35 +30,28 @@ form
   margin: 0 80px 0 0
   + form
     margin-right: 0
-    color: #3ad4e6
-    fieldset
-      input[type="text"]
-        background: #3ad4e6
-    ul.matches
-      li
-        color: #3ad4e6
-        &.spotlite-selected
-          background: #3ad4e6
   fieldset
     label
       display: block
       font-size: 18px
+      font-weight: bold
     input[type="text"]
       border: none
       padding: 8px
       width: 290px
       font-size: 14px
-      background: #ffd800
+      background: #d2d8e3
       font-weight: bold
       color: #1d1f21
   ul.matches
     position: absolute
-    background: #2d3034
+    background: #d2d8e3
+    color: #1d1f21
     li
       padding: 4px 6px
+      text-shadow: none
       &.spotlite-selected
-        background: #ffd800
-        color: #1d1f21
+        background: #3bd8e2
       b
         font-weight: bold
   h2
@@ -67,15 +62,16 @@ form
     li
       font-size: 11px
       font-weight: bold
-      background: url("/images/remove.png") no-repeat 5px center #ffd800
+      background: url("/images/remove.png") no-repeat 5px center #d2d8e3
       color: #1d1f21
+      text-shadow: none
       border-radius: 5px
       float: left
       margin: 0 5px 5px 0
       padding: 4px 8px 4px 22px
       cursor: pointer
       &:hover
-        background-color: #ffe44d
+        background-color: #3bd8e2
 
 p
   clear: both
@@ -83,8 +79,8 @@ p
   margin: 0 0 40px 0
   a
     text-decoration: none
-    color: #ffd800
-    border-bottom: 1px dotted #ffd800
+    color: #d2d8e3
+    border-bottom: 1px dotted #d2d8e3
     &:hover
-      color: #3ad4e6
-      border-bottom: 1px dotted #3ad4e6
+      color: #3bd8e2
+      border-bottom: 1px dotted #3bd8e2
