@@ -132,7 +132,7 @@
     type("Ba");
     $spot.find("input[type='text']").trigger("click");
     expectAttribute(getMatches(), ":visible");
-    $("<div />").appendTo("body").trigger("click");
+    $("label").trigger("click");
     expectAttribute(getMatches(), ":hidden");
   });
 
@@ -188,6 +188,7 @@
   });
 
   test("it properly handles items already in result list", function() {
+    getMain().append($("<ul />", { "class" : "spotlite-results" }));
     getResults().append($("<li />").text("foo"));
     getResults().append($("<li />").text("bar"));
     fireSpotlite();
@@ -212,6 +213,19 @@
       var $li = $(this);
       equal($li.find('b').text(), "Alonzo Bar", "'Alonzo Bar' is bolded for " + $li.text());
     });
+  });
+
+  test("it handles multiple Spotlites on a page", function() {
+    var $spot1 = $("#spotlite-test");
+    var $spot2 = $("<div />").attr("id", "#spotlite-test-2");
+    $spot2.html($spot1.html()).insertAfter($("#spotlite-test")).spotlite({ pool: getDefaultData() });
+    fireSpotlite();
+    type("ba");
+    shouldSee("Alonzo Bartlett");
+    type("za", $spot2.find(":input"));
+    shouldSee("Zack Leslie Hicks");
+    $spot1.find(":input").trigger("focus");
+    shouldSee("Alonzo Bartlett");
   });
 
   module("Options");
@@ -248,11 +262,11 @@
   });
 
   test("custom class prefix", function() {
-    fireSpotlite({ class_prefix: "foo" });
+    var $spot = fireSpotlite({ class_prefix: "foo" });
     type("Ba");
-    shouldHighlight("Alonzo Bartlett");
+    ok($("body > .foo-matches").find("li.foo-selected:contains('Ba')").length === 1, "'Ba' is the highlighted result");
     typeKeycode(13, "enter");
-    shouldSeeResult("Alonzo Bartlett");
+    ok($spot.find("li:contains('Alonzo Bartlett')").length, "I should see 'Alonzo Bartlett'" );
   });
 
   test("exclude certain characters", function() {
@@ -357,7 +371,7 @@
   });
 
   function getMain() {
-    return $("[id$='-test']");
+    return $("#spotlite-test");
   }
 
   function getInput() {
@@ -365,25 +379,25 @@
   }
 
   function getMatches() {
-    return getMain().find("ul[id$='-test-matches']");
+    return $("body > ul.spotlite-matches");
   }
 
   function getResults() {
-    return getMain().find("ul[id$='-test-results']");
+    return getMain().find(".spotlite-results");
   }
 
   function fireSpotlite(options) {
     var opts = $.extend({
-      pool: getDefaultData(),
-      match_list: getMatches(),
-      result_list: getResults()
+      pool: getDefaultData()
     }, options);
-    return $("[id$='-test']").spotlite(opts);
+    return $("#spotlite-test").spotlite(opts);
   }
 
-  function type(str) {
+  function type(str, $input) {
     ok(true, "I type '" + str + "'");
-    var $input = getInput();
+    if (!$input) {
+      $input = getInput();
+    }
     var s = str.split('');
     for (var i = 0, ln = s.length; i < ln; i++) {
       var $e = $.Event('keyup');
@@ -438,7 +452,7 @@
   }
 
   function shouldHighlight(str) {
-    var selected = getMatches().find("li[class$='-selected']:contains('" + str + "')");
+    var selected = getMatches().find("li.spotlite-selected:contains('" + str + "')");
     return ok(selected.length === 1, "'" + str + "' is the highlighted result");
   }
 
