@@ -106,7 +106,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         position: 'absolute',
         'z-index': 1000,
         left: $input.offset().left + 'px',
-        top: $input.offset().top + $input.outerHeight() + 'px',
+        top: $input.offset().top + parseInt($("body").css("border-top-width").replace("px", ""), 10) + $input.outerHeight() + 'px',
         width: $input.outerWidth() - border_width
       }).show();
       return spot.match_list;
