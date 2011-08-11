@@ -1,7 +1,7 @@
 /*
 
 jQuery Spotlite Plugin
-version 0.1.4
+version 0.1.5
 
 Copyright (c) 2011 Cameron Daigle, http://camerondaigle.com
 
@@ -231,7 +231,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     }
     if (results.length && ss.length) {
       for (var j = 0, rl = results.length; j < rl; j++) {
-        if (!spot.match_list.find(":contains(" + $(results[j]).text() + ")").length) {
+        if (!spot.result_list.add(spot.match_list).find(":contains(" + $(results[j]).text() + ")").length) {
           spot.match_list.append(results[j]);
         }
       }

@@ -187,7 +187,16 @@
     shouldSeeResultCount(0);
   });
 
-  test("it properly handles items already in result list", function() {
+  test("it properly handles matching of items already in result list", function() {
+    getMain().append($("<ul />", { "class" : "spotlite-results" }));
+    getResults().append($("<li />").text("Eddy Ray"));
+    getResults().append($("<li />").text("Sarah Edna Fitzpatrick"));
+    fireSpotlite();
+    type("ed");
+    shouldSeeResultCount(2);
+  });
+
+  test("it properly handles removal of items already in result list", function() {
     getMain().append($("<ul />", { "class" : "spotlite-results" }));
     getResults().append($("<li />").text("foo"));
     getResults().append($("<li />").text("bar"));
