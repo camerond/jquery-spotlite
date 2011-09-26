@@ -11,20 +11,14 @@
       try{Typekit.load();}catch(e){}
   %body
     #wrapper
-      %hgroup
+      %header
         %h1
           jQuery.
           %span<> spotlite
         %h2 simple input autofill/search
-      %p
-        by
-        %a(href="http://camerondaigle.com") Cameron Daigle
-      :markdown
-        To use: include [the plugin](https://github.com/camerond/jquery-spotlite/blob/master/public/javascript/jquery-spotlite.js), call [one function](/javascript/demo.js), and style the matches & results however you like.
-
-        For available options, check out the [source](https://github.com/camerond/jquery-spotlite/blob/master/public/javascript/jquery-spotlite.js)
-        or the [test suite](/test).
-
+        %p
+          by
+          %a(href="http://camerondaigle.com") Cameron Daigle
       %form#demo-1
         %fieldset
           %label add to a list
@@ -33,6 +27,7 @@
         %fieldset
           %label autofill
           %input(type="text")
+      %article#readme~ markdown @readme
 
     - if production?
       :javascript

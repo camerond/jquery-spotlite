@@ -5,29 +5,51 @@ body
   background: #1d1f21 url("/images/jq_bg.png")
   color: #d2d8e3
   text-shadow: 0 2px 1px #000
+  font-size: 13px
 
 #wrapper
   padding: 100px
 
-hgroup
-  margin: 0 0 40px 0
-  font-family: "chunk-1","chunk-2", 'Helvetica Neue', helvetica, sans-serif
+code
+  font-weight: bold
+  background: #31363b
+  padding: 1px 4px
+  margin: 0 4px
+  text-shadow: 0 1px 1px #000
+
+pre 
+  padding: 0 80px
+  margin: 0 0 20px 0
+  code
+    display: block
+    background: none
+
+header
   h1
     font-size: 80px
+    font-family: "chunk-1","chunk-2", 'Helvetica Neue', helvetica, sans-serif
     span
       color: #3bd8e2
   h2
     font-size: 40px
-  form
-    label
-      font-size: 14px
-    + form
+    font-family: "chunk-1","chunk-2", 'Helvetica Neue', helvetica, sans-serif
+    margin: 0 0 20px 0
+  p
+    font-weight: bold
+    margin: 0 0 40px 0
+
+a
+  text-decoration: none
+  color: #3bd8e2
+  &:hover
+    text-decoration: underline
 
 form
   width: 320px
   float: left
   position: relative
-  margin: 0 80px 0 0
+  margin: 0 80px 20px 0
+  min-height: 140px
   + form
     margin-right: 0
   fieldset
@@ -62,16 +84,6 @@ form
       &:hover
         background-color: #3bd8e2
 
-p
-  clear: both
-  font-weight: bold
-  margin: 0 0 40px 0
-  a
-    text-decoration: none
-    color: #3bd8e2
-    &:hover
-      text-decoration: underline
-
 ul.spotlite-matches
   background: #d2d8e3
   color: #1d1f21
@@ -82,3 +94,29 @@ ul.spotlite-matches
       background: #3bd8e2
     b
       font-weight: bold
+
+#readme
+  clear: both
+  font-weight: normal
+  h1
+    display: none
+  h2
+    font-size: 16px
+    font-weight: bold
+    margin: 0 0 20px 0
+  h3
+    font-size: 14px
+    font-weight: bold
+    margin: 0 0 20px 20px
+  p
+    font-size: 13px
+    line-height: 20px
+    margin: 0 0 20px 0
+    padding: 0 40px
+  ul
+    padding: 0 40px 20px 40px
+    font-size: 13px
+    line-height: 20px
+    list-style-type: square
+    li
+      margin: 0 0 5px 0
