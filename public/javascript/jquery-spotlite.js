@@ -1,7 +1,7 @@
 /*
 
 jQuery Spotlite Plugin
-version 0.1.5
+version 0.2
 
 Copyright (c) 2011 Cameron Daigle, http://camerondaigle.com
 
@@ -51,15 +51,15 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   function init($spot, options) {
 
     var defaults = {
-      pool: '',
-      result_list: $spot.find("ul").first(),
       input_field: $spot.find("input[type='text']"),
-      result_limit: 10,
+      pool: null,
+      multiselect: true,
+      result_list: $spot.find("ul").first(),
+      match_limit: 10,
       threshold: 1,
+      class_prefix: 'spotlite',
       exclude_characters: '\\W',
       bypass: '',
-      multiselect: true,
-      class_prefix: 'spotlite',
       output: function(e) { return $("<li />").html(e); }
     };
 
@@ -215,7 +215,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       item = pool[i];
       if ($.trim(clean_ss).length && clean_ss === $.trim(item.search_term).substring(0, ss.length)) {
         new_cache.push(pool[i]);
-        if ((results.length < spot.result_limit) &&
+        if ((results.length < spot.match_limit) &&
             ((spot.multiselect && $.inArray(item.term, current_results) < 0) || !spot.multiselect)) {
           if (typeof item.term === "object") {
             temp_term = $.extend({}, item.term);

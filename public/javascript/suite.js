@@ -240,7 +240,7 @@
   module("Options");
 
   test("adjust number of displayed matches", function() {
-    fireSpotlite({ result_limit: 2 });
+    fireSpotlite({ match_limit: 2 });
     type("a");
     shouldSeeMatchCount(2);
   });
