@@ -44,7 +44,7 @@ In this case, you'll probably want to search on name only, and display the locat
         .append($("<img />", { "src": e.image }));
     }
 
-This is just a basic example - the ability to directly control all of your users' matches and results gives you plenty of flexibility when you get down to .
+This is just a basic example - the ability to directly control all of your users' matches and results gives you plenty of design flexibility.
 
 ## Questions & Comments
 
