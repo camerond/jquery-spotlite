@@ -2,5 +2,10 @@
   { "name": "Marty McFly", "email": "marty@mcfly.com" },
   { "name": "Doc Brown", "email": "great@scott.com" },
   { "name": "Biff", "email": "makelikea@tree.com" },
-  { "name": "Crispin Glover", "email": "whatisit@willard.com" }
+  { "name": "Crispin Glover", "email": "whatisit@willard.com" },
+  {
+    "name": "Lorraine Baines",
+    "email": "iheartcalvin@klein.com",
+    "features": { "hair": "wavy" }
+  }
 ]

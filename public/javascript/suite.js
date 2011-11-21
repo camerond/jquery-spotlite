@@ -132,7 +132,7 @@
     type("Ba");
     $spot.find("input[type='text']").trigger("click");
     expectAttribute(getMatches(), ":visible");
-    $("label").trigger("click");
+    $("#outer").trigger("click");
     expectAttribute(getMatches(), ":hidden");
   });
 
@@ -365,7 +365,31 @@
       type("marty");
       shouldSeeMatchCount(1);
       start();
-    }, 100);
+    }, 200);
+  });
+
+  test("parse and search through embedded objects", function() {
+    fireSpotlite({
+      pool: "/javascript/test_data.json",
+      output: function(e) {
+        var i = $("<span />");
+        var el = $("<li />");
+        i.html(e.email);
+        el.html(e.full_name);
+        if (e.features) {
+          var j = $("<span />");
+          j.html(e.features.hair);
+          i.append(j);
+        }
+        return el.append(i);
+      }
+    });
+    stop();
+    setTimeout(function() {
+      type("wavy");
+      shouldSeeMatchCount(1);
+      start();
+    }, 200);
   });
 
   module("Methods");
