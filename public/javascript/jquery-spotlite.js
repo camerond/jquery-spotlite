@@ -227,9 +227,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             ((spot.multiselect && $.inArray(item.term, current_results) < 0) || !spot.multiselect)) {
           if (typeof item.term === "object") {
             temp_term = $.extend({}, item.term);
-            for (val in temp_term) {
-              temp_term[val] = highlightInString.call(spot, ss, temp_term[val]);
-            }
+            highlightTerm(spot, ss, temp_term);
             results.push(spot.output(temp_term)[0]);
           } else {
             results.push(spot.output(highlightInString.call(spot, ss, item.term))[0]);
@@ -254,6 +252,16 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     }
     spot.match_count = results.length;
     return new_cache;
+  }
+
+  function highlightTerm(spot, ss, temp_term) {
+    for (val in temp_term) {
+      if (typeof temp_term[val] === "object") {
+        highlightTerm(spot, ss, temp_term[val]);
+      } else {
+        temp_term[val] = highlightInString.call(spot, ss, temp_term[val]);
+      }
+    }
   }
 
   function selectMatch(num) {
