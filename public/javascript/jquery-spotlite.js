@@ -166,16 +166,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     for (i = 0, tl = terms.length; i < tl; i++) {
       words = [];
       if (typeof terms[i] === "object") {
-        term = terms[i];
-        for (t in term) {
-          if (spot.bypass.length) {
-            if ($.inArray(t, spot.bypass) == -1) {
-              words = $.merge(words, cleanSplit(term[t]));
-            }
-          } else {
-            words = $.merge(words, cleanSplit(term[t]));
-          }
-        }
+        parseTerm(words, terms[i]);
       } else {
         words = cleanSplit(terms[i]);
       }
@@ -186,6 +177,23 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
     }
     spot.pool = pool;
+
+    function parseTerm(words, term) {
+      for (t in term) {
+        if (typeof term[t] === "object") {
+          parseTerm(words, term[t]);
+        }
+        else {
+          if (spot.bypass.length) {
+            if ($.inArray(t, spot.bypass) == -1) {
+              $.merge(words, cleanSplit(term[t]));
+            }
+          } else {
+            $.merge(words, cleanSplit(term[t]));
+          }
+        }
+      }
+    }
 
     function cleanSplit(str) {
       return spot.sanitize($.trim(str)).split(" ");
@@ -219,9 +227,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             ((spot.multiselect && $.inArray(item.term, current_results) < 0) || !spot.multiselect)) {
           if (typeof item.term === "object") {
             temp_term = $.extend({}, item.term);
-            for (val in temp_term) {
-              temp_term[val] = highlightInString.call(spot, ss, temp_term[val]);
-            }
+            highlightTerm(spot, ss, temp_term);
             results.push(spot.output(temp_term)[0]);
           } else {
             results.push(spot.output(highlightInString.call(spot, ss, item.term))[0]);
@@ -246,6 +252,16 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     }
     spot.match_count = results.length;
     return new_cache;
+  }
+
+  function highlightTerm(spot, ss, temp_term) {
+    for (val in temp_term) {
+      if (typeof temp_term[val] === "object") {
+        highlightTerm(spot, ss, temp_term[val]);
+      } else {
+        temp_term[val] = highlightInString.call(spot, ss, temp_term[val]);
+      }
+    }
   }
 
   function selectMatch(num) {
