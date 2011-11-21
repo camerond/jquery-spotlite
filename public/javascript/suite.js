@@ -370,6 +370,33 @@ var matches;
     }, 200);
   });
 
+  test("parse and search through embedded objects", function() {
+    fireSpotlite({
+      pool: "/javascript/test_data.json",
+      output: function(e) {
+        var i = $("<span />");
+        var el = $("<li />");
+        i.html(e.email);
+        el.html(e.full_name);
+        // console.log(e.email);
+        // console.log(e.full_name);
+        // console.log(e.features);
+        if (e.features) {
+          var j = $("<span />");
+          j.html(e.features.hair);
+          i.append(j);
+        }
+        return el.append(i);
+      }
+    });
+    stop();
+    setTimeout(function() {
+      type("wavy");
+      shouldSeeMatchCount(1);
+      start();
+    }, 200);
+  });
+
   module("Methods");
 
   test("refresh", function() {
