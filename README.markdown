@@ -46,6 +46,8 @@ In this case, you'll probably want to search on name only, and display the locat
 
 This is just a basic example - the ability to directly control all of your users' matches and results gives you plenty of design flexibility.
 
+__New in 0.2.1:__ Now handles multi-layered JSON objects, thanks to none other than [Durran Jordan](https://twitter.com/#!/modetojoy) of [Mongoid](http://mongoid.org) fame.
+
 ## Questions & Comments
 
 We use Spotlite in a number of projects at [Hashrocket](http://hashrocket.com), and I'm working on an extended article detailing why & how Spotlite came about. In the meantime, feel free to [contact me](http://camerondaigle.com/about) with questions or feature requests (I'll politely answer your questions and (probably) politely decline your feature requests).
