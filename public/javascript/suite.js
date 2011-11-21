@@ -132,7 +132,7 @@
     type("Ba");
     $spot.find("input[type='text']").trigger("click");
     expectAttribute(getMatches(), ":visible");
-    $("label").trigger("click");
+    $("#outer").trigger("click");
     expectAttribute(getMatches(), ":hidden");
   });
 
