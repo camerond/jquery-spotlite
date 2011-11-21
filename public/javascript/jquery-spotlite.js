@@ -166,16 +166,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     for (i = 0, tl = terms.length; i < tl; i++) {
       words = [];
       if (typeof terms[i] === "object") {
-        term = terms[i];
-        for (t in term) {
-          if (spot.bypass.length) {
-            if ($.inArray(t, spot.bypass) == -1) {
-              words = $.merge(words, cleanSplit(term[t]));
-            }
-          } else {
-            words = $.merge(words, cleanSplit(term[t]));
-          }
-        }
+        parseTerm(words, terms[i]);
       } else {
         words = cleanSplit(terms[i]);
       }
@@ -186,6 +177,23 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
     }
     spot.pool = pool;
+
+    function parseTerm(words, term) {
+      for (t in term) {
+        if (typeof term[t] === "object") {
+          parseTerm(words, term[t]);
+        }
+        else {
+          if (spot.bypass.length) {
+            if ($.inArray(t, spot.bypass) == -1) {
+              $.merge(words, cleanSplit(term[t]));
+            }
+          } else {
+            $.merge(words, cleanSplit(term[t]));
+          }
+        }
+      }
+    }
 
     function cleanSplit(str) {
       return spot.sanitize($.trim(str)).split(" ");
