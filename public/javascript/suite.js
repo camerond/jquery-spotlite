@@ -370,16 +370,16 @@ var matches;
     }, 200);
   });
 
-  // module("Methods");
+  module("Methods");
 
-  // test("refresh", function() {
-  //   var data = getDefaultData();
-  //   fireSpotlite();
-  //   data.push("Billy Dee Williams");
-  //   $("[id$='-test']").spotlite('refresh', {pool: data});
-  //   type("dee");
-  //   shouldSee("Billy Dee Williams");
-  // });
+  test("refresh", function() {
+    var data = getDefaultData();
+    fireSpotlite();
+    data.push("Billy Dee Williams");
+    $("[id$='-test']").spotlite('refresh', {pool: data});
+    type("dee");
+    shouldSee("Billy Dee Williams");
+  });
 
   function getMain() {
     return $("#spotlite-test");
