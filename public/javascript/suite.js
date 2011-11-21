@@ -376,9 +376,6 @@
         var el = $("<li />");
         i.html(e.email);
         el.html(e.full_name);
-        // console.log(e.email);
-        // console.log(e.full_name);
-        // console.log(e.features);
         if (e.features) {
           var j = $("<span />");
           j.html(e.features.hair);
