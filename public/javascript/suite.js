@@ -1,5 +1,3 @@
-var matches;
-
 ;(function($) {
 
   $.fx.off = true;
