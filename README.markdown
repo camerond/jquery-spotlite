@@ -6,7 +6,7 @@ Call `$.spotlite()` on the element (usually an `<li>` or `<dl>`) containing your
 
 ## Requirements
 
-Include jQuery and [jquery.spotlite.js](https://github.com/camerond/jquery-spotlite/blob/master/public/javascript/jquery-spotlite.js), then style the output however you like.
+Include jQuery and [jquery.spotlite.js](https://github.com/camerond/jquery-spotlite/blob/master/public/javascript/jquery-spotlite.js), then style the output however you like (or feel free to pull the styles from the demo).
 
 ## Options
 

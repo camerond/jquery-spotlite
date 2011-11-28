@@ -1,21 +1,41 @@
 @import 'reset.scss'
+$accent: #29a08d
 
 body
   font-family: 'Helvetica Neue', helvetica, sans-serif
-  background: #1d1f21 url("/images/jq_bg.png")
-  color: #d2d8e3
-  text-shadow: 0 2px 1px #000
-  font-size: 13px
+  background: #e9e4d7 url("/images/jq_bg.png")
+  text-shadow: 0 1px 1px #fff
+  color: #373b43
+  &::before
+    position: absolute
+    left: 0
+    top: 0
+    opacity: .3
+    width: 100%
+    height: 100px
+    background-image: -moz-linear-gradient(100% 100% 90deg, #eae6d9, $accent)
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from($accent), to(#eae6d9))
+    content: ""
+    z-index: 1
 
 #wrapper
-  padding: 100px
+  position: relative
+  padding: 70px
+  z-index: 2
+  max-width: 1000px
+  margin: 0 auto
+
+a
+  text-decoration: none
+  color: $accent
+  &:hover
+    color: $accent - #333
 
 code
   font-weight: bold
-  background: #31363b
+  background: #efece4
   padding: 1px 4px
   margin: 0 4px
-  text-shadow: 0 1px 1px #000
 
 pre 
   padding: 0 80px
@@ -29,7 +49,7 @@ header
     font-size: 80px
     font-family: "chunk-1","chunk-2", 'Helvetica Neue', helvetica, sans-serif
     span
-      color: #3bd8e2
+      color: $accent
   h2
     font-size: 40px
     font-family: "chunk-1","chunk-2", 'Helvetica Neue', helvetica, sans-serif
@@ -37,12 +57,6 @@ header
   p
     font-weight: bold
     margin: 0 0 40px 0
-
-a
-  text-decoration: none
-  color: #3bd8e2
-  &:hover
-    text-decoration: underline
 
 form
   width: 320px
@@ -58,13 +72,11 @@ form
       font-size: 18px
       font-weight: bold
     input[type="text"]
-      border: none
       padding: 8px
       width: 290px
       font-size: 14px
-      background: #d2d8e3
       font-weight: bold
-      color: #1d1f21
+      color: #373b43
   h2
     font-size: 18px
     font-weight: bold
@@ -73,8 +85,8 @@ form
     li
       font-size: 11px
       font-weight: bold
-      background: url("/images/remove.png") no-repeat 5px center #d2d8e3
-      color: #1d1f21
+      background: url("/images/remove.png") no-repeat 5px center #fff
+      color: #373b43
       text-shadow: none
       border-radius: 5px
       float: left
@@ -82,16 +94,16 @@ form
       padding: 4px 8px 4px 22px
       cursor: pointer
       &:hover
-        background-color: #3bd8e2
+        background-color: #88d5c9
 
 ul.spotlite-matches
-  background: #d2d8e3
+  background: #fff
   color: #1d1f21
   li
     padding: 4px 6px
     text-shadow: none
     &.spotlite-selected
-      background: #3bd8e2
+      background: #88d5c9
     b
       font-weight: bold
 
@@ -117,6 +129,8 @@ ul.spotlite-matches
     padding: 0 40px 20px 40px
     font-size: 13px
     line-height: 20px
-    list-style-type: square
-    li
-      margin: 0 0 5px 0
+    ul
+      padding: 0 20px
+  p + ul
+    padding-left: 60px
+    padding-right: 60px
