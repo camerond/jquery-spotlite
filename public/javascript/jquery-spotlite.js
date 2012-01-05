@@ -306,22 +306,27 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         keycode = e.keyCode,
         $ul = spot.match_list,
         $sel = $ul.find("." + spot.class_prefix + "-selected"),
-        idx = $sel.index();
-    if (keycode === 40 && (idx != $sel.siblings().length)) {
-      selectMatch.call(this, idx + 1);
-    } else if (keycode === 38 && (idx != 0)) {
-      selectMatch.call(this, idx - 1);
-    } else if (keycode === 27) {
-      $ul.hide();
-    } else if (keycode === 13) {
-      e.preventDefault();
-      addMatch.call(this, $sel);
-    } else if (keycode === 9) {
-      addMatch.call(this, $sel);
-    } else {
-      return false;
+        idx = $sel.index()
+        unhandled = true;
+    var actions = {
+      9: function() { addMatch.call(spot, $sel); },
+      13: function() {
+        e.preventDefault();
+        addMatch.call(spot, $sel);
+      },
+      27: function() { $ul.hide(); },
+      38: function() {
+        idx !== 0 && selectMatch.call(spot, idx - 1);
+      },
+      40: function() {
+        idx != $sel.siblings().length && selectMatch.call(spot, idx + 1);
+      }
+    };
+    if (keycode in actions) {
+      actions[keycode]();
+      unhandled = false;
     }
-    return true;
+    return unhandled;
   }
 
   function removeOnClick($el) {

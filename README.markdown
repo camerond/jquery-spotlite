@@ -51,3 +51,4 @@ __New in 0.2.1:__ Now handles multi-layered JSON objects, thanks to none other t
 ## Questions & Comments
 
 We use Spotlite in a number of projects at [Hashrocket](http://hashrocket.com), and I'm working on an extended article detailing why & how Spotlite came about. In the meantime, feel free to [contact me](http://camerondaigle.com/about) with questions or feature requests (I'll politely answer your questions and (probably) politely decline your feature requests).
+
