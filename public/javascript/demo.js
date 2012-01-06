@@ -5,8 +5,12 @@ $(function() {
   });
 
   $("#demo-2").spotlite({
-    pool: demo_data(),
-    multiselect: false
+    multiselect: false,
+    ajax: true,
+    ajax_opts: {
+      url: "/javascript/people.json",
+      method: "get"
+    }
   });
 
   function demo_data() {
