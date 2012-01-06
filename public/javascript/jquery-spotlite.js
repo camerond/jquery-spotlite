@@ -28,6 +28,58 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ;(function($) {
 
+  var spotlite = {
+    keyHandled: false,
+    ajax: function(opts) {
+      var s = spotlite;
+      if (opts.xhr) { opts.xhr.abort(); }
+      opts.match_list.hide();
+      opts.xhr = $.ajax({
+        url: opts.ajax_opts.url,
+        method: opts.ajax_opts.method,
+        data: "search=" + opts.$el.val(),
+        dataType: "json",
+        success: function(json, text, xhr) {
+          delete opts.xhr;
+          opts.match_list.empty();
+          $.each(json.matches, function(i) {
+            opts.output(json.matches[i]).appendTo(opts.match_list);
+          });
+          generatePool.call(opts, json.matches);
+          s.filterResults.call(opts.$el, { data: { complete: true, opts: opts } });
+          opts.ajax_opts.success.call(opts.$el, json.matches, text, xhr);
+        },
+        complete: function(xhr, text) {
+          delete opts.xhr;
+          opts.ajax_opts.complete.call(opts.$el, xhr, text);
+        },
+        error: function(xhr, text, error) {
+          delete opts.xhr;
+          opts.ajax_opts.error.call(opts.$el, xhr, text, error);
+        }
+      });
+    },
+    filterResults: function(e) {
+      var s = spotlite,
+          opts = e.data.opts;
+      if (!e.data.complete && e.type === "keyup") {
+        if (opts.keyHandled) { return; }
+        if (opts.ajax && opts.ajax_opts.url) {
+          s.ajax(opts);
+          return;
+        }
+      }
+      var ss = $(this).val();
+      ss.length && opts.match_list.length ? opts.showMatches() : opts.match_list.hide();
+      if (ss.length >= opts.threshold) {
+        opts.cache = populateMatches.call(opts, ss);
+        selectMatch.call(opts, 0);
+        opts.current_val = ss;
+      }
+      opts.keyHandled = false;
+    }
+  };
+
   $.fn.spotlite = function(options, secondary) {
     return this.each(function() {
 
@@ -51,12 +103,20 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   function init($spot, options) {
 
     var defaults = {
+      $el: $spot.find(":text"),
       input_field: $spot.find("input[type='text']"),
-      pool: null,
+      pool: [],
       multiselect: true,
       result_list: $spot.find("ul").first(),
       match_limit: 10,
       threshold: 1,
+      ajax: false,
+      ajax_opts: {
+        url: "",
+        success: $.noop,
+        complete: $.noop,
+        error: $.noop
+      },
       class_prefix: 'spotlite',
       exclude_characters: '\\W',
       bypass: '',
@@ -72,9 +132,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var spot = {};
 
     if ($spot.data('opts.spotlite')) {
-      spot = $.extend($spot.data('opts.spotlite'), options, temp_settings);
+      spot = $.extend(true, $spot.data('opts.spotlite'), options, temp_settings);
     } else {
-      spot = $.extend(defaults, options, temp_settings);
+      spot = $.extend(true, defaults, options, temp_settings);
     }
 
     if (spot.bypass.length) {
@@ -126,23 +186,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   }
 
   function attachEvents(spot) {
-    var keyHandled = false;
+    var s = spotlite
+    spot.keyHandled = false;
 
     spot.input_field.bind("keydown.spotlite", function(e) {
-      keyHandled = handleKeypress.call(spot, e);
+      spot.keyHandled = handleKeypress.call(spot, e);
     });
 
-    spot.input_field.bind("keyup.spotlite focus.spotlite", function(e) {
-      if (e.type === "keyup" && keyHandled) { return; }
-      var ss = $(this).val();
-      ss.length && spot.match_list.length ? spot.showMatches() : spot.match_list.hide();
-      if (ss.length >= spot.threshold) {
-        spot.cache = populateMatches.call(spot, ss);
-        selectMatch.call(spot, 0);
-        spot.current_val = ss;
-      }
-      keyHandled = false;
-    });
+    spot.input_field.bind("keyup.spotlite focus.spotlite", { opts: spot }, spotlite.filterResults);
 
     spot.result_list.children().each(function() {
       removeOnClick($(this));
@@ -307,9 +358,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         $ul = spot.match_list,
         $sel = $ul.find("." + spot.class_prefix + "-selected"),
         idx = $sel.index()
-        unhandled = true;
+        handled = false;
     var actions = {
-      9: function() { addMatch.call(spot, $sel); },
+      9: function() {
+        addMatch.call(spot, $sel);
+      },
       13: function() {
         e.preventDefault();
         addMatch.call(spot, $sel);
@@ -324,9 +377,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     };
     if (keycode in actions) {
       actions[keycode]();
-      unhandled = false;
+      handled = true;
     }
-    return unhandled;
+    return handled;
   }
 
   function removeOnClick($el) {

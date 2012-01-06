@@ -11,7 +11,7 @@ Include jQuery and [jquery.spotlite.js](https://github.com/camerond/jquery-spotl
 ## Options
 
 - `input_field` (jQuery object): pretty self-explanatory. Spotlite automatically finds the first input field inside the container on which you called `$.spotlite`.
-- `pool` (required): this is your data source to search against. It can either be a simple array of strings or an array of objects (in which case you'll need to define an Output function as well).
+- `pool` (array, required): this is your data source to search against. It can either be a simple array of strings or an array of objects (in which case you'll need to define an Output function as well).
 - `multiselect` (defaults to `true`): either add multiple items to a result list or fill the text input with the user's choice.
 - `result_list` (jQuery object): where your user's chosen items will reside (if `multiselect` is set to `true`). Spotlite looks for a `<ul>` right after the text input, and if it doesn't find one it makes one with a class of `spotlite-results`.
 - `match_limit` (defaults to 10) how many items are displayed in the dropdown of matches.
@@ -20,6 +20,10 @@ Include jQuery and [jquery.spotlite.js](https://github.com/camerond/jquery-spotl
 - `exclude_characters` (regex, defaults to `\\W` (non-word characters)): anything in this regex will be treated as whitespace for match-finding purposes (useful when your pool items include odd characters like parentheses and such).
 - `bypass` (string): comma-delimited list of object attributes to not search against (if your pool contains objects)
 - `output` (function): returns the matched string or object as a jQuery object. Defaults to returning a `<li>` containing the matched item's full text.
+- `ajax` (boolean): tells the plugin to load its results via Ajax. If set to true, the ajax_opts object is required. The ajax request made sends the value of the associated input as a parameter named search. The expected return is a JSON object with the array of filtered or non-filtered results in the format of:
+`{ "matches": ["John Doe", "Jane Doe"] }`
+where "matches" is the required object key that the results are assigned to.
+- `ajax_opts` (object, required if ajax is true): an object containing the basic options given to a jQuery Ajax call. The only required property is url; success, complete, and error ar optional callbacks that are fired after the internal methods are run. Every optional callback receives the jQuery input object as its context and matching arguments to the jQuery.ajax method callback arguments.
 
 ## Features
 
