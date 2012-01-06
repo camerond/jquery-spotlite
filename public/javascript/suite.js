@@ -392,6 +392,63 @@
     }, 200);
   });
 
+  module("Ajax");
+
+  test("should find 1 result", function() {
+    fireSpotlite({
+      multiselect: false,
+      ajax: true,
+      ajax_opts: {
+        url: "/javascript/people.json",
+        method: "get"
+      }
+    });
+    stop();
+    type("z");
+    setTimeout(function() {
+      shouldSeeMatchCount(1);
+      start();
+    }, 200);
+  });
+  test("should filter from 4 to 1 result", function() {
+    fireSpotlite({
+      multiselect: false,
+      ajax: true,
+      ajax_opts: {
+        url: "/javascript/people.json",
+        method: "get"
+      }
+    });
+    stop();
+    type("t");
+    setTimeout(function() {
+      shouldSeeMatchCount(4);
+      start();
+      stop();
+      type("o");
+      setTimeout(function() {
+        shouldSeeMatchCount(1);
+        start();
+      }, 200);
+    }, 200);
+  });
+  test("should not return results", function() {
+    fireSpotlite({
+      multiselect: false,
+      ajax: true,
+      ajax_opts: {
+        url: "/javascript/people.json",
+        method: "get"
+      }
+    });
+    stop();
+    type("a");
+    setTimeout(function() {
+      shouldSeeMatchCount(0);
+      start();
+    }, 200);
+  });
+
   module("Methods");
 
   test("refresh", function() {
