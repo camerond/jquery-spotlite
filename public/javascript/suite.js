@@ -392,17 +392,44 @@
     }, 200);
   });
 
-  module("Ajax");
+  var module_opts = {
+    multiselect: false,
+    ajax: true,
+    ajax_opts: {
+      url: "/javascript/people.json",
+      method: "get",
+      success: function(json, text, xhr) {
+        var cb_type = " success callback";
+        ok(true, "Fires" + cb_type);
+        ok($.isArray(json), "Matches array returned in" + cb_type);
+        ok(this.is(":input"), "Context is input in" + cb_type);
+        ok(typeof text === "string", "Text response is string in" + cb_type);
+        ok("abort" in xhr, "XHR object passed in" + cb_type);
+      },
+      complete: function(xhr, text) {
+        var cb_type = " complete callback";
+        ok(true, "Fires" + cb_type);
+        ok(this.is(":input"), "Context is input in" + cb_type);
+        ok(typeof text === "string", "Text response is string in" + cb_type);
+        ok("abort" in xhr, "XHR object passed in" + cb_type);
+      },
+      error: function(xhr, text, error) {
+        var cb_type = " error callback";
+        ok(true, "Fires" + cb_type);
+        ok(this.is(":input"), "Context is input in" + cb_type);
+        ok(typeof text === "string", "Text response is string in" + cb_type);
+        ok("abort" in xhr, "XHR object passed in" + cb_type);
+      }
+    }
+  };
+  module("Ajax", {
+    setup: function() {
+      console.log(module_opts.ajax_opts.url);
+      fireSpotlite(module_opts);
+    }
+  });
 
   test("should find 1 result", function() {
-    fireSpotlite({
-      multiselect: false,
-      ajax: true,
-      ajax_opts: {
-        url: "/javascript/people.json",
-        method: "get"
-      }
-    });
     stop();
     type("z");
     setTimeout(function() {
@@ -411,14 +438,6 @@
     }, 200);
   });
   test("should filter from 4 to 1 result", function() {
-    fireSpotlite({
-      multiselect: false,
-      ajax: true,
-      ajax_opts: {
-        url: "/javascript/people.json",
-        method: "get"
-      }
-    });
     stop();
     type("t");
     setTimeout(function() {
@@ -433,20 +452,18 @@
     }, 200);
   });
   test("should not return results", function() {
-    fireSpotlite({
-      multiselect: false,
-      ajax: true,
-      ajax_opts: {
-        url: "/javascript/people.json",
-        method: "get"
-      }
-    });
     stop();
     type("a");
     setTimeout(function() {
       shouldSeeMatchCount(0);
+      module_opts.ajax_opts.url = "/nonexistent";
       start();
     }, 200);
+  });
+  test("should fire error callback", function() {
+    stop();
+    type("a");
+    setTimeout(start, 200);
   });
 
   module("Methods");
