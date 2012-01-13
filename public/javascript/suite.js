@@ -392,6 +392,23 @@
     }, 200);
   });
 
+  test("fire spotlite on select tag", function() {
+    getInput().replaceWith($("<select />").attr("id", "spotlite-test"));
+    var $select = $("select#spotlite-test");
+    var names = ["Doc Brown", "George McFly", "Marty McFly", "Biff"];
+    for (i in names) {
+      $("<option />").text(names[i]).attr("value", i).appendTo($select);
+    }
+    $("#spotlite-test").spotlite();
+    type("mc");
+    shouldSee("George McFly");
+    shouldSee("Marty McFly");
+    shouldNotSee("Doc Brown");
+    typeKeycode(13, "enter");
+    equal($select.val(), "1", "'George McFly (value 1) is now the value of the select tag");
+    equal(getInput().val(), "George McFly", "'George McFly' is now the value of the input field");
+  });
+
   var module_opts = {
     multiselect: false,
     ajax: true,

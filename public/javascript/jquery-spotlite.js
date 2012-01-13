@@ -1,7 +1,7 @@
 /*
 
 jQuery Spotlite Plugin
-version 0.3
+version 0.3.1
 
 Copyright (c) 2011 Cameron Daigle, http://camerondaigle.com
 
@@ -130,6 +130,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     };
 
     var spot = {};
+    if (!options) { options = {}; }
 
     if ($spot.data('opts.spotlite')) {
       spot = $.extend(true, $spot.data('opts.spotlite'), options, temp_settings);
@@ -139,6 +140,17 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     if (spot.bypass.length) {
       spot.bypass = spot.bypass.replace(" ", "").split(",");
+    } else {
+      spot.bypass = [];
+    }
+
+    if (!options.input_field && $spot.find("select").length) {
+      spot.select = $spot.find("select").hide();
+      spot.input_field = $("<input />", { type: "text" }).insertAfter(spot.select);
+      spot.output = function(e) {
+        return $("<li />").html(e.text).data("spotlite-value", e.val);
+      };
+      spot.multiselect = spot.select.attr("multiselect");
     }
 
     spot.input_field.addClass(spot.class_prefix + "-input");
@@ -177,6 +189,15 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         generatePool.call(spot, data);
       });
     } else {
+      if (!spot.pool.length && spot.select) {
+        spot.select.find("option").each(function() {
+          spot.pool.push({
+            text: $(this).text(),
+            val: $(this).val()
+          });
+        });
+        spot.bypass.push("value");
+      }
       generatePool.call(spot);
     }
     $spot.data('opts.spotlite', spot);
@@ -186,7 +207,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   }
 
   function attachEvents(spot) {
-    var s = spotlite
+    var s = spotlite;
     spot.keyHandled = false;
 
     spot.input_field.bind("keydown.spotlite", function(e) {
@@ -348,6 +369,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       spot.input_field.val($el.text());
       spot.current_val = $el.text();
       $el.removeClass(spot.class_prefix + "-selected");
+      if (spot.select) {
+        spot.select.val($el.data("spotlite-value"));
+      }
     }
     spot.match_list.hide().children().detach();
   }
@@ -357,7 +381,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         keycode = e.keyCode,
         $ul = spot.match_list,
         $sel = $ul.find("." + spot.class_prefix + "-selected"),
-        idx = $sel.index()
+        idx = $sel.index();
         handled = false;
     var actions = {
       9: function() {
