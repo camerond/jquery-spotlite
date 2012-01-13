@@ -424,7 +424,6 @@
   };
   module("Ajax", {
     setup: function() {
-      console.log(module_opts.ajax_opts.url);
       fireSpotlite(module_opts);
     }
   });
@@ -437,14 +436,14 @@
       start();
     }, 200);
   });
-  test("should filter from 4 to 1 result", function() {
+  test("should filter from 5 to 1 result", function() {
     stop();
-    type("t");
+    type("el");
     setTimeout(function() {
-      shouldSeeMatchCount(4);
+      shouldSeeMatchCount(5);
       start();
       stop();
-      type("o");
+      type("t");
       setTimeout(function() {
         shouldSeeMatchCount(1);
         start();
@@ -453,7 +452,7 @@
   });
   test("should not return results", function() {
     stop();
-    type("a");
+    type("axy");
     setTimeout(function() {
       shouldSeeMatchCount(0);
       module_opts.ajax_opts.url = "/nonexistent";

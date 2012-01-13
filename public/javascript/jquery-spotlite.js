@@ -1,7 +1,7 @@
 /*
 
 jQuery Spotlite Plugin
-version 0.2.1
+version 0.3
 
 Copyright (c) 2011 Cameron Daigle, http://camerondaigle.com
 
