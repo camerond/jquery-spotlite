@@ -295,7 +295,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       item = pool[i];
       if ($.trim(clean_ss).length && clean_ss === $.trim(item.search_term).substring(0, ss.length)) {
         new_cache.push(pool[i]);
-        if ((results.length < spot.match_limit) &&
+        if ((results.length < spot.match_limit || !spot.match_limit) &&
             ((spot.multiselect && $.inArray(item.term, current_results) < 0) || !spot.multiselect)) {
           if (typeof item.term === "object") {
             temp_term = $.extend({}, item.term);

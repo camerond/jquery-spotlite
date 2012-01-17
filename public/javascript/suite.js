@@ -245,6 +245,12 @@
     shouldSeeMatchCount(2);
   });
 
+  test("display all matches if match limit is 0", function() {
+    fireSpotlite({ match_limit: 0 });
+    type("r");
+    shouldSeeMatchCount(17);
+  });
+
   test("fill input intead of adding match to result list", function() {
     fireSpotlite({ multiselect: false });
     type("jos");
