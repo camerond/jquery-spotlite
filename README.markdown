@@ -16,6 +16,7 @@ Include jQuery and [jquery.spotlite.js](https://github.com/camerond/jquery-spotl
 - `result_list` (jQuery object): where your user's chosen items will reside (if `multiselect` is set to `true`). Spotlite looks for a `<ul>` right after the text input, and if it doesn't find one it makes one with a class of `spotlite-results`.
 - `match_limit` (defaults to 10) how many items are displayed in the dropdown of matches. Displays all matches if set to 0.
 - `threshold` (defaults to 1) how many characters the user must type before Spotlite starts searching for matches.
+- `display_matches_on_focus`: always display match list when input is focused, even if nothing has been typed yet.
 - `class_prefix` (defaults to `'spotlite'`): the CSS prefix for all of Spotlite's elements.
 - `exclude_characters` (regex, defaults to `\\W` (non-word characters)): anything in this regex will be treated as whitespace for match-finding purposes (useful when your pool items include odd characters like parentheses and such).
 - `bypass` (string): comma-delimited list of object attributes to not search against (if your pool contains objects)

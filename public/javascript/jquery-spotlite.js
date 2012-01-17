@@ -71,7 +71,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
       var ss = $(this).val();
       ss.length && opts.match_list.length ? opts.showMatches() : opts.match_list.hide();
-      if (ss.length >= opts.threshold) {
+      if (ss.length >= opts.threshold || opts.display_matches_on_focus) {
         opts.cache = populateMatches.call(opts, ss);
         selectMatch.call(opts, 0);
         opts.current_val = ss;
@@ -110,6 +110,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       result_list: $spot.find("ul").first(),
       match_limit: 10,
       threshold: 1,
+      display_matches_on_focus: false,
       ajax: false,
       ajax_opts: {
         url: "",
@@ -285,32 +286,42 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     spot.result_list.find("li").each(function() {
       current_results.push($(this).text());
     });
-    if(ss.length > 1 && spot.current_val === ss.substring(0, ss.length-1)) {
+    if(ss.length && spot.current_val != ss.substring(0, spot.current_val.length)) {
       pool = spot.cache;
-    } else {
-      spot.cache = [];
     }
     spot.match_list.children().remove();
-    for (var i = 0, pl = pool.length; i < pl; i++) {
-      item = pool[i];
-      if ($.trim(clean_ss).length && clean_ss === $.trim(item.search_term).substring(0, ss.length)) {
-        new_cache.push(pool[i]);
-        if ((results.length < spot.match_limit || !spot.match_limit) &&
-            ((spot.multiselect && $.inArray(item.term, current_results) < 0) || !spot.multiselect)) {
-          if (typeof item.term === "object") {
-            temp_term = $.extend({}, item.term);
-            highlightTerm(spot, ss, temp_term);
-            results.push(spot.output(temp_term)[0]);
-          } else {
-            results.push(spot.output(highlightInString.call(spot, ss, item.term))[0]);
+    if (spot.display_matches_on_focus && !ss.length) {
+      new_cache = spot.pool;
+      for (var i = 0, j = spot.pool.length; i < j; i++) {
+        item = spot.pool[i];
+        if (typeof item.term === "object") {
+          results.push(spot.output($.extend({}, item.term))[0]);
+        } else {
+          results.push(spot.output(item.term)[0]);
+        }
+      }
+    } else {
+      for (var k = 0, l = spot.pool.length; k < l; k++) {
+        item = spot.pool[k];
+        if ($.trim(clean_ss).length && clean_ss === $.trim(item.search_term).substring(0, ss.length)) {
+          new_cache.push(item);
+          if ((results.length < spot.match_limit || !spot.match_limit) &&
+              ((spot.multiselect && $.inArray(item.term, current_results) < 0) || !spot.multiselect)) {
+            if (typeof item.term === "object") {
+              temp_term = $.extend({}, item.term);
+              highlightTerm(spot, ss, temp_term);
+              results.push(spot.output(temp_term)[0]);
+            } else {
+              results.push(spot.output(highlightInString.call(spot, ss, item.term))[0]);
+            }
           }
         }
       }
     }
-    if (results.length && ss.length) {
-      for (var j = 0, rl = results.length; j < rl; j++) {
-        if (!spot.result_list.add(spot.match_list).find(":contains(" + $(results[j]).text() + ")").length) {
-          spot.match_list.append(results[j]);
+    if (results.length && ss.length || (spot.display_matches_on_focus && !ss.length)) {
+      for (i = 0, j = results.length; i < j; i++) {
+        if (!spot.result_list.add(spot.match_list).find(":contains(" + $(results[i]).text() + ")").length) {
+          spot.match_list.append(results[i]);
         }
       }
       spot.showMatches().children()

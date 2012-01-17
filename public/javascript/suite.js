@@ -251,6 +251,19 @@
     shouldSeeMatchCount(17);
   });
 
+  test("display all matches on focus if input is blank", function() {
+    fireSpotlite({
+      match_limit: 0,
+      display_matches_on_focus: true
+    });
+    getInput().trigger("focus");
+    shouldSeeMatchCount(100);
+    type("r");
+    shouldSeeMatchCount(17);
+    $("body").click();
+    expectAttribute(getMatches(), ":hidden");
+  });
+
   test("fill input intead of adding match to result list", function() {
     fireSpotlite({ multiselect: false });
     type("jos");
