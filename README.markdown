@@ -20,7 +20,8 @@ Include jQuery and [jquery.spotlite.js](https://github.com/camerond/jquery-spotl
 - `class_prefix` (defaults to `'spotlite'`): the CSS prefix for all of Spotlite's elements.
 - `exclude_characters` (regex, defaults to `\\W` (non-word characters)): anything in this regex will be treated as whitespace for match-finding purposes (useful when your pool items include odd characters like parentheses and such).
 - `bypass` (string): comma-delimited list of object attributes to not search against (if your pool contains objects)
-- `output` (function): returns the matched string or object as a jQuery object. Defaults to returning a `<li>` containing the matched item's full text.
+- `output` (function): returns the matched string or object as a jQuery object. Defaults to returning a `<li>` containing the matched item's full text. (Make sure to use $.html() to preserve Spotlite's phrase highlighting.)
+- `before_match_display` (function): callback to expose the `<ul>` of matches for adjustment before display.
 - `ajax` (boolean): tells the plugin to load its results via Ajax. If set to true, the ajax_opts object is required. The ajax request made sends the value of the associated input as a parameter named search. The expected return is a JSON object with the array of filtered or non-filtered results in the format of:
 `{ "matches": ["John Doe", "Jane Doe"] }`
 where "matches" is the required object key that the results are assigned to.

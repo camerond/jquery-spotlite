@@ -330,6 +330,19 @@
     equal(getMatches().find('p:eq(0)').text(), "Alonzo Bartlett", "Custom output function wraps match in paragraph");
   });
 
+  test("allow adjustment of match list through callback", function() {
+    fireSpotlite({
+      before_match_display: function($ul) {
+        $.fn.reverse = [].reverse;
+        return $ul.html($ul.children().reverse());
+      }
+    });
+    type("ar");
+    equal(getMatches().find("li:eq(0)").text(), "Elmer Aron Preston", "Reverse match list with callback");
+    getMatches().find(".spotlite-highlighted").click();
+    shouldSeeResult("Elmer Aron Preston");
+  });
+
   test("allow array of objects as data", function() {
     fireSpotlite({
       pool: getObjectData(),

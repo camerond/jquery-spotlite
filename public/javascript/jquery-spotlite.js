@@ -70,11 +70,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         }
       }
       var ss = $(this).val();
-      ss.length && opts.match_list.length ? opts.showMatches() : opts.match_list.hide();
       if (ss.length >= opts.threshold || opts.display_matches_on_focus) {
         opts.cache = populateMatches.call(opts, ss);
         selectMatch.call(opts, 0);
         opts.current_val = ss;
+      } else {
+        opts.match_list.hide();
       }
       opts.keyHandled = false;
     }
@@ -121,6 +122,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       class_prefix: 'spotlite',
       exclude_characters: '\\W',
       bypass: '',
+      before_match_display: function($list) { return $list; },
       output: function(e) { return $("<li />").html(e); }
     };
 
@@ -182,7 +184,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         top: $input.offset().top + parseInt($("body").css("border-top-width").replace("px", ""), 10) + $input.outerHeight() + 'px',
         width: $input.outerWidth() - border_width
       }).show();
-      return spot.match_list;
     };
 
     if (typeof spot.pool === 'string') {
@@ -324,12 +325,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           spot.match_list.append(results[i]);
         }
       }
-      spot.showMatches().children()
+      spot.before_match_display(spot.match_list).children()
         .bind("mouseover.spotlite", function() {
           selectMatch.call(spot, $(this).index());
       }).bind("click", function() {
         addMatch.call(spot, $(this));
       });
+      spot.showMatches();
     } else {
       spot.match_list.hide();
     }
