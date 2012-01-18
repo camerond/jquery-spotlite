@@ -425,13 +425,15 @@
   });
 
   test("fire spotlite on select tag", function() {
-    getInput().replaceWith($("<select />").attr("id", "spotlite-test"));
-    var $select = $("select#spotlite-test");
+    getInput().replaceWith($("<select />"));
+    var $select = $("#spotlite-test select");
     var names = ["Doc Brown", "George McFly", "Marty McFly", "Biff"];
     for (i in names) {
       $("<option />").text(names[i]).attr("value", i).appendTo($select);
     }
     $("#spotlite-test").spotlite();
+    equal(getInput().val(), "Doc Brown", "'Doc Brown' is the initial value of the select tag");
+    backspace(9);
     type("mc");
     shouldSee("George McFly");
     shouldSee("Marty McFly");

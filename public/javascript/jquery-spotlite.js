@@ -154,6 +154,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         return $("<li />").html(e.text).data("spotlite-value", e.val);
       };
       spot.multiselect = spot.select.attr("multiselect");
+      spot.input_field.val(spot.select.find(":selected").text());
     }
 
     spot.input_field.addClass(spot.class_prefix + "-input");
