@@ -155,6 +155,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       };
       spot.multiselect = spot.select.attr("multiselect");
       spot.input_field.val(spot.select.find(":selected").text());
+      spot.input_field.bind("focus", function() {
+        $(this).val("");
+      });
     }
 
     spot.input_field.addClass(spot.class_prefix + "-input");

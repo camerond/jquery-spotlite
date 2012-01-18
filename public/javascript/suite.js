@@ -432,8 +432,9 @@
       $("<option />").text(names[i]).attr("value", i).appendTo($select);
     }
     $("#spotlite-test").spotlite();
-    equal(getInput().val(), "Doc Brown", "'Doc Brown' is the initial value of the select tag");
-    backspace(9);
+    equal(getInput().val(), "Doc Brown", "'Doc Brown' is the initial value of the input tag");
+    getInput().trigger("focus");
+    equal(getInput().val(), "", "input tag clears on focus");
     type("mc");
     shouldSee("George McFly");
     shouldSee("Marty McFly");
