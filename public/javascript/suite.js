@@ -446,13 +446,32 @@
 
   test("handle placeholder in select tag", function() {
     getInput().replaceWith($("<select />"));
-    var $select = $("#spotlite-test select").attr("data-placeholder", "select a name ...");
+    var $select = $("#spotlite-test select");
     var names = ["Doc Brown", "George McFly", "Marty McFly", "Biff"];
+    $("<option />").attr("value", "").text("select a name ...").appendTo($select);
     for (i in names) {
       $("<option />").text(names[i]).attr("value", i).appendTo($select);
     }
     $("#spotlite-test").spotlite();
     equal(getInput().attr("placeholder"), "select a name ...", "The placeholder attribute is properly assigned to the input tag");
+  });
+
+  test("handle display_matches_on_focus when converting from select tag", function() {
+    getInput().replaceWith($("<select />"));
+    var $select = $("#spotlite-test select");
+    var names = ["Doc Brown", "George McFly", "Marty McFly", "Biff"];
+    for (i in names) {
+      $("<option />").text(names[i]).attr("value", i).appendTo($select);
+    }
+    $("#spotlite-test").spotlite({ display_matches_on_focus: true });
+    getInput().trigger("focus");
+    shouldSee("Doc Brown");
+    type("mc");
+    shouldSee("George McFly");
+    shouldNotSee("Doc Brown");
+    typeKeycode(13, "enter");
+    equal($select.val(), "1", "'George McFly (value 1) is now the value of the select tag");
+    equal(getInput().val(), "George McFly", "'George McFly' is now the value of the input field");
   });
 
   var module_opts = {

@@ -221,15 +221,24 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var spot = this;
     var $spot = spot.$el;
     spot.$select = $spot.find("select").hide();
-    spot.$input_field = $("<input />", { type: "text" }).insertAfter(spot.$select);
-    if (spot.$select.attr("data-placeholder")) {
-      spot.$input_field.attr("placeholder", spot.$select.attr("data-placeholder"));
+    spot.$input_field = $("<input />", { type: "text" }).addClass(spot.class_prefix + "-input").insertAfter(spot.$select);
+
+    var currently_selected = spot.$select.find(":selected");
+    if (currently_selected.val()) {
+     spot.$input_field.val(currently_selected.text());
+    }
+
+    var $blank_option = spot.$select.find("option[value='']");
+    if ($blank_option.length) {
+      spot.$input_field.attr("placeholder", $blank_option.text());
+      spot.$input_field.val("");
+      $blank_option.remove();
     };
+
     spot.output = function(e) {
       return $("<li />").html(e.text).data("spotlite-value", e.val);
     };
     spot.multiselect = spot.$select.attr("multiselect");
-    spot.$input_field.val(spot.$select.find(":selected").text());
     spot.$input_field.bind("focus.spotlite", function() {
       $(this).val("");
     });
@@ -333,7 +342,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       spot.before_match_display(spot.$match_list).children()
         .bind("mouseover.spotlite", function() {
           selectMatch.call(spot, $(this).index());
-      }).bind("click", function() {
+      }).bind("click.spotlite", function() {
         addMatch.call(spot, $(this));
       });
       spot.showMatches();
