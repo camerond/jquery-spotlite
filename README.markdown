@@ -10,13 +10,12 @@ Include jQuery and [jquery.spotlite.js](https://github.com/camerond/jquery-spotl
 
 ## Options
 
-- `input_field` (jQuery object): pretty self-explanatory. Spotlite automatically finds the first input field inside the container on which you called `$.spotlite`.
-- `pool` (array, required): this is your data source to search against. It can either be a simple array of strings or an array of objects (in which case you'll need to define an Output function as well).
+- `pool` (array or URL): this is your data source to search against. (If you're firing Spotlite on a `select` tag you don't need this.) It can either be a simple array of strings or an array of objects (in which case you'll need to define an Output function as well). You can either define the data directly in the function call or via a URL that will deliver the data.
 - `multiselect` (defaults to `true`): either add multiple items to a result list or fill the text input with the user's choice.
-- `result_list` (jQuery object): where your user's chosen items will reside (if `multiselect` is set to `true`). Spotlite looks for a `<ul>` right after the text input, and if it doesn't find one it makes one with a class of `spotlite-results`.
-- `match_limit` (defaults to 10) how many items are displayed in the dropdown of matches. Displays all matches if set to 0.
-- `threshold` (defaults to 1) how many characters the user must type before Spotlite starts searching for matches.
-- `display_matches_on_focus`: always display match list when input is focused, even if nothing has been typed yet.
+- `$result_list` (jQuery object, defaults to nearest `<ul>` or will create one if none is found): where your user's chosen items will reside (if `multiselect` is set to `true`).
+- `match_limit` (defaults to 10): how many items are displayed in the dropdown of matches. Displays all matches if set to 0.
+- `threshold` (defaults to 1): how many characters the user must type before Spotlite starts searching for matches.
+- `display_matches_on_focus` (boolean): always display match list when input is focused, even if nothing has been typed yet.
 - `class_prefix` (defaults to `'spotlite'`): the CSS prefix for all of Spotlite's elements.
 - `exclude_characters` (regex, defaults to `\\W` (non-word characters)): anything in this regex will be treated as whitespace for match-finding purposes (useful when your pool items include odd characters like parentheses and such).
 - `bypass` (string): comma-delimited list of object attributes to not search against (if your pool contains objects)
@@ -53,6 +52,8 @@ In this case, you'll probably want to search on name only, and display the locat
 This is just a basic example - the ability to directly control all of your users' matches and results gives you plenty of design flexibility.
 
 __New in 0.2.1:__ Now handles multi-layered JSON objects, thanks to none other than [Durran Jordan](https://twitter.com/#!/modetojoy) of [Mongoid](http://mongoid.org) fame.
+
+__New in 0.3:__ Now supports Ajax calls for search results and can be called on a `select` tag instead of an input with JSON.
 
 ## Questions & Comments
 

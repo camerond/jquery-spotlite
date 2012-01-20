@@ -178,8 +178,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         generatePool.call(spot, data);
       });
     } else {
-      if (!spot.pool.length && spot.select) {
-        spot.select.find("option").each(function() {
+      if (!spot.pool.length && spot.$select) {
+        spot.$select.find("option").each(function() {
           spot.pool.push({
             text: $(this).text(),
             val: $(this).val()
@@ -220,16 +220,16 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   function convertSelectTag() {
     var spot = this;
     var $spot = spot.$el;
-    spot.select = $spot.find("select").hide();
-    spot.$input_field = $("<input />", { type: "text" }).insertAfter(spot.select);
-    if (spot.select.attr("data-placeholder")) {
-      spot.$input_field.attr("placeholder", spot.select.attr("data-placeholder"));
+    spot.$select = $spot.find("select").hide();
+    spot.$input_field = $("<input />", { type: "text" }).insertAfter(spot.$select);
+    if (spot.$select.attr("data-placeholder")) {
+      spot.$input_field.attr("placeholder", spot.$select.attr("data-placeholder"));
     };
     spot.output = function(e) {
       return $("<li />").html(e.text).data("spotlite-value", e.val);
     };
-    spot.multiselect = spot.select.attr("multiselect");
-    spot.$input_field.val(spot.select.find(":selected").text());
+    spot.multiselect = spot.$select.attr("multiselect");
+    spot.$input_field.val(spot.$select.find(":selected").text());
     spot.$input_field.bind("focus.spotlite", function() {
       $(this).val("");
     });
@@ -356,9 +356,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
   function selectMatch(num) {
     var spot = this;
-    var $li = spot.$match_list.children();
-    if ($li.length) {
-      $li.removeClass(spot.class_prefix + "-selected")[num].className += spot.class_prefix + "-selected";
+    var $items = spot.$match_list.children();
+    if ($items.length) {
+      $items.removeClass(spot.class_prefix + "-selected").eq(num).addClass(spot.class_prefix + "-selected");
     }
   }
 
@@ -387,8 +387,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       spot.$input_field.val($el.text());
       spot.current_val = $el.text();
       $el.removeClass(spot.class_prefix + "-selected");
-      if (spot.select) {
-        spot.select.val($el.data("spotlite-value"));
+      if (spot.$select) {
+        spot.$select.val($el.data("spotlite-value"));
       }
     }
     spot.$match_list.hide().children().detach();
