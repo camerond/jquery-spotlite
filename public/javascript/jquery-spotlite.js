@@ -393,7 +393,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       spot.$input_field.val('');
       spot.current_val = '';
     } else if ($el.length) {
-      spot.$input_field.val($el.text());
+      spot.$input_field.val($el.text()).change();
       spot.current_val = $el.text();
       $el.removeClass(spot.class_prefix + "-selected");
       if (spot.$select) {
