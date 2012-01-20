@@ -150,6 +150,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     if (!options.input_field && $spot.find("select").length) {
       spot.select = $spot.find("select").hide();
       spot.input_field = $("<input />", { type: "text" }).insertAfter(spot.select);
+      if (spot.select.attr("data-placeholder")) {
+        spot.input_field.attr("placeholder", spot.select.attr("data-placeholder"));
+      };
       spot.output = function(e) {
         return $("<li />").html(e.text).data("spotlite-value", e.val);
       };

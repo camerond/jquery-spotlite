@@ -444,6 +444,17 @@
     equal(getInput().val(), "George McFly", "'George McFly' is now the value of the input field");
   });
 
+  test("handle placeholder in select tag", function() {
+    getInput().replaceWith($("<select />"));
+    var $select = $("#spotlite-test select").attr("data-placeholder", "select a name ...");
+    var names = ["Doc Brown", "George McFly", "Marty McFly", "Biff"];
+    for (i in names) {
+      $("<option />").text(names[i]).attr("value", i).appendTo($select);
+    }
+    $("#spotlite-test").spotlite();
+    equal(getInput().attr("placeholder"), "select a name ...", "The placeholder attribute is properly assigned to the input tag");
+  });
+
   var module_opts = {
     multiselect: false,
     ajax: true,
