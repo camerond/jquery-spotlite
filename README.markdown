@@ -2,7 +2,7 @@
 
 ## Usage
 
-Call `$.spotlite()` on the element (usually an `<li>` or `<dl>`) containing your text input. Spotlite will position a list of search results directly after the text input.
+Call `$.spotlite()` on the element (usually an `<li>` or `<dd>`) containing your text input. Spotlite will position a list of search results directly after the text input.
 
 ## Requirements
 
