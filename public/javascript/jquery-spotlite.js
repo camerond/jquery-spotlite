@@ -78,6 +78,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         opts.$match_list.hide();
       }
       opts.keyHandled = false;
+    },
+    createResultsList: function(spot) {
+      return $("<ul />", { "class": spot.class_prefix + "-results" });
     }
   };
 
@@ -121,6 +124,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       before_match_display: function($list) { return $list; },
       output: function(e) { return $("<li />").html(e); }
     };
+    defaults.spotlite_original_output = defaults.output;
 
     var temp_settings = {
       cache: [],
@@ -153,7 +157,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     }
 
     if (!options.$result_list && spot.multiselect && !$spot.find("." + spot.class_prefix + "-results").length) {
-      spot.$result_list = $("<ul />").addClass(spot.class_prefix + "-results").insertAfter(spot.$input_field);
+      spot.$result_list = spotlite.createResultsList(spot).insertAfter(spot.$input_field);
     }
 
     spot.sanitize = function(str) {
@@ -223,9 +227,21 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     spot.$select = $spot.find("select").hide();
     spot.$input_field = $("<input />", { type: "text" }).addClass(spot.class_prefix + "-input").insertAfter(spot.$select);
 
-    var currently_selected = spot.$select.find(":selected");
-    if (currently_selected.val()) {
-     spot.$input_field.val(currently_selected.text());
+    if (spot.$select.attr("multiple")) {
+      spot.$result_list = spotlite.createResultsList(spot).insertAfter(spot.$input_field);
+        spot.$select.find(":selected").each(function() {
+        var $e = $(this),
+            $li;
+        if (!$e.val()) { return; }
+        $li = spot.output($e.text()).data({
+          select: spot.$select,
+          "spotlite-value": $e.val()
+        });
+        spot.$result_list.append(removeOnClick($li));
+      });
+    }
+    else if (spot.$select.find(":selected").length) {
+      spot.$input_field.val(spot.$select.find(":selected").text());
     }
 
     var $blank_option = spot.$select.find("option[value='']");
@@ -235,10 +251,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       $blank_option.remove();
     };
 
-    spot.output = function(e) {
-      return $("<li />").html(e.text).data("spotlite-value", e.val);
-    };
-    spot.multiselect = spot.$select.attr("multiselect");
+    if (spot.spotlite_original_output === spot.output) {
+      spot.output = function(e) {
+        return $("<li />").html(e.text).data("spotlite-value", e.val);
+      };
+    }
+    spot.multiselect = spot.$select.attr("multiple");
     spot.$input_field.bind("focus.spotlite", function() {
       $(this).val("");
     });
@@ -388,8 +406,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var spot = this;
     if (spot.multiselect) {
       var hl = $el.find('.' + spot.class_prefix + '-highlighted');
-      hl.replaceWith(hl.html());
       spot.$result_list.append(removeOnClick($el.removeClass(spot.class_prefix + "-selected").unbind().detach()));
+      spot.$select && spot.$select.length && spot.$select.find("[value='" + $el.data("spotliteValue") + "']").attr("selected", true);
       spot.$input_field.val('');
       spot.current_val = '';
     } else if ($el.length) {
@@ -435,11 +453,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
   function removeOnClick($el) {
     return $el.bind("click.spotlite", function() {
-      $(this).animate({ opacity: 0 }, {
+      $el.animate({ opacity: 0 }, {
         duration: 200,
         complete: function() {
-          $(this).slideUp(200, function() {
-            $(this).remove();
+          $el.slideUp(200, function() {
+            if ($el.data("select")) {
+              $el.data("select").find("[value='" + $el.data("spotlite-value") + "']").removeAttr("selected");
+            }
+            $el.remove();
           });
         }
       });
