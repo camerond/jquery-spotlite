@@ -1,7 +1,7 @@
 /*
 
 jQuery Spotlite Plugin
-version 0.3.1
+version 0.4
 
 Copyright (c) 2011 Cameron Daigle, http://camerondaigle.com
 
@@ -407,7 +407,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     if (spot.multiselect) {
       var hl = $el.find('.' + spot.class_prefix + '-highlighted');
       spot.$result_list.append(removeOnClick($el.removeClass(spot.class_prefix + "-selected").unbind().detach()));
-      spot.$select && spot.$select.length && spot.$select.find("[value='" + $el.data("spotliteValue") + "']").attr("selected", true);
+      spot.$select && spot.$select.length && spot.$select.find("[value='" + $el.data("spotlite-value") + "']").attr("selected", true);
       spot.$input_field.val('');
       spot.current_val = '';
     } else if ($el.length) {

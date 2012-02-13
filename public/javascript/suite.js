@@ -424,13 +424,18 @@
     }, 200);
   });
 
-  test("fire spotlite on select tag", function() {
+  var initSelect = function() {
     getInput().replaceWith($("<select />"));
     var $select = $("#spotlite-test select");
     var names = ["Doc Brown", "George McFly", "Marty McFly", "Biff"];
     for (i in names) {
       $("<option />").text(names[i]).attr("value", i).appendTo($select);
     }
+    return $select;
+  };
+
+  test("fire spotlite on select tag", function() {
+    var $select = initSelect();
     $("#spotlite-test").spotlite();
     equal(getInput().val(), "Doc Brown", "'Doc Brown' is the initial value of the input tag");
     getInput().trigger("focus");
@@ -445,24 +450,14 @@
   });
 
   test("handle placeholder in select tag", function() {
-    getInput().replaceWith($("<select />"));
-    var $select = $("#spotlite-test select");
-    var names = ["Doc Brown", "George McFly", "Marty McFly", "Biff"];
-    $("<option />").attr("value", "").text("select a name ...").appendTo($select);
-    for (i in names) {
-      $("<option />").text(names[i]).attr("value", i).appendTo($select);
-    }
+    var $select = initSelect();
+    $("<option />").attr("value", "").text("select a name ...").prependTo($select);
     $("#spotlite-test").spotlite();
     equal(getInput().attr("placeholder"), "select a name ...", "The placeholder attribute is properly assigned to the input tag");
   });
 
   test("handle display_matches_on_focus when converting from select tag", function() {
-    getInput().replaceWith($("<select />"));
-    var $select = $("#spotlite-test select");
-    var names = ["Doc Brown", "George McFly", "Marty McFly", "Biff"];
-    for (i in names) {
-      $("<option />").text(names[i]).attr("value", i).appendTo($select);
-    }
+    var $select = initSelect();
     $("#spotlite-test").spotlite({ display_matches_on_focus: true });
     getInput().trigger("focus");
     shouldSee("Doc Brown");
@@ -472,6 +467,23 @@
     typeKeycode(13, "enter");
     equal($select.val(), "1", "'George McFly (value 1) is now the value of the select tag");
     equal(getInput().val(), "George McFly", "'George McFly' is now the value of the input field");
+  });
+
+  test("fire spotlite on multiselect tag", function() {
+    var $select = initSelect();
+    $("<option />").attr("value", "").text("select a name ...").prependTo($select);
+    $select.attr("multiple", "true");
+    $("#spotlite-test").spotlite();
+    type("doc");
+    typeKeycode(13, "enter");
+    expectAttribute($select.find("option:contains('Doc')"), ":selected");
+    shouldSeeResult("Doc Brown");
+    equal(getInput().val(), "", "Input is blank after selecting an item");
+    getInput().trigger("focus");
+    type("g");
+    shouldSee("George McFly");
+    typeKeycode(13, "enter");
+    expectAttribute($select.find("option:contains('George')"), ":selected");
   });
 
   var module_opts = {
