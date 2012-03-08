@@ -466,6 +466,14 @@
     equal(getInput().val(), "George McFly", "'George McFly' is now the value of the input field");
   });
 
+  test("ignore value attribute on option tags", function() {
+    var $select = initSelect();
+    $("#spotlite-test").spotlite();
+    getInput().trigger("focus");
+    type("1");
+    shouldSeeMatchCount(0);
+  });
+
   test("handle placeholder in select tag", function() {
     var $select = initSelect();
     $("<option />").attr("value", "").text("select a name ...").prependTo($select);

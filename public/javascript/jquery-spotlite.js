@@ -1,7 +1,7 @@
 /*
 
 jQuery Spotlite Plugin
-version 0.4
+version 0.4.1
 
 Copyright (c) 2011 Cameron Daigle, http://camerondaigle.com
 
@@ -189,7 +189,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             val: $(this).val()
           });
         });
-        spot.bypass.push("value");
+        spot.bypass.push("val");
       }
       generatePool.call(spot);
     }
