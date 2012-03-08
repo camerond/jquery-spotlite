@@ -353,7 +353,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     }
     if (results.length && ss.length || (spot.display_matches_on_focus && !ss.length)) {
       for (i = 0, j = results.length; i < j; i++) {
-        if (!spot.$result_list.add(spot.$match_list).find(":contains(" + $(results[i]).text() + ")").length) {
+        var exact_matches = 0;
+        spot.$result_list.add(spot.$match_list).find("li").map(function(k, v) {
+          $(this).text() === $(results[i]).text() ? exact_matches++ : false;
+        });
+        if (!exact_matches) {
           spot.$match_list.append(results[i]);
         }
       }

@@ -179,6 +179,23 @@
     shouldSee("Barrett Larson");
   });
 
+  test("it does show unique matches that encompass one another's terms", function() {
+    var data_with_similar = getDefaultData();
+    data_with_similar.splice(1, 0, "Alonzo");
+    $("#spotlite-test").spotlite({
+      pool: data_with_similar
+    });
+    type("Alonzo");
+    shouldSee("Alonzo Bartlett");
+    shouldSee("Alonzo");
+    typeKeycode(13, "Enter");
+    getInput().trigger("focus");
+    type("a");
+    shouldSee("Alonzo Bartlett");
+    shouldSeeResult("Alonzo");
+    ok(getMatches().find("li").eq(1).text() === "Alonzo Bartlett", "The second match is now Alonzo Bartlett");
+  });
+
   test("it removes the result on click", function() {
     fireSpotlite();
     type("Ba");
