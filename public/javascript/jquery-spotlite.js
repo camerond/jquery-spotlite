@@ -1,7 +1,7 @@
 /*
 
 jQuery Spotlite Plugin
-version 0.4.1
+version 0.4.2
 
 Copyright (c) 2011 Cameron Daigle, http://camerondaigle.com
 
@@ -73,6 +73,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       if (ss.length >= opts.threshold || opts.display_matches_on_focus) {
         opts.cache = populateMatches.call(opts, ss);
         selectMatch.call(opts, 0);
+        if (opts.$select && opts.display_matches_on_focus) {
+          opts.$match_list.find("li").each(function() {
+            if($(this).data("spotlite-value") === opts.$select.val()) {
+              selectMatch.call(opts, $(this).index());
+              return;
+            }
+          });
+        }
         opts.current_val = ss;
       } else {
         opts.$match_list.hide();
@@ -200,7 +208,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   }
 
   function attachEvents(spot) {
-    var s = spotlite;
     spot.keyHandled = false;
 
     spot.$input_field.bind("keydown.spotlite", function(e) {
@@ -216,6 +223,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     $("body").live("click.spotlite", function(e) {
       if (!$.contains(spot.$match_list[0], e.target) && !($(e.target).is(":input." + spot.class_prefix + "-input"))) {
         spot.$match_list.hide();
+        if (spot.$select && spot.display_matches_on_focus) {
+          spot.$input_field.val(spot.$select.find(":selected").text());
+        }
       }
     });
 
@@ -258,7 +268,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     }
     spot.multiselect = spot.$select.attr("multiple");
     spot.$input_field.bind("focus.spotlite", function() {
-      $(this).val("");
+      if (spot.$select.find(":selected").val() && spot.display_matches_on_focus) {
+        $(this).val("");
+      }
     });
   }
 
@@ -440,7 +452,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         e.preventDefault();
         addMatch.call(spot, $sel);
       },
-      27: function() { $ul.hide(); },
+      27: function() {
+          $ul.hide();
+          if (spot.$select && spot.display_matches_on_focus) {
+            spot.$input_field.val(spot.$select.find(":selected").text());
+          }
+      },
       38: function() {
         idx !== 0 && selectMatch.call(spot, idx - 1);
       },

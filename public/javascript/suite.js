@@ -455,8 +455,7 @@
     var $select = initSelect();
     $("#spotlite-test").spotlite();
     equal(getInput().val(), "Doc Brown", "'Doc Brown' is the initial value of the input tag");
-    getInput().trigger("focus");
-    equal(getInput().val(), "", "input tag clears on focus");
+    backspace(9);
     type("mc");
     shouldSee("George McFly");
     shouldSee("Marty McFly");
@@ -481,14 +480,48 @@
     equal(getInput().attr("placeholder"), "select a name ...", "The placeholder attribute is properly assigned to the input tag");
   });
 
+  test("recognize initially selected value in select tag", function() {
+    var $select = initSelect();
+    $select.find("option").eq(1).attr("selected", "selected");
+    $("#spotlite-test").spotlite();
+    equal(getInput().val(), "George McFly", "'George McFly' is now the value of the input field");
+  });
+
+  test("when displaying on focus, remember currently selected value on outside click", function() {
+    var $select = initSelect();
+    $("#spotlite-test").spotlite({ display_matches_on_focus: true });
+    equal(getInput().val(), "Doc Brown", "'Doc Brown' is the initial value of the input field");
+    getInput().trigger("focus");
+    equal(getInput().val(), "", "input tag clears on focus");
+    $("#outer").click();
+    equal(getInput().val(), "Doc Brown", "'Doc Brown' is restored after blur");
+  });
+
+  test("when displaying on focus, remember currently selected value on esc", function() {
+    var $select = initSelect();
+    $("#spotlite-test").spotlite({ display_matches_on_focus: true });
+    getInput().trigger("focus");
+    equal(getInput().val(), "", "input tag clears on focus");
+    typeKeycode(27, "esc");
+    equal(getInput().val(), "Doc Brown", "'Doc Brown' is restored after blur");
+  });
+
+  test("when displaying on focus, remember currently selected value in match list on focus", function() {
+    var $select = initSelect();
+    $("#spotlite-test").spotlite({ display_matches_on_focus: true });
+    $select.find("option").eq(1).attr("selected", "selected");
+    getInput().trigger("focus");
+    shouldHighlight("George McFly");
+  });
+
   test("handle display_matches_on_focus when converting from select tag", function() {
     var $select = initSelect();
     $("#spotlite-test").spotlite({ display_matches_on_focus: true });
     getInput().trigger("focus");
     shouldSee("Doc Brown");
     type("mc");
-    shouldSee("George McFly");
     shouldNotSee("Doc Brown");
+    shouldHighlight("George McFly");
     typeKeycode(13, "enter");
     equal($select.val(), "1", "'George McFly (value 1) is now the value of the select tag");
     equal(getInput().val(), "George McFly", "'George McFly' is now the value of the input field");
