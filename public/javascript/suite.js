@@ -10,7 +10,7 @@
       return ok(this.getMatches().find("li:contains('" + str + "')").length, "I should see " + str);
     },
     shouldHighlight : function(str) {
-      var selected = this.getMatches().find("li.spotlite-selected:contains('" + str + "')");
+      var selected = this.getMatches().find("li.spotlite_selected:contains('" + str + "')");
       return ok(selected.length === 1, "'" + str + "' is the highlighted result");
     },
     shouldNotSee : function(str) {
@@ -140,23 +140,27 @@
     }
   });
 
-  // module("Highlighting Results");
-  // 
-  // test("it highlights the first result", function() {
-  //   fireSpotlite();
-  //   type("Ba");
-  //   shouldHighlight("Alonzo Bartlett");
-  // });
-  // 
-  // test("highlight changes on hover", function() {
-  //   fireSpotlite();
-  //   type("Ba");
-  //   getMatches().find('li:eq(2)').trigger("mouseover");
-  //   shouldHighlight("Bart Velazquez");
-  //   getMatches().find('li:eq(0)').trigger("mouseover");
-  //   shouldHighlight("Alonzo Bartlett");
-  // });
-  // 
+  module("Highlighting Results");
+
+  test("it highlights the first result", function() {
+    with (tester) {
+      init();
+      type("Ba");
+      shouldHighlight("Alonzo Bartlett");
+    }
+  });
+
+  test("highlight changes on hover", function() {
+    with (tester) {
+      init();
+      type("Ba");
+      getMatches().find('li:eq(2)').trigger("mouseover");
+      shouldHighlight("Bart Velazquez");
+      getMatches().find('li:eq(0)').trigger("mouseover");
+      shouldHighlight("Alonzo Bartlett");
+    }
+  });
+
   // test("highlight next match with down arrow", function() {
   //   fireSpotlite();
   //   type("Ba");
@@ -208,7 +212,7 @@
   //   $("#outer").trigger("click");
   //   expectAttribute(getMatches(), ":hidden");
   // });
-  // 
+
   // module("Interacting With Matches");
   // 
   // test("it attaches the matched item to the results on enter", function() {

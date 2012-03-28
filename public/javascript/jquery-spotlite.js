@@ -62,6 +62,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         }
       }
       s.$matches.toggle(s.$matches.length);
+      s.$matches.children().first().trigger("mouseover");
+    },
+    mouseoverMatch: function(e) {
+      var s = $(this).closest("ul").data("spotlite"),
+          klass = s.class_prefix + "_selected";
+      s.$matches.children().removeClass(klass);
+      $(this).addClass(klass);
     },
     keyup: function(e) {
       var s = $(this).data("spotlite");
@@ -74,9 +81,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     init: function() {
       var s = this;
       s.detect();
-      s.$matches = $("<ul />", {"class": s.class_prefix + "_matches"});
-      s.$matches.appendTo("body").hide();
+      s.$matches = $("<ul />", {"class": s.class_prefix + "_matches"}).data("spotlite", s).appendTo("body").hide();
       s.$el.keyup(s.keyup);
+      s.$matches.delegate("li", "mouseover", s.mouseoverMatch);
     }
   };
 
