@@ -76,7 +76,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           s.$matches.append($("<li />").text(st));
         }
       }
-      s.$matches.toggle(s.$matches.length);
+      s.$matches.toggle(s.$matches.children().length > 0);
       s.$matches.children().first().trigger("mouseover");
     },
     getHighlighted: function() {
@@ -97,12 +97,25 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
       s.filterMatches();
     },
+    focus: function() {
+      var s = $(this).data("spotlite");
+      s.$matches.children().length && s.$matches.show();
+    },
+    blur: function(e) {
+      var s = $(this).data("spotlite");
+      var $target = $(e.target);
+      if ($target.is(s.$matches) || $target.is(s.$el) || $target.closest("ul").is(s.$matches)) { return; }
+      s.$matches.hide();
+    },
     init: function() {
       var s = this;
       s.detect();
       s.$matches = $("<ul />", {"class": s.class_prefix + "_matches"}).data("spotlite", s).appendTo("body").hide();
-      s.$el.keyup(s.keyup);
       s.$matches.delegate("li", "mouseover", s.mouseoverMatch);
+      s.$el.keyup(s.keyup);
+      s.$el.focus(s.focus);
+      s.$el.blur(s.blur);
+      $(document).bind("click.spotlite", function(e) { s.blur.call(s.$el, e); });
     }
   };
 

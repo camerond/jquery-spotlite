@@ -199,26 +199,29 @@
     }
   });
 
-  // test("show matches on focus", function() {
-  //   fireSpotlite();
-  //   getInput().trigger("focus");
-  //   expectAttribute(getMatches(), ":hidden");
-  //   type("Ba");
-  //   expectAttribute(getMatches(), ":visible");
-  //   typeKeycode(27, "esc");
-  //   expectAttribute(getMatches(), ":hidden");
-  //   getInput().trigger("focus");
-  //   expectAttribute(getMatches(), ":visible");
-  // });
-  // 
-  // test("hide matches on outside click", function() {
-  //   var $spot = fireSpotlite();
-  //   type("Ba");
-  //   $spot.find("input[type='text']").trigger("click");
-  //   expectAttribute(getMatches(), ":visible");
-  //   $("#outer").trigger("click");
-  //   expectAttribute(getMatches(), ":hidden");
-  // });
+  test("show matches on focus", function() {
+    with (tester) {
+      init();
+      type("Will");
+      getMatches().expectAttribute(":visible");
+      typeKeycode(27, "esc");
+      getMatches().expectAttribute(":hidden");
+      $input.trigger("focus");
+      getMatches().expectAttribute(":visible");
+    }
+  });
+
+  test("hide matches on outside click", function() {
+    with (tester) {
+      init();
+      type("Ba");
+      getMatches().expectAttribute(":visible");
+      $input.click();
+      getMatches().expectAttribute(":visible");
+      $("#outer").click();
+      getMatches().expectAttribute(":hidden");
+    }
+  });
 
   // module("Interacting With Matches");
   // 
