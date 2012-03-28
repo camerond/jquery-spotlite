@@ -31,12 +31,13 @@
       }
     },
     typeKeycode: function(k, msg) {
+      var t = this;
       if (msg) {
         ok(true, "I press '" + msg + "'");
       }
-      var $e = $.Event('keydown');
+      var $e = $.Event('keyup');
       $e.keyCode = k;
-      this.$el.trigger($e);
+      t.$input.trigger($e);
     },
     backspace: function(num) {
       num = num || 1;
@@ -161,37 +162,43 @@
     }
   });
 
-  // test("highlight next match with down arrow", function() {
-  //   fireSpotlite();
-  //   type("Ba");
-  //   typeKeycode(40, "down");
-  //   shouldHighlight("Barrett Larson");
-  //   typeKeycode(40, "down");
-  //   typeKeycode(40, "down");
-  //   shouldHighlight("Josefa Jenna Barton");
-  //   typeKeycode(40, "down");
-  //   shouldHighlight("Josefa Jenna Barton");
-  // });
-  // 
-  // test("highlight previous match with up arrow", function() {
-  //   fireSpotlite();
-  //   type("Ba");
-  //   shouldHighlight("Alonzo Bartlett");
-  //   typeKeycode(38, "up");
-  //   shouldHighlight("Alonzo Bartlett");
-  //   getMatches().find("li:eq(2)").trigger("mouseover");
-  //   typeKeycode(38, "up");
-  //   shouldHighlight("Barrett Larson");
-  // });
-  // 
-  // test("hide matches on escape", function() {
-  //   fireSpotlite();
-  //   type("Ba");
-  //   typeKeycode(27, "esc");
-  //   shouldSeeMatchCount(4);
-  //   expectAttribute(getMatches(), ":hidden");
-  // });
-  // 
+  test("highlight next match with down arrow", function() {
+    with (tester) {
+      init();
+      type("Ba");
+      typeKeycode(40, "down");
+      shouldHighlight("Barrett Larson");
+      typeKeycode(40, "down");
+      typeKeycode(40, "down");
+      shouldHighlight("Josefa Jenna Barton");
+      typeKeycode(40, "down");
+      shouldHighlight("Josefa Jenna Barton");
+    }
+  });
+
+  test("highlight previous match with up arrow", function() {
+    with (tester) {
+      init();
+      type("Ba");
+      shouldHighlight("Alonzo Bartlett");
+      typeKeycode(38, "up");
+      shouldHighlight("Alonzo Bartlett");
+      getMatches().find("li:eq(2)").trigger("mouseover");
+      typeKeycode(38, "up");
+      shouldHighlight("Barrett Larson");
+    }
+  });
+
+  test("hide matches on escape", function() {
+    with (tester) {
+      init();
+      type("Ba");
+      typeKeycode(27, "esc");
+      shouldSeeMatchCount(4);
+      getMatches().expectAttribute(":hidden");
+    }
+  });
+
   // test("show matches on focus", function() {
   //   fireSpotlite();
   //   getInput().trigger("focus");

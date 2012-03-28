@@ -34,7 +34,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     threshold: 1,
     display_matches_on_focus: false,
     class_prefix: 'spotlite',
-    keys: {},
+    keys: {
+      // esc
+      27: function() {
+        this.$matches.hide();
+      },
+      // up
+      38: function() {
+        var next = this.getHighlighted().prev();
+        next && next.trigger("mouseover");
+      },
+      // down
+      40: function() {
+        var next = this.getHighlighted().next();
+        next && next.trigger("mouseover");
+      }
+    },
     detect: function() {
       var s = this;
       if (s.$el.is("select")) {
@@ -64,7 +79,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       s.$matches.toggle(s.$matches.length);
       s.$matches.children().first().trigger("mouseover");
     },
-    mouseoverMatch: function(e) {
+    getHighlighted: function() {
+      var s = this;
+      return s.$matches.find("." + s.class_prefix + "_selected");
+    },
+    mouseoverMatch: function() {
       var s = $(this).closest("ul").data("spotlite"),
           klass = s.class_prefix + "_selected";
       s.$matches.children().removeClass(klass);
@@ -73,7 +92,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     keyup: function(e) {
       var s = $(this).data("spotlite");
       if (s.keys[e.keyCode]) {
-        s.keys[e.keyCode]();
+        s.keys[e.keyCode].apply(s);
         return;
       }
       s.filterMatches();
