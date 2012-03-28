@@ -57,7 +57,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       s.$matches.empty();
       for (var i=0, max=s.pool.length; i<max; i++) {
         var st = s.pool[i].search_term;
-        if (new RegExp("^" + ss + "| +" + ss, "gi").test(st)) {
+        if (new RegExp("^" + ss + "| +" + ss, "gi").test(st) && s.$matches.children().length < s.match_limit) {
           s.$matches.append($("<li />").text(st));
         }
       }
@@ -74,7 +74,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     init: function() {
       var s = this;
       s.detect();
-      s.$matches = $("<ul />", {"id": s.class_prefix + "_matches"});
+      s.$matches = $("<ul />", {"class": s.class_prefix + "_matches"});
       s.$matches.appendTo("body").hide();
       s.$el.keyup(s.keyup);
     }

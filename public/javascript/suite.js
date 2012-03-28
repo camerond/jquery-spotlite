@@ -42,7 +42,7 @@
       num = num || 1;
       var t = this;
       for (var i = 0; i < num; i++) {
-        t.$input.val($input.val().slice(0, -1));
+        t.$input.val(t.$input.val().slice(0, -1));
         t.$input.trigger('keyup');
       }
       ok(true, "I type a backspace x " + num);
@@ -50,6 +50,7 @@
     init: function(type, opts) {
       var t = this;
       type = type || "single";
+      $("ul.spotlite_matches").remove();
       if (type === "single") {
         t.$el = $("select.single").spotlite(opts);
         t.$input = t.$el.data("spotlite_input");
@@ -102,37 +103,43 @@
     }
   });
 
-  // test("it re-searches on backspace", function() {
-  //   fireSpotlite();
-  //   type("Ve");
-  //   shouldSeeMatchCount(3);
-  //   shouldSee("Romeo Velez");
-  //   shouldNotSee("Virgil Gomez");
-  //   backspace();
-  //   shouldSeeMatchCount(7);
-  //   shouldSee("Romeo Velez");
-  //   shouldSee("Virgil Gomez");
-  // });
-  // 
-  // test("it is not case sensitive", function() {
-  //   fireSpotlite();
-  //   type("Ba");
-  //   shouldSeeMatchCount(4);
-  //   shouldSee("Alonzo Bartlett");
-  //   backspace();
-  //   type("A");
-  //   shouldSeeMatchCount(4);
-  //   shouldSee("Alonzo Bartlett");
-  // });
-  // 
-  // test("it limits displayed matches to 10 by default", function() {
-  //   fireSpotlite();
-  //   type("E");
-  //   shouldSeeMatchCount(10);
-  //   shouldSee("Elaine Huff");
-  //   shouldNotSee("Eliseo Mathew Oneal");
-  // });
-  // 
+  test("it re-searches on backspace", function() {
+    with (tester) {
+      init();
+      type("Ve");
+      shouldSeeMatchCount(3);
+      shouldSee("Romeo Velez");
+      shouldNotSee("Virgil Gomez");
+      backspace();
+      shouldSeeMatchCount(7);
+      shouldSee("Romeo Velez");
+      shouldSee("Virgil Gomez");
+    }
+  });
+
+  test("it is not case sensitive", function() {
+    with (tester) {
+      init();
+      type("Ba");
+      shouldSeeMatchCount(4);
+      shouldSee("Alonzo Bartlett");
+      backspace();
+      type("A");
+      shouldSeeMatchCount(4);
+      shouldSee("Alonzo Bartlett");
+    }
+  });
+
+  test("it limits displayed matches to 10 by default", function() {
+    with (tester) {
+      init();
+      type("E");
+      shouldSeeMatchCount(10);
+      shouldSee("Elaine Huff");
+      shouldNotSee("Eliseo Mathew Oneal");
+    }
+  });
+
   // module("Highlighting Results");
   // 
   // test("it highlights the first result", function() {
