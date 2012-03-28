@@ -19,6 +19,14 @@
     shouldSeeMatchCount: function(num) {
       return equal(this.getMatches().find("li").length, num, "I should see " + num + " matches");
     },
+    shouldSeeChoice: function(str) {
+      var input_value = this.$input.val(),
+          option_value = this.$el.val();
+          option_text = this.$el.find(":selected").text();
+      equal(input_value, str, "Input tag's value is " + str);
+      equal(option_text, str, "Option tag's text is " + str + " (value " + option_value + ")");
+      return equal(input_value, option_text, "Values are equal");
+    },
     type: function(str) {
       var t = this;
       ok(true, "I type '" + str + "'");
@@ -48,14 +56,11 @@
       }
       ok(true, "I type a backspace x " + num);
     },
-    init: function(type, opts) {
+    init: function() {
       var t = this;
-      type = type || "single";
       $("ul.spotlite_matches").remove();
-      if (type === "single") {
-        t.$el = $("select.single").spotlite(opts);
-        t.$input = t.$el.data("spotlite_input");
-      }
+      t.$el = $("select.single").spotlite();
+      t.$input = t.$el.data("spotlite_input");
     return t.$el;
     }
   };
@@ -199,6 +204,16 @@
     }
   });
 
+  test("hide matches on blur", function() {
+    with (tester) {
+      init();
+      type("Ba");
+      shouldSeeMatchCount(4);
+      $input.blur();
+      getMatches().expectAttribute(":hidden");
+    }
+  });
+
   test("show matches on focus", function() {
     with (tester) {
       init();
@@ -223,18 +238,19 @@
     }
   });
 
-  // module("Interacting With Matches");
-  // 
-  // test("it attaches the matched item to the results on enter", function() {
-  //   fireSpotlite();
-  //   type("Ba");
-  //   typeKeycode(13, "enter");
-  //   shouldSeeResult("Alonzo Bartlett");
-  //   shouldSeeMatchCount(0);
-  //   expectAttribute(getMatches(), ":hidden");
-  //   equal(getInput().val(), "", "Input is clear");
-  // });
-  // 
+  module("Interacting With Matches - Single Select");
+
+  test("it selects the highlighted match on enter", function() {
+    with (tester) {
+      init();
+      type("Ba");
+      typeKeycode(13, "enter");
+      shouldSeeChoice("Alonzo Bartlett");
+      shouldSeeMatchCount(0);
+      getMatches().expectAttribute(":hidden");
+    }
+  });
+
   // test("it attaches the matched item to the results on tab", function() {
   //   fireSpotlite();
   //   type("Ba");

@@ -35,6 +35,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     display_matches_on_focus: false,
     class_prefix: 'spotlite',
     keys: {
+      // enter
+      13: function(e) {
+        e.preventDefault();
+        this.selectHighlighted();
+      },
       // esc
       27: function() {
         this.$matches.hide();
@@ -73,7 +78,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       for (var i=0, max=s.pool.length; i<max; i++) {
         var st = s.pool[i].search_term;
         if (new RegExp("^" + ss + "| +" + ss, "gi").test(st) && s.$matches.children().length < s.match_limit) {
-          s.$matches.append($("<li />").text(st));
+          s.$matches.append($("<li />").text(st).data("spotlite_term", s.pool[i]));
         }
       }
       s.$matches.toggle(s.$matches.children().length > 0);
@@ -82,6 +87,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     getHighlighted: function() {
       var s = this;
       return s.$matches.find("." + s.class_prefix + "_selected");
+    },
+    selectHighlighted: function() {
+      var s = this,
+          term = s.getHighlighted().data("spotlite_term");
+      s.$el.val(term.$el.text());
+      s.$called_on.find(term.$el).attr("selected", true);
+      s.$matches.empty().hide();
     },
     mouseoverMatch: function() {
       var s = $(this).closest("ul").data("spotlite"),
@@ -92,7 +104,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     keyup: function(e) {
       var s = $(this).data("spotlite");
       if (s.keys[e.keyCode]) {
-        s.keys[e.keyCode].apply(s);
+        s.keys[e.keyCode].call(s, e);
         return;
       }
       s.filterMatches();
@@ -103,9 +115,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     },
     blur: function(e) {
       var s = $(this).data("spotlite");
-      var $target = $(e.target);
-      if ($target.is(s.$matches) || $target.is(s.$el) || $target.closest("ul").is(s.$matches)) { return; }
       s.$matches.hide();
+    },
+    click: function(e) {
+      var $target = $(e.target);
+      var s = this;
+      if ($target.is(s.$matches) || $target.is(s.$el) || $target.closest("ul").is(s.$matches)) { return; }
+      s.$el.blur();
     },
     init: function() {
       var s = this;
@@ -115,7 +131,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       s.$el.keyup(s.keyup);
       s.$el.focus(s.focus);
       s.$el.blur(s.blur);
-      $(document).bind("click.spotlite", function(e) { s.blur.call(s.$el, e); });
+      $(document).bind("click.spotlite", function(e) { s.click.call(s, e) });
     }
   };
 
