@@ -238,6 +238,28 @@
     }
   });
 
+  test("it bolds the matched elements of a word/phrase", function() {
+    with (tester) {
+      init();
+      type("ba");
+      getMatches().find("li").each(function() {
+        var $li = $(this);
+        equal($li.find('b').text(), "Ba", "'Ba' is bolded for " + $li.text());
+      });
+    }
+  });
+
+  test("it bolds the matched elements of a word/phrase across words", function() {
+    with (tester) {
+      init();
+      type("Alonzo Bar");
+      getMatches().find("li").each(function() {
+        var $li = $(this);
+        equal($li.find('b').text(), "Alonzo Bar", "'Alonzo Bar' is bolded for " + $li.text());
+      });
+    }
+  });
+
   module("Interacting With Matches - Single Select");
 
   test("it selects the highlighted match on enter", function() {
@@ -273,98 +295,6 @@
     }
   });
 
-  // test("it attaches the matched item to the results on tab", function() {
-  //   fireSpotlite();
-  //   type("Ba");
-  //   typeKeycode(9);
-  //   shouldSeeResult("Alonzo Bartlett");
-  //   shouldSeeMatchCount(0);
-  //   expectAttribute(getMatches(), ":hidden");
-  //   equal(getInput().val(), "", "Input is clear");
-  // });
-  // 
-  // test("it attaches the matched item to the results on click", function() {
-  //   fireSpotlite();
-  //   type("Ba");
-  //   getMatches().find("li.spotlite-selected").click();
-  //   shouldSeeResult("Alonzo Bartlett");
-  //   shouldSeeMatchCount(0);
-  //   expectAttribute(getMatches(), ":hidden");
-  //   equal(getInput().val(), "", "Input is clear");
-  // });
-  // 
-  // test("it does not show matches that have already been added", function() {
-  //   fireSpotlite();
-  //   type("Ba");
-  //   shouldSee("Alonzo Bartlett");
-  //   getMatches().find("li.spotlite-selected").click();
-  //   shouldSeeResult("Alonzo Bartlett");
-  //   type("Ba");
-  //   shouldNotSee("Alonzo Bartlett");
-  //   shouldSee("Barrett Larson");
-  // });
-  // 
-  // test("it does show unique matches that encompass one another's terms", function() {
-  //   var data_with_similar = getDefaultData();
-  //   data_with_similar.splice(1, 0, "Alonzo");
-  //   $("#spotlite-test").spotlite({
-  //     pool: data_with_similar
-  //   });
-  //   type("Alonzo");
-  //   shouldSee("Alonzo Bartlett");
-  //   shouldSee("Alonzo");
-  //   typeKeycode(13, "Enter");
-  //   getInput().trigger("focus");
-  //   type("a");
-  //   shouldSee("Alonzo Bartlett");
-  //   shouldSeeResult("Alonzo");
-  //   ok(getMatches().find("li").eq(1).text() === "Alonzo Bartlett", "The second match is now Alonzo Bartlett");
-  // });
-  // 
-  // test("it removes the result on click", function() {
-  //   fireSpotlite();
-  //   type("Ba");
-  //   typeKeycode(13);
-  //   getResults().find("li").click();
-  //   shouldSeeResultCount(0);
-  // });
-  // 
-  // test("it properly handles matching of items already in result list", function() {
-  //   getMain().append($("<ul />", { "class" : "spotlite-results" }));
-  //   getResults().append($("<li />").text("Eddy Ray"));
-  //   getResults().append($("<li />").text("Sarah Edna Fitzpatrick"));
-  //   fireSpotlite();
-  //   type("ed");
-  //   shouldSeeResultCount(2);
-  // });
-  // 
-  // test("it properly handles removal of items already in result list", function() {
-  //   getMain().append($("<ul />", { "class" : "spotlite-results" }));
-  //   getResults().append($("<li />").text("foo"));
-  //   getResults().append($("<li />").text("bar"));
-  //   fireSpotlite();
-  //   shouldSeeResultCount(2);
-  //   getResults().find("li:first").click();
-  //   shouldSeeResultCount(1);
-  // });
-  // 
-  // test("it bolds the matched elements of a word/phrase", function() {
-  //   fireSpotlite();
-  //   type("ba");
-  //   getMatches().find("li").each(function() {
-  //     var $li = $(this);
-  //     equal($li.find('b').text(), "Ba", "'Ba' is bolded for " + $li.text());
-  //   });
-  // });
-  // 
-  // test("it bolds the matched elements of a word/phrase across words", function() {
-  //   fireSpotlite();
-  //   type("Alonzo Bar");
-  //   getMatches().find("li").each(function() {
-  //     var $li = $(this);
-  //     equal($li.find('b').text(), "Alonzo Bar", "'Alonzo Bar' is bolded for " + $li.text());
-  //   });
-  // });
   // 
   // test("it handles multiple Spotlites on a page", function() {
   //   var $spot1 = $("#spotlite-test");

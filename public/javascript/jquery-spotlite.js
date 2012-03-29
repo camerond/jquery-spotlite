@@ -75,6 +75,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         });
       }
     },
+    createMatch: function(pool_obj, search_string) {
+      var html = pool_obj.search_term.replace(new RegExp("(" + search_string + ")", "gi"), function($1) {
+        return "<b>" + $1 + "</b>";
+      });
+      var $li = $("<li />").html(html).data("spotlite_term", pool_obj);
+      return $li;
+    },
     filterMatches: function() {
       var s = this,
           ss = s.$el.val();
@@ -82,7 +89,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       for (var i=0, max=s.pool.length; i<max; i++) {
         var st = s.pool[i].search_term;
         if (new RegExp("^" + ss + "| +" + ss, "gi").test(st) && s.$matches.children().length < s.match_limit) {
-          s.$matches.append($("<li />").text(st).data("spotlite_term", s.pool[i]));
+          s.$matches.append(s.createMatch(s.pool[i], ss));
         }
       }
       s.$matches.toggle(s.$matches.children().length > 0);
