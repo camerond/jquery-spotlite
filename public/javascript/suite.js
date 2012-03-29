@@ -251,6 +251,28 @@
     }
   });
 
+  test("it selects the highlighted match on tab", function() {
+    with (tester) {
+      init();
+      type("Ba");
+      typeKeycode(9, "tab");
+      shouldSeeChoice("Alonzo Bartlett");
+      shouldSeeMatchCount(0);
+      getMatches().expectAttribute(":hidden");
+    }
+  });
+
+  test("it selects the highlighted match on click", function() {
+    with (tester) {
+      init();
+      type("Ba");
+      getMatches().find(".spotlite_selected").click();
+      shouldSeeChoice("Alonzo Bartlett");
+      shouldSeeMatchCount(0);
+      getMatches().expectAttribute(":hidden");
+    }
+  });
+
   // test("it attaches the matched item to the results on tab", function() {
   //   fireSpotlite();
   //   type("Ba");

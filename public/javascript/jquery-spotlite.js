@@ -35,6 +35,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     display_matches_on_focus: false,
     class_prefix: 'spotlite',
     keys: {
+      // tab
+      9: function(e) {
+        this.selectHighlighted();
+      },
       // enter
       13: function(e) {
         e.preventDefault();
@@ -118,8 +122,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       s.$matches.hide();
     },
     click: function(e) {
-      var $target = $(e.target);
-      var s = this;
+      var $target = $(e.target),
+          s = this,
+          highlighted = s.getHighlighted();
+      if ($target.is(highlighted) || $target.closest("li").is(highlighted)) {
+        s.selectHighlighted();
+        return;
+      }
       if ($target.is(s.$matches) || $target.is(s.$el) || $target.closest("ul").is(s.$matches)) { return; }
       s.$el.blur();
     },
@@ -131,7 +140,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       s.$el.keyup(s.keyup);
       s.$el.focus(s.focus);
       s.$el.blur(s.blur);
-      $(document).bind("click.spotlite", function(e) { s.click.call(s, e) });
+      $(document).bind("click.spotlite", function(e) { s.click.call(s, e); });
     }
   };
 
