@@ -1,4 +1,8 @@
-#jQuery.spotlite
+# There Is A Better Plugin Out There
+
+The problem jQuery.spotlite was trying to solve – to make select boxes smarter – is handled wonderfully by [Harvest's Chosen](http://harvesthq.github.com/chosen/). I got halfway through a rewrite before finding Chosen, and we've switched to using it for any non-AJAX interactions on client projects, and Spotlite just doesn't have a place in the world anymore. I learned a lot building it (this was one of my first relatively large JS plugins) but there's no sense in re-solving a problem that Chosen handles so well.
+
+# jQuery.spotlite
 
 ## Usage
 
